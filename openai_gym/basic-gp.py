@@ -51,8 +51,6 @@ def protectedDiv(left, right):
     try: return left / right
     except ZeroDivisionError: return 1
 
-
-
 # Define a new if-then-else function
 def if_then_else(input, output1, output2):
     if input: return output1
@@ -114,7 +112,7 @@ def evalIndividual(individual, render=False):
             if failed:
                 action_result = 0
             else:
-                action_result = action(observation[0], observation[1], observation[2], observation[3])
+                action_result = 1 #action(observation[0], observation[1], observation[2], observation[3])
             # print(action_result)
             try: observation, reward, done, info = env.step(action_result)
             except:
@@ -129,7 +127,7 @@ def evalIndividual(individual, render=False):
     # envInUse[i] = False
     return (0,) if failed else (fitness,)
 
-toolbox.register("map", futures.map)
+# toolbox.register("map", futures.map)
 toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=7)
 # creator.create("FitnessMax", base.Fitness, weights=(1.0,))
