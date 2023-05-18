@@ -1,0 +1,2 @@
+# Ignore the virtual enviornment so it does not commit it
+venv/
