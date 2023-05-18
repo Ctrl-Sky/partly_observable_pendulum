@@ -84,6 +84,8 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
+    # Even though toolbox.mate, mutate, select, and expr_mut are never
+    # called they are used in algorithms.eaSimple as a process for evolution
     pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats,
                                    halloffame=hof, verbose=True)
     # print log
