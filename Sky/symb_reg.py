@@ -1,5 +1,6 @@
 import math, operator, random
 import numpy
+import matplotlib.pyplot as plt
 from deap import gp
 from deap import creator
 from deap import base
@@ -86,9 +87,32 @@ def main():
 
     # Even though toolbox.mate, mutate, select, and expr_mut are never
     # called they are used in algorithms.eaSimple as a process for evolution
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats,
-                                   halloffame=hof, verbose=True)
-    # print log
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats, halloffame=hof, verbose=True)
+
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    size_avgs = log.chapters["size"].select("avg")
+    # Simply change the lines in quottation above to change the values you want to graph
+
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
+    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
+    ax2.set_ylabel("Size", color="r")
+    for tl in ax2.get_yticklabels():
+        tl.set_color("r")
+
+    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="center right") # Adds then a legend
+
+    plt.show()
+
     return pop, log, hof
 
 if __name__ == "__main__":

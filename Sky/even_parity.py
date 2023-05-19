@@ -1,5 +1,23 @@
 import operator, random, numpy
 from deap import gp, creator, tools, base, algorithms
+import pygraphviz as pgv
+import matplotlib.pyplot as plt
+
+
+def displayBest(hof):
+    nodes, edges, labels = gp.graph(hof[0])
+
+    g = pgv.AGraph()
+    g.add_nodes_from(nodes)
+    g.add_edges_from(edges)
+    g.layout(prog="dot")
+
+    for i in nodes:
+        n = g.get_node(i)
+        n.attr["label"] = labels[i]
+
+    g.draw("best_tree.pdf")
+
 
 PARITY_FANIN_M = 6
 PARITY_SIZE_M = 2**PARITY_FANIN_M
@@ -63,7 +81,7 @@ toolbox.register("compile", gp.compile, pset=pset)
 # -------------------------------------------
 def evalParity(individual):
     func = toolbox.compile(expr=individual)
-    return sum(func(*in_) == out for in_, out in zip(inputs, outputs)),
+    return sum(func(*in_) == out for in_, out in zip(inputs, outputs)), # Notice the comma
 
 toolbox.register("evaluate", evalParity)
 # -------------------------------------------
@@ -75,7 +93,7 @@ toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genGrow, min_=0, max_=2)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 # -------------------------------------------
-# Used in algorithms.eaSimple
+# Used in algorithms.eaSimple for process of evolution
 
 def main():
     random.seed(21)
@@ -87,7 +105,34 @@ def main():
     stats.register("min", numpy.min)
     stats.register("max", numpy.max)
 
-    algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 40, stats, halloffame=hof)
+    # Requires toolbox.mate, select, mutate, evaluate
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 40, stats, halloffame=hof)
+
+    # Displays the best tree that solves the problem
+    #--------------------------------------------------------------------
+
+    # displayBest(hof)
+
+    #--------------------------------------------------------------------
+
+    #plt
+
+    gen = log.select("gen") 
+    fit_mins = log.select("avg")
+    # Simply change the lines in quottation above to change the values you want to graph
+
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Average") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Average", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    lns = line1
+    labs = [l.get_label() for l in lns]
+    ax1.legend(lns, labs, loc="upper right")
+
+    plt.show()
 
     return pop, stats, hof
 
