@@ -5,6 +5,8 @@
 import operator
 import numpy
 import random
+import matplotlib.pyplot as plt
+import pygraphviz as pgv
 from deap import gp
 from deap import tools
 from deap import creator
@@ -13,6 +15,20 @@ from deap import algorithms
 
 def if_then_else(input, output1, output2):
     return output1 if input else output2
+
+def displayBest(hof):
+    nodes, edges, labels = gp.graph(hof[0])
+
+    g = pgv.AGraph()
+    g.add_nodes_from(nodes)
+    g.add_edges_from(edges)
+    g.layout(prog="dot")
+
+    for i in nodes:
+        n = g.get_node(i)
+        n.attr["label"] = labels[i]
+
+    g.draw("best_tree.pdf")
 
 # Initialize multiplexer problem input and output vectors
 
@@ -97,31 +113,63 @@ def main(verbose=True, seed=None):
     CXPB = 0.8
     MUTPB = 0.1
 
-    pop = toolbox.population(n=40)
+    pop = toolbox.population(n=300)
     hof = tools.HallOfFame(1)
-    stats = tools.Statistics(lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean)
-    stats.register("std", numpy.std)
-    stats.register("min", numpy.min)
-    stats.register("max", numpy.max)
 
-    logbook = tools.Logbook()
-    logbook.header = ['gen', 'nevals'] + (stats.fields if stats else [])
+    stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
+    stats_size = tools.Statistics(len)
+    mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
+    mstats.register("avg", numpy.mean)
+    mstats.register("std", numpy.std)
+    mstats.register("min", numpy.min)
+    mstats.register("max", numpy.max)
 
-    algo = algorithms.GenerationalAlgorithm(pop, toolbox, cxpb=CXPB, mutpb=MUTPB)
-    for gen, state in enumerate(algo):
-        hof.update(state.population)
+    # Even though toolbox.mate, mutate, select, and expr_mut are never
+    # called they are used in algorithms.eaSimple as a process for evolution
+    pop, log = algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats=mstats, halloffame=hof, verbose=True)
 
-        record = stats.compile(state.population)
-        logbook.record(gen=gen, nevals=state.nevals, **record)
-        if verbose:
-            print(logbook.stream)
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    size_avgs = log.chapters["size"].select("avg")
+    # Simply change the lines in quottation above to change the values you want to graph
 
-        if gen >= NGEN:
-            break
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
 
-    return pop, stats, hof
+    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
+    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
+    ax2.set_ylabel("Size", color="r")
+    for tl in ax2.get_yticklabels():
+        tl.set_color("r")
+
+    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="center right") # Adds then a legend
+
+    plt.show()
+
+
+    # THIS SECTION DOES NOT WORK BECAUSE IT CAN NOT RECGONIZE algorithms.GenerationalAlgorithm
+    # -----------------------------------------------------------------------------
+    # algo = algorithms.GenerationalAlgorithm(pop, toolbox, cxpb=CXPB, mutpb=MUTPB)
+
+    # for gen, state in enumerate(algo):
+    #     hof.update(state.population)
+
+    #     record = stats.compile(state.population)
+    #     logbook.record(gen=gen, nevals=state.nevals, **record)
+    #     if verbose:
+    #         print(logbook.stream)
+
+    #     if gen >= NGEN:
+    #         break
+
+    # return pop, stats, hof
+    # -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     main()
-

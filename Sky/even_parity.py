@@ -96,45 +96,46 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 # Used in algorithms.eaSimple for process of evolution
 
 def main():
-    random.seed(21)
+    random.seed(318)
+
     pop = toolbox.population(n=300)
     hof = tools.HallOfFame(1)
-    stats = tools.Statistics(lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean)
-    stats.register("std", numpy.std)
-    stats.register("min", numpy.min)
-    stats.register("max", numpy.max)
 
-    # Requires toolbox.mate, select, mutate, evaluate
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.2, 40, stats, halloffame=hof)
+    stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
+    stats_size = tools.Statistics(len)
+    mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
+    mstats.register("avg", numpy.mean)
+    mstats.register("std", numpy.std)
+    mstats.register("min", numpy.min)
+    mstats.register("max", numpy.max)
 
-    # Displays the best tree that solves the problem
-    #--------------------------------------------------------------------
-
-    # displayBest(hof)
-
-    #--------------------------------------------------------------------
-
-    #plt
+    # Even though toolbox.mate, mutate, select, and expr_mut are never
+    # called they are used in algorithms.eaSimple as a process for evolution
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 40, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
-    fit_mins = log.select("avg")
+    fit_mins = log.chapters["fitness"].select("max")
+    size_avgs = log.chapters["size"].select("avg")
     # Simply change the lines in quottation above to change the values you want to graph
 
     fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
-    line1 = ax1.plot(gen, fit_mins, "b-", label="Average") # Plots using gen as x value and fit_mins as y, both are list
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
     ax1.set_xlabel("Generation")
-    ax1.set_ylabel("Average", color="b")
+    ax1.set_ylabel("Fitness", color="b")
     for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
         tl.set_color("b")
 
-    lns = line1
-    labs = [l.get_label() for l in lns]
-    ax1.legend(lns, labs, loc="upper right")
+    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
+    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
+    ax2.set_ylabel("Size", color="r")
+    for tl in ax2.get_yticklabels():
+        tl.set_color("r")
+
+    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="center right") # Adds then a legend
 
     plt.show()
-
-    return pop, stats, hof
 
 if __name__ == "__main__":
     main()
