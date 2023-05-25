@@ -1,0 +1,45 @@
+---------------Crossover---------------
+
+gp.cxOnePoint(ind1, ind2)
+
+Randomly select in each individual and exchange each subtree with the point as root between each individual.
+
+ind1 – First tree participating in the crossover.
+ind2 – Second tree participating in the crossover.
+Returns: A tuple of two trees.
+
+- Used in toolbox.mate for algorithms.eaSimple
+- Basically selects a random node on each tree and swaps their corresponding sub trees under the selcted node
+
+
+
+
+gp.cxOnePointLeafBiased(ind1, ind2, termpb)
+
+Randomly select crossover point in each individual and exchange each subtree with the point as root between each individual.
+
+ind1 – First typed tree participating in the crossover.
+ind2 – Second typed tree participating in the crossover.
+termpb – The probability of chosing a terminal node (leaf). Takes a decimal as a percentage(input 0.1 represents 10%)
+Returns: A tuple of two typed trees.
+
+- terminal node is the leaf (ie end of tree)
+- Used similarily to cxOnePoint
+
+
+
+
+gp.cxSemantic(ind1, ind2, gen_func=<function genGrow>, pset=None, min=2, max=6)
+
+variation of crossover that aims to preserve the semantic meaning of the individuals during the crossover operation. It goes beyond the structural manipulation of the individuals and takes into account the functional behavior of the genetic programming trees.
+
+ind1 – first parent
+ind2 – second parent
+gen_func – function responsible for the generation of the random tree that will be used during the mutation
+pset – Primitive Set, which contains terminal and operands to be used during the evolution
+min – min depth of the random tree
+max – max depth of the random tree
+Returns: offsprings
+
+- Example of implementation
+- new_ind1, new_ind2 = cxSemantic(ind1, ind2, pset=pset, max=2)

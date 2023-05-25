@@ -1,0 +1,59 @@
+---------------Mutations---------------
+
+gp.mutShrink(individual)
+
+This operator shrinks the individual by chosing randomly a branch and replacing it with one of the branch’s arguments (also randomly chosen).
+
+individual – The tree to be shrinked.
+Returns: A tuple of one tree.
+
+- Replaces a full subtree with the ARG#
+- Useful in toolbox.mutate for algorithms.eaSimple
+
+
+
+
+gp.mutUniform(individual, expr, pset)
+
+Randomly select a point in the tree individual, then replace the subtree at that point as a root by the expression generated using method expr().
+
+individual – The tree to be mutated.
+expr – A function object that can generate an expression when called.
+Returns: A tuple of one tree.
+
+- Basically replaces a subtree with another generated tree
+
+
+
+
+gp.mutNodeReplacement(individual, pset)
+
+Replaces a randomly chosen primitive from individual by a randomly chosen primitive with the same number of arguments from the pset attribute of the individual.
+
+individual – The normal or typed tree to be mutated.
+Returns: A tuple of one tree.
+
+- Basically swaps primitives (ex. operator.mul) with another
+
+
+
+
+gp.mutEphemeral(individual, mode)
+
+This operator works on the constants of the tree individual. In mode "one", it will change the value of one of the individual ephemeral constants by calling its generator function. In mode "all", it will change the value of all the ephemeral constants.
+
+individual – The normal or typed tree to be mutated.
+mode – A string to indicate to change "one" or "all" ephemeral constants.
+Returns: A tuple of one tree.
+
+- Changes ephemeral constant with another
+
+
+
+
+gp.mutInsert(individual, pset)
+
+Inserts a new branch at a random position in individual. The subtree at the chosen position is used as child node of the created subtree, in that way, it is really an insertion rather than a replacement. Note that the original subtree will become one of the children of the new primitive inserted, but not perforce the first (its position is randomly selected if the new primitive has more than one child).
+
+individual – The normal or typed tree to be mutated.
+Returns:	A tuple of one tree.
