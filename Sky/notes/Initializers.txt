@@ -1,0 +1,53 @@
+---------------Initializers---------------
+
+tools.initRepeat(container, func, n)
+
+Call the function container with a generator function corresponding to the calling n times the function func.
+
+container – The type to put in the data from func.
+func – The function that will be called n times to fill the container.
+n – The number of times to repeat func.
+
+- Useful for generating a population by placing individuals in a list
+
+
+
+
+tools.initIterate(container, generator)
+
+Call the function container with an iterable as its only argument. The iterable must be returned by the method or the object generator.
+
+container – The type to put in the data from func.
+generator – A function returning an iterable (list, tuple, …), the content of this iterable will fill the container.
+
+- Useful for creating an individual, generator would be expr (ie. genFull...)
+
+
+
+
+gp.genFull(pset, min_, max_, type_=None)
+
+Generate expr where each leaf has the same depth between min and max
+
+pset – Primitive set from which primitives are selected.
+min – Minimum height of the produced trees.
+max – Maximum Height of the produced trees.
+type – The type that should return the tree when called, when None (default) the type of :pset: (pset.ret) is assumed.
+returns - full tree with all leaves at same depth
+
+- Often used in toolbox.expr to generate expr for creating individual
+
+
+
+
+gp.genGrow(pset, min_, max_, type=None)
+
+- Exact same as genFull excpet the leaves might not be at the same depth
+
+
+
+
+gp.genHalfandHalf(pset, min_, max_, type=None)
+
+- Exact same as genFull except, half the time, the expression is grown using genFull and the other half is genGrow
+- Chooses to use one, so one might be full and the other might be grown
