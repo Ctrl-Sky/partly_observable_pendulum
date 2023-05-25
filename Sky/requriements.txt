@@ -1,0 +1,7 @@
+deap
+matplotlib
+pygraghviz
+gym
+gymnasium
+scoop
+pygame
