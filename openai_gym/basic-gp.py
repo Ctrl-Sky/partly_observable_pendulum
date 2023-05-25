@@ -16,7 +16,8 @@
 #    License along with DEAP. If not, see <http://www.gnu.org/licenses/>.
 
 import numpy
-import gym
+# import gym
+import gymnasium as gym
 from gym import wrappers
 import operator
 
@@ -105,19 +106,24 @@ def evalIndividual(individual, render=False):
     # print(action)
     fitness = 0
     failed = False
-    for x in range(0, 10):
+    for x in range(0, 20):
         done = False
         observation = env.reset()
+        # print("o0: " + str(observation[0][0]))
+        # print("o1: " + str(observation[1]))
+        # print("o2: " + str(observation[2]))
+        # print("o3: " + str(observation[3]))
+        # print("o4: " + str(observation[4]))
         while not done:
             if failed:
                 action_result = 0
             else:
-                action_result = 1 #action(observation[0], observation[1], observation[2], observation[3])
+                action_result = env.action_space.sample() #action(observation[0], observation[1], observation[2], observation[3])
             # print(action_result)
-            try: observation, reward, done, info = env.step(action_result)
+            try: observation, reward, done, truncated, info = env.step(action_result)
             except:
                 failed = True #throw out any individual that throws any type of exception
-                observation, reward, done, info = env.step(0)
+                observation, reward, done, truncated, info = env.step(0)
                 # return (0,) #If your not recording you can reset the environment early,
             if render:
                 env.render()
