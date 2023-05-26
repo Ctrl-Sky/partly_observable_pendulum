@@ -127,7 +127,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"),
 
 def main():
     pop = toolbox.population(n=300)
-    hof = tools.HallOfFame(25)
+    hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
@@ -143,8 +143,7 @@ def main():
     winner = gp.compile(hof[0], pset)
     evalIndividual(hof[0], True)
     # save graph of best individual
-    for i in range(0, 20):
-        graph(hof[i], 'out'+str(25-i))
+    graph(hof[0], 'out')
 
     # print log
     return pop, log, hof
