@@ -17,6 +17,9 @@ import pygraphviz as pgv
 
 # user defined funcitons
 
+def initTree():
+    return gp.PrimitiveTree([pset.primitives['limit'], pset.primitives['conditional'], 1, 0])
+
 def conditional(input1, input2):
     if input1 < input2:
         return -input1
@@ -41,11 +44,10 @@ def protectedDiv(left, right):
 pset = gp.PrimitiveSet("MAIN", 4)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(operator.mul, 2)
-pset.addPrimitive(max, 2)
-pset.addPrimitive(operator.abs, 1)
+# pset.addPrimitive(max, 2)
+# pset.addPrimitive(operator.abs, 1)
 pset.addPrimitive(operator.neg, 1)
-pset.addPrimitive(if_then_else, 3)
+# pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
@@ -58,7 +60,7 @@ creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
-toolbox.register("expr", gp.genFull, pset=pset, min_=1, max_=2)
+toolbox.register("expr", gp.genFull, pset=pset, min_=2, max_=3)
 toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -66,7 +68,7 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 env_train = gym.make('CartPole-v1') # For training
 env_test = gym.make('CartPole-v1', render_mode="human") # For rendering the best one
 
-def graph(expr):
+def graph(expr, str):
     nodes, edges, labels = gp.graph(expr)
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
@@ -76,7 +78,7 @@ def graph(expr):
     for i in nodes:
         n = g.get_node(i)
         n.attr["label"] = labels[i]
-    g.draw('out.png')
+    g.draw(str+".png")
 
 def evalIndividual(individual, test=False):
     env = env_train
@@ -125,7 +127,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"),
 
 def main():
     pop = toolbox.population(n=300)
-    hof = tools.HallOfFame(1)
+    hof = tools.HallOfFame(25)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
@@ -135,16 +137,21 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.5, 0.1, 25, stats=mstats,
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats,
                                    halloffame=hof, verbose=True)
     # evaluate best individual with visualization
     winner = gp.compile(hof[0], pset)
     evalIndividual(hof[0], True)
     # save graph of best individual
-    graph(hof[0])
+    for i in range(0, 20):
+        graph(hof[i], 'out'+str(25-i))
 
     # print log
     return pop, log, hof
 
 if __name__ == "__main__":
     main()
+
+# limit as top node seems best
+
+# changed mutation (0.2 -> 0.5) and cross probabilty (0.5 -> 0.2)
