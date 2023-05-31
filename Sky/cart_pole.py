@@ -46,7 +46,6 @@ pset.addPrimitive(operator.sub, 2)
 # pset.addPrimitive(operator.abs, 1)
 pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
-pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
 
@@ -100,9 +99,7 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                action = get_action(observation[0], observation[1],
-                                       observation[2], observation[3]) 
-            
+                action = get_action(observation[0], observation[1], observation[2], observation[3]) 
                 
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
@@ -136,15 +133,36 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats,
-                                   halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.6, 25, stats=mstats, halloffame=hof, verbose=True)
+
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    size_avgs = log.chapters["size"].select("avg")
+    # Simply change the lines in quottation above to change the values you want to graph
+
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
+    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
+    ax2.set_ylabel("Size", color="r")
+    for tl in ax2.get_yticklabels():
+        tl.set_color("r")
+
+    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="lower right") # Adds then a legend
+
+    plt.show()
+    
     # evaluate best individual with visualization
-    winner = gp.compile(hof[0], pset)
     evalIndividual(hof[0], True)
     # save graph of best individual
     graph(hof[0], 'out')
-
-    # print log
     return pop, log, hof
 
 if __name__ == "__main__":
