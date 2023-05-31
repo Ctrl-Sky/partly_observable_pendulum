@@ -105,6 +105,9 @@ def evalIndividual(individual, test=False):
                 action = get_action(observation[0], observation[1],
                                        observation[2], observation[3]) 
                 
+                if test:
+                    print(action)
+                
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
                 failed = True

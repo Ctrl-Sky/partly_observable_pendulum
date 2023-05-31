@@ -1,13 +1,15 @@
-import random
-from deap import gp
+import gym
 
-# Create two example individuals
-ind1 = gp.PrimitiveTree.from_string("add(sub(a, b), mul(c, d))")
-ind2 = gp.PrimitiveTree.from_string("div(add(a, b), sub(c, d))")
+env = gym.make('MountainCar-v0', render_mode="human")
+env.reset()
 
-# Perform one-point crossover
-offspring1, offspring2 = gp.cxOnePoint(ind1, ind2)
+done = False
+while not done:
+    env.render()
+    action = env.action_space.sample()  # Random action selection
+    observation, reward, done, info = env.step(action)
+    done = False
+    if reward == -200:
+        done = True
 
-# Display the resulting offspring
-print(offspring1)
-print(offspring2)
+env.close()

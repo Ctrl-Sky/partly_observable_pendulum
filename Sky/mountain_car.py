@@ -1,11 +1,10 @@
 # genetic programming for Gymnasium Cart Pole task
-# https://gymnasium.farama.org/environments/classic_control/acrobot/
+# https://gymnasium.farama.org/environments/classic_control/cart_pole/
 
 import numpy
 import random
 import gymnasium as gym
 import operator
-import math
 
 from deap import algorithms
 from deap import base
@@ -39,25 +38,20 @@ def protectedDiv(left, right):
     try: return left / right
     except ZeroDivisionError: return 1
 
-
-pset = gp.PrimitiveSet("MAIN", 6)
+pset = gp.PrimitiveSet("MAIN", 2)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(conditional, 2)
-pset.addPrimitive(limit, 3)
+pset.addPrimitive(max, 2)
+pset.addPrimitive(operator.abs, 1)
 pset.addPrimitive(operator.neg, 1)
 pset.addPrimitive(if_then_else, 3)
-# pset.addPrimitive(max, 2)
- # pset.addPrimitive(protectedDiv, 2)
-
-pset.addPrimitive(math.cos, 1)
-pset.addPrimitive(math.sin, 1)
-pset.addPrimitive(math.tan, 1)
+# pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(conditional, 2)
+pset.addPrimitive(limit, 3)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
 pset.addTerminal(1)
-pset.addTerminal(2)
 
 creator.create("FitnessMax", base.Fitness, weights=(-1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
@@ -68,8 +62,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Acrobot-v1') # For training
-env_test = gym.make('Acrobot-v1', render_mode="human") # For rendering the best one
+env_train = gym.make('MountainCar-v0') # For training
+env_test = gym.make('MountainCar-v0', render_mode="human") # For rendering the best one
 
 def graph(expr, str):
     nodes, edges, labels = gp.graph(expr)
@@ -105,15 +99,21 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                action = get_action(observation[0], observation[1], observation[2], observation[3], observation[4], observation[5]) 
-                if action < 0:
-                    action = 0
-                elif action < 2:
-                    action = 2
+                action = get_action(observation[0], observation[1]) 
+                if test:
+                    print(observation[0], observation[1], action)
+                
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
+                
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
+            
+            v = abs(observation[0])
+            if v > 0.5:
+                reward = -(1 - (v - 0.5))
+            if v < 0.5:
+                reward = -(1 - (0.5 - v))
             episode_reward += reward
         fitness += episode_reward
     fitness = fitness/num_episode        
@@ -125,8 +125,10 @@ toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
-toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
-toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
+toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"),
+                                        max_value=17))
+toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"),
+                                          max_value=17))
 
 def main():
     pop = toolbox.population(n=100)
@@ -140,7 +142,8 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats,
+                                   halloffame=hof, verbose=True)
     # evaluate best individual with visualization
     winner = gp.compile(hof[0], pset)
     evalIndividual(hof[0], True)
@@ -153,8 +156,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+# limit as top node seems best
 
-# Changed ephermal from (-1,1) -> (0,2)
-# population from 300 -> 100 to lower time it takes to compute
-# add if statment to get it to swing both ways so to test actionspace
-# add math.cos math.sin and math.tan
+# changed mutation (0.2 -> 0.5) and cross probabilty (0.5 -> 0.2)
+# -0.5 is centre
