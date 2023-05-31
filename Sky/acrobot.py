@@ -13,11 +13,11 @@ from deap import creator
 from deap import tools
 from deap import gp
 
-from scoop import futures
 import pygraphviz as pgv
+import matplotlib.pyplot as plt
+
 
 # user defined funcitons
-
 def conditional(input1, input2):
     if input1 < input2:
         return -input1
@@ -40,6 +40,7 @@ def protectedDiv(left, right):
     except ZeroDivisionError: return 1
 
 
+# user defined funcitons
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
@@ -59,6 +60,8 @@ pset.addTerminal(0)
 pset.addTerminal(1)
 pset.addTerminal(2)
 
+
+# Prepare individual and mountain car
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
@@ -71,6 +74,8 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 env_train = gym.make('Acrobot-v1') # For training
 env_test = gym.make('Acrobot-v1', render_mode="human") # For rendering the best one
 
+
+# Used to graph the best individual and output to out.png
 def graph(expr, str):
     nodes, edges, labels = gp.graph(expr)
     g = pgv.AGraph()
@@ -83,6 +88,8 @@ def graph(expr, str):
         n.attr["label"] = labels[i]
     g.draw(str+".png")
 
+
+# Function to calculate the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
     num_episode = 20 # Basically the amount of simulations ran
@@ -106,9 +113,11 @@ def evalIndividual(individual, test=False):
             else:
                 # use the tree to compute action, plugs values of observation into get_action
                 action = get_action(observation[0], observation[1], observation[2], observation[3], observation[4], observation[5]) 
+                
+                # limit actions to swinging left (0) and right (2)
                 if action < 0:
                     action = 0
-                else: action =2;
+                else: action =2
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
                 failed = True
@@ -118,6 +127,8 @@ def evalIndividual(individual, test=False):
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
 
+
+# Set up functions for evolution algorithm
 toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("mate", gp.cxOnePoint)
@@ -126,6 +137,8 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
+
+
 
 def main():
     pop = toolbox.population(n=50)
@@ -140,14 +153,36 @@ def main():
     mstats.register("max", numpy.max)
 
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats, halloffame=hof, verbose=True)
+
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    size_avgs = log.chapters["size"].select("avg")
+    # Simply change the lines in quottation above to change the values you want to graph
+
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
+    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
+    ax2.set_ylabel("Size", color="r")
+    for tl in ax2.get_yticklabels():
+        tl.set_color("r")
+
+    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="lower right") # Adds then a legend
+
+    plt.show()
+
     # evaluate best individual with visualization
-    winner = gp.compile(hof[0], pset)
-    print(hof[0].fitness.values)
     evalIndividual(hof[0], True)
+
     # save graph of best individual
     graph(hof[0], 'out')
-
-    # print log
     return pop, log, hof
 
 if __name__ == "__main__":

@@ -12,14 +12,10 @@ from deap import creator
 from deap import tools
 from deap import gp
 
-from scoop import futures
 import pygraphviz as pgv
+import matplotlib.pyplot as plt
 
 # user defined funcitons
-
-def initTree():
-    return gp.PrimitiveTree([pset.primitives['limit'], pset.primitives['conditional'], 1, 0])
-
 def conditional(input1, input2):
     if input1 < input2:
         return -input1
@@ -40,6 +36,8 @@ def limit(input, minimum, maximum):
 def protectedDiv(left, right):
     try: return left / right
     except ZeroDivisionError: return 1
+
+
 
 pset = gp.PrimitiveSet("MAIN", 4)
 pset.addPrimitive(operator.add, 2)
@@ -104,9 +102,7 @@ def evalIndividual(individual, test=False):
                 # use the tree to compute action, plugs values of observation into get_action
                 action = get_action(observation[0], observation[1],
                                        observation[2], observation[3]) 
-                
-                if test:
-                    print(action)
+            
                 
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
