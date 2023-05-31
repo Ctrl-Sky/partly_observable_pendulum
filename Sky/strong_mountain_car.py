@@ -17,16 +17,26 @@ import pygraphviz as pgv
 
 # user defined funcitons
 
+def float_abs(float):
+    if float < 0:
+        return -(float)
+    else:
+        return float
+
+def vel_check(vel):
+    if vel > 0:
+        return 2
+    else:
+        return 0 
+
 def conditional(input1, input2):
     if input1 < input2:
-        return -input1
-    else: return input1
+        return 0
+    else: return 2
 
-def if_then_else(vel):
-    if vel >= 0: 
-        return 2
-    else: 
-        return 1
+def if_then_else(input, output1, output2):
+    if input: return output1
+    else: return output2
 
 def limit(input, minimum, maximum):
     if input < minimum:
@@ -40,21 +50,20 @@ def protectedDiv(left, right):
     try: return left / right
     except ZeroDivisionError: return 1
 
-pset = gp.PrimitiveSet("MAIN", 2)
-pset.addPrimitive(operator.add, 2)
-pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(operator.mul, 2)
-pset.addPrimitive(max, 2)
-pset.addPrimitive(operator.abs, 1)
-pset.addPrimitive(operator.neg, 1)
-pset.addPrimitive(if_then_else, 1)
-pset.addPrimitive(conditional, 2)
-pset.addPrimitive(limit, 3)
+pset = gp.PrimitiveSetTyped("MAIN", [float, float], int)
+pset.addPrimitive(operator.add, [float, float], float)
+pset.addPrimitive(operator.sub, [float, float], float)
+pset.addPrimitive(max, [float, float], float)
+pset.addPrimitive(float_abs, [float], float)
+pset.addPrimitive(operator.neg, [float], float)
+pset.addPrimitive(vel_check, [float], int)
+pset.addPrimitive(conditional, [float, float], int)
+pset.addTerminal(1, int)
+# pset.addPrimitive(limit,3)
 
-pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
-pset.addTerminal(0)
-pset.addTerminal(1)
-pset.addTerminal(2)
+# pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
+# pset.addTerminal(0)
+# pset.addTerminal(1)
 
 creator.create("FitnessMax", base.Fitness, weights=(-1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
@@ -91,7 +100,6 @@ def evalIndividual(individual, test=False):
     get_action = gp.compile(individual, pset)
     fitness = 0
     failed = False
-    flag_location = 0.5
     for x in range(0, num_episode):
         done = False
         truncated = False
@@ -113,11 +121,27 @@ def evalIndividual(individual, test=False):
                 
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
+                
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
+            
+            # v = abs(observation[0])
+            # if v > 0.5:
+            #     reward = -(1 - (v - 0.5))
+            # if v < 0.5:
+            #     reward = -(1 - (0.5 - v))
+            
 
+            # p = 0.5 - abs(observation[0])
+            # v = abs(observation[0]) - 0.5
+            # if p > max:
+            #     max = p
+            #     deduct = p
+            # elif v > max:
+            #     max = v
+            #     deduct = v
+            # reward += deduct
 
-        # fitness += abs(observation[0] - flag_location)
             episode_reward += reward
         fitness += episode_reward
     fitness = fitness/num_episode        
@@ -135,7 +159,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"),
                                           max_value=17))
 
 def main():
-    pop = toolbox.population(n=300)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -146,7 +170,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 20, stats=mstats,
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats,
                                    halloffame=hof, verbose=True)
     # evaluate best individual with visualization
     winner = gp.compile(hof[0], pset)

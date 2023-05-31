@@ -48,7 +48,7 @@ pset.addPrimitive(limit, 3)
 pset.addPrimitive(operator.neg, 1)
 pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(max, 2)
- # pset.addPrimitive(protectedDiv, 2)
+# pset.addPrimitive(protectedDiv, 2)
 
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
@@ -59,7 +59,7 @@ pset.addTerminal(0)
 pset.addTerminal(1)
 pset.addTerminal(2)
 
-creator.create("FitnessMax", base.Fitness, weights=(-1.0,))
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
@@ -108,8 +108,7 @@ def evalIndividual(individual, test=False):
                 action = get_action(observation[0], observation[1], observation[2], observation[3], observation[4], observation[5]) 
                 if action < 0:
                     action = 0
-                elif action < 2:
-                    action = 2
+                else: action =2;
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
             except:
                 failed = True
@@ -129,7 +128,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=50)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -143,6 +142,7 @@ def main():
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats, halloffame=hof, verbose=True)
     # evaluate best individual with visualization
     winner = gp.compile(hof[0], pset)
+    print(hof[0].fitness.values)
     evalIndividual(hof[0], True)
     # save graph of best individual
     graph(hof[0], 'out')
@@ -152,9 +152,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Changed ephermal from (-1,1) -> (0,2)
-# population from 300 -> 100 to lower time it takes to compute
-# add if statment to get it to swing both ways so to test actionspace
-# add math.cos math.sin and math.tan
