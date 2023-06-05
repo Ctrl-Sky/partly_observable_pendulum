@@ -43,16 +43,16 @@ def protectedDiv(left, right):
 pset = gp.PrimitiveSet("MAIN", 2)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(max, 2)
+# pset.addPrimitive(operator.abs, 1)
+pset.addPrimitive(operator.neg, 1)
+# pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
-pset.addPrimitive(operator.neg, 1)
-pset.addPrimitive(if_then_else, 3)
-pset.addPrimitive(conditional, 2)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
 pset.addTerminal(1)
-pset.addTerminal(2)
 
 
 # Prepare individual and mountain car
@@ -65,8 +65,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('MountainCar-v0') # For training
-env_test = gym.make('MountainCar-v0', render_mode="human") # For rendering the best one
+env_train = gym.make('MountainCarContinuous-v0') # For training
+env_test = gym.make('MountainCarContinuous-v0', render_mode="human") # For rendering the best one
 
 
 # Used to graph the best individual and output to out.png
@@ -108,12 +108,11 @@ def evalIndividual(individual, test=False):
                 # use the tree to compute action, plugs values of observation into get_action
                 action = get_action(observation[0], observation[1])
 
-                # Used to limit the action to move left (0) or move right (2)
-                if action < 0:
-                    action = 0
-                else: action =2
+                # because continuous mountain car has ndarray of (1,) for action, action will not be iterable
+                # so must turn it into an iterable for env.step(action) that refers to action as action[0]
+                action = (action, )
 
-            try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, don, truncated, info
+            try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, done, truncated, info
             except:
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
@@ -137,7 +136,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 def main():
     pop = toolbox.population(n=50)
-    hof = tools.HallOfFame(1)
+    hof = tools.HallOfFame(11)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
@@ -176,6 +175,7 @@ def main():
     # evaluate best individual with visualization
     evalIndividual(hof[0], True)
     # save graph of best individual
+
     graph(hof[0], 'out')
     return pop, log, hof
 
