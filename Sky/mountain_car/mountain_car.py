@@ -40,7 +40,7 @@ def protectedDiv(left, right):
 
 
 # Set up primitives and terminals
-pset = gp.PrimitiveSet("MAIN", 2)
+pset = gp.PrimitiveSet("MAIN", 1)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(operator.sub, 2)
 pset.addPrimitive(conditional, 2)
@@ -52,7 +52,6 @@ pset.addPrimitive(conditional, 2)
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
 pset.addTerminal(1)
-pset.addTerminal(2)
 
 
 # Prepare individual and mountain car
@@ -106,7 +105,7 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                action = get_action(observation[0], observation[1])
+                action = get_action(observation[0])
 
                 # Used to limit the action to move left (0) or move right (2)
                 if action < 0:
@@ -136,8 +135,8 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 
 def main():
-    pop = toolbox.population(n=50)
-    hof = tools.HallOfFame(1)
+    pop = toolbox.population(n=300)
+    hof = tools.HallOfFame(10)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
@@ -147,7 +146,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 10, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 20, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -176,7 +175,10 @@ def main():
     # evaluate best individual with visualization
     evalIndividual(hof[0], True)
     # save graph of best individual
-    graph(hof[0], 'out')
+    for i in range(10):
+        graph(hof[i], 'out'+str(10-i))
+    print(hof[0].fitness.values)
+
     return pop, log, hof
 
 if __name__ == "__main__":
