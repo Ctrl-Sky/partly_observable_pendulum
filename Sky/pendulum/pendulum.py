@@ -43,17 +43,20 @@ def protectedDiv(left, right):
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
 pset.addPrimitive(operator.add, 2)
-pset.addPrimitive(operator.sub, 2)
+pset.addPrimitive(conditional, 2)
+
+# pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(limit, 3)
+# pset.addPrimitive(operator.neg, 1)
+
+# pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(max, 2)
 # pset.addPrimitive(operator.abs, 1)
-pset.addPrimitive(operator.neg, 1)
-# pset.addPrimitive(if_then_else, 3)
-pset.addPrimitive(conditional, 2)
-pset.addPrimitive(limit, 3)
 
-pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
-pset.addTerminal(0)
-pset.addTerminal(1)
+
+# pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
+# pset.addTerminal(0)
+# pset.addTerminal(1)
 
 
 # Prepare individual and mountain car
@@ -109,6 +112,11 @@ def evalIndividual(individual, test=False):
                 # use the tree to compute action, plugs values of observation into get_action
                 action = get_action(observation[0], observation[1], observation[2])
 
+                # if action < -2:
+                #     action = -2
+                # elif action > 2:
+                #     action = 2
+
                 # because pendulum has ndarray of (1,) for action, action will not be iterable
                 # so must turn it into an iterable for env.step(action) that refers to action as action[0]
                 action = (action, )
@@ -147,7 +155,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 20, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")

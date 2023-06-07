@@ -1,0 +1,12 @@
+for memory remove velocity and try to solve using just observation[0] and observation[1]
+1 step 
+give it 6 arguments with 2 of them being the common observation[0] and observation[1] and then also pass it the x and y of the
+2 previous steps
+
+2 step
+Play around with memory such as an external array where the primitives are functions that can read and write from that array
+
+for the part to get the pendulum upright, 
+follows the simple premise, if y is posive (aka rises above the x line) action is counter force to whatever direction of movement
+Baiscally if its moving clockwise, when y is positive, action is counter clokwise force that still allows the pendulum to swing higher that before
+until it reaches the peak
