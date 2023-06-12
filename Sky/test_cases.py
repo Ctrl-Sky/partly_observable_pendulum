@@ -52,3 +52,5 @@ while i < fractions.Fraction(7, 100):
     i += fractions.Fraction(1, 100)
 
 print(arr2)
+
+print(0.14625882 - 0.14080083)
