@@ -66,23 +66,23 @@ def vel(x1, x2, y1, y2):
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
-pset.addPrimitive(operator.add, 2)
+# pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
-pset.addPrimitive(protectedDiv, 2)
+# pset.addPrimitive(protectedDiv, 2)
 
-pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(limit, 3)
-pset.addPrimitive(operator.neg, 1)
+# pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(limit, 3)
+# pset.addPrimitive(operator.neg, 1)
 
-pset.addPrimitive(if_then_else, 3)
-pset.addPrimitive(max, 2)
-pset.addPrimitive(operator.abs, 1)
+# pset.addPrimitive(if_then_else, 3)
+# pset.addPrimitive(max, 2)
+# pset.addPrimitive(operator.abs, 1)
 
 
-pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
-pset.addTerminal(0)
-pset.addTerminal(1)
+# pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
+# pset.addTerminal(0)
+# pset.addTerminal(1)
 
 
 # Prepare individual and mountain car

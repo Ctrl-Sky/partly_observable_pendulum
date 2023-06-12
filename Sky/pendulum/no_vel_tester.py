@@ -101,6 +101,7 @@ def evalIndividual(individual, test=False):
         truncated = False
         observation = env.reset() # Reset the pole to some random location and defines the things in observation
         observation = observation[0]
+
         episode_reward = 0
 
         num_steps = 0
@@ -115,8 +116,6 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                print(observation[1], prev_x)
-                                    
                 if num_steps == 0:
                     action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
                     prev_y = observation[0]
@@ -161,6 +160,8 @@ str = "vel(conditional(ARG2, ARG0), conditional(ARG0, ARG3), ARG5, add(ARG1, ARG
 # very shaky and wobly at top
 # Can not succeed if it does not start with enough velocity
 # Can only bring the pendulum up using counter clockwise force
+
+str = "vel(vel(ARG4, add(conditional(ARG2, ARG0), conditional(ARG3, ARG5)), ARG2, ARG0), vel(ARG1, ARG2, ARG4, ARG4), ARG5, vel(ARG5, ARG3, ARG4, ARG5))"
 
 print(evalIndividual(str, True))
 
