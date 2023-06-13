@@ -53,7 +53,7 @@ def truncate(number, decimals=0):
     factor = 10.0 ** decimals
     return math.trunc(number * factor) / factor
 
-def vel(x1, x2, y1, y2):
+def vel(y2, y1, x2, x1):
     try: y = truncate((y2-y1), 8)
     except: 
         y = 1
@@ -66,7 +66,7 @@ def vel(x1, x2, y1, y2):
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
-# pset.addPrimitive(operator.add, 2)
+pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
 # pset.addPrimitive(protectedDiv, 2)
@@ -83,6 +83,13 @@ pset.addPrimitive(vel, 4)
 # pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 # pset.addTerminal(0)
 # pset.addTerminal(1)
+
+pset.renameArguments(ARG0='y1')
+pset.renameArguments(ARG1='x1')
+pset.renameArguments(ARG2='y2')
+pset.renameArguments(ARG3='x2')
+pset.renameArguments(ARG4='y3')
+pset.renameArguments(ARG5='x3')
 
 
 # Prepare individual and mountain car

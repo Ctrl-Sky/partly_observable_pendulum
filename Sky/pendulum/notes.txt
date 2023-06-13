@@ -11,5 +11,30 @@ follows the simple premise, if y is posive (aka rises above the x line) action i
 Baiscally if its moving clockwise, when y is positive, action is counter clokwise force that still allows the pendulum to swing higher that before
 until it reaches the peak
 
--514 passed
--525 failed
+with limit
+-454.16 failed
+-509.54 failed
+-742.78 failed
+-533.51 failed, almost balanced but pushed it too far
+-475.71 failed, attempt to keep it up but not enough force applied
+-645.30 failed
+-550.98 failed
+-523.66 failed
+Conclusion: limit is not the pick
+
+cond, add, and vel
+-297 passed             add(vel(vel(ARG5, ARG5, ARG4, ARG1), conditional(ARG0, ARG2), conditional(ARG3, ARG3), vel(ARG2, ARG4, ARG1, ARG1)), vel(conditional(ARG0, ARG4), conditional(ARG3, ARG5), vel(add(ARG1, vel(add(ARG2, ARG3), vel(ARG5, ARG1, ARG3, ARG2), add(ARG4, ARG0), conditional(ARG4, ARG1))), add(ARG5, ARG2), conditional(ARG2, ARG5), conditional(ARG0, conditional(ARG3, ARG1))), vel(ARG1, ARG5, ARG3, ARG0)))
+-391 failed
+-770 failed
+-550 failed
+-378 passed      technically yes but up for revision       vel(vel(ARG3, add(ARG4, ARG4), ARG1, ARG2), vel(conditional(ARG3, ARG1), add(ARG4, ARG3), conditional(ARG1, ARG2), add(conditional(vel(ARG2, ARG3, ARG1, ARG1), conditional(ARG0, ARG0)), ARG1)), add(add(ARG3, conditional(add(ARG5, ARG1), conditional(ARG3, ARG2))), vel(ARG1, ARG4, ARG2, ARG0)), vel(add(ARG5, ARG3), add(ARG5, ARG0), conditional(ARG4, ARG5), vel(ARG1, ARG3, ARG2, ARG1)))
+-575 failed
+-464 failed
+-735 failed
+-579 failed
+-513 passed      technically yes but slanted to the side when held up      vel(add(ARG5, vel(ARG5, ARG2, ARG5, ARG5)), vel(vel(ARG3, ARG4, ARG5, ARG0), conditional(ARG5, ARG4), add(ARG0, ARG1), ARG4), conditional(vel(ARG3, ARG3, ARG2, ARG0), add(ARG2, ARG5)), vel(add(ARG2, ARG3), add(ARG2, vel(vel(ARG0, ARG0, ARG4, ARG5), vel(ARG0, ARG2, ARG3, ARG3), conditional(ARG0, ARG4), vel(ARG5, ARG2, ARG3, ARG4))), ARG2, conditional(ARG2, ARG0)))
+-677 failed
+-422 passed             add(vel(vel(y3, x3, x3, x1), add(x1, x1), add(y1, conditional(x2, x3)), vel(x2, y3, y2, x1)), add(add(vel(add(y3, y3), x1, add(x2, x3), conditional(add(x2, x2), conditional(x3, y2))), x3), x2))
+-474 failed     attempted to hold it up but pushed it too far
+-413 failed     took too long to bring the pendulum
+-430 passed     balanced it, but let it swing side to side more than normal                  vel(y2, add(add(x2, x2), add(y2, add(x3, x2))), conditional(x2, x3), add(conditional(y2, y3), vel(x1, y2, x3, x3)))

@@ -13,6 +13,17 @@ from deap import gp
 
 import pygraphviz as pgv
 
+def graph(expr, str):
+    nodes, edges, labels = gp.graph(expr)
+    g = pgv.AGraph()
+    g.add_nodes_from(nodes)
+    g.add_edges_from(edges)
+    g.layout(prog="dot")
+
+    for i in nodes:
+        n = g.get_node(i)
+        n.attr["label"] = labels[i]
+    g.draw(str+".png")
 
 # user defined funcitons
 def conditional(input1, input2):
@@ -50,7 +61,7 @@ def truncate(number, decimals=0):
     factor = 10.0 ** decimals
     return math.trunc(number * factor) / factor
 
-def vel(x1, x2, y1, y2):
+def vel(y2, y1, x2, x1):
     try: y = truncate((y2-y1), 8)
     except: 
         y = 1
@@ -77,6 +88,13 @@ pset.addPrimitive(vel, 4)
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
 pset.addTerminal(1)
+
+pset.renameArguments(ARG0='y1')
+pset.renameArguments(ARG1='x1')
+pset.renameArguments(ARG2='y2')
+pset.renameArguments(ARG3='x2')
+pset.renameArguments(ARG4='y3')
+pset.renameArguments(ARG5='x3')
 
 env_train = gym.make('Pendulum-v1', g = 9.81) # For training
 env_test = gym.make('Pendulum-v1', g = 9.81, render_mode="human") # For rendering the best one
@@ -153,17 +171,23 @@ def evalIndividual(individual, test=False):
     print(individual)       
     return (0,) if failed else (fitness,)
     
-str = "vel(conditional(ARG2, ARG0), conditional(ARG0, ARG3), ARG5, add(ARG1, ARG5))"
+# str = "vel(conditional(y2, y1), conditional(y1, x2), x3, add(x1, x3))"
 
-# str = "vel(vel(vel(ARG5, ARG4, ARG0, ARG4), ARG1, ARG4, ARG0), if_then_else(ARG4, if_then_else(ARG0, ARG3, ARG5), ARG5), add(ARG0, conditional(add(ARG4, ARG3), conditional(ARG3, add(ARG0, ARG3)))), if_then_else(ARG4, ARG3, ARG2))"
+# str = "vel(vel(vel(x3, y3, y1, y3), x1, y3, y1), if_then_else(y3, if_then_else(y1, x2, x3), x3), add(y1, conditional(add(y3, x2), conditional(x2, add(y1, x2)))), if_then_else(y3, x2, y2))"
 # high success rate
 # very shaky and wobly at top
 # Can not succeed if it does not start with enough velocity
 # Can only bring the pendulum up using counter clockwise force
 
-str = "vel(vel(ARG4, add(conditional(ARG2, ARG0), conditional(ARG3, ARG5)), ARG2, ARG0), vel(ARG1, ARG2, ARG4, ARG4), ARG5, vel(ARG5, ARG3, ARG4, ARG5))"
+# str = "vel(vel(y3, add(conditional(y2, y1), conditional(x2, x3)), y2, y1), vel(x1, y2, y3, y3), x3, vel(x3, x2, y3, x3))"
+
+
+str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
 print(evalIndividual(str, True))
+
+s = gp.PrimitiveTree.from_string(str, pset)
+graph(s, 'test')
 
 counts = range(len(xs))
 
