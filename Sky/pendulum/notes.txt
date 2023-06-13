@@ -36,5 +36,21 @@ cond, add, and vel
 -677 failed
 -422 passed             add(vel(vel(y3, x3, x3, x1), add(x1, x1), add(y1, conditional(x2, x3)), vel(x2, y3, y2, x1)), add(add(vel(add(y3, y3), x1, add(x2, x3), conditional(add(x2, x2), conditional(x3, y2))), x3), x2))
 -474 failed     attempted to hold it up but pushed it too far
--413 failed     took too long to bring the pendulum
+-413 failed     took too long to bring the pendulum up
 -430 passed     balanced it, but let it swing side to side more than normal                  vel(y2, add(add(x2, x2), add(y2, add(x3, x2))), conditional(x2, x3), add(conditional(y2, y3), vel(x1, y2, x3, x3)))
+avg = -511
+
+with neg
+-468 failed     almost stabilized but too much force and pushed it over
+-528 failed     same reason as above
+-502 passed     vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))
+-521 failed     failed to stabilize
+-509 failed     failed to stabilize
+-482 passed     stabilized using max and min torque right after the other  vel(add(x2, conditional(conditional(x2, y3), neg(y2))), y2, add(x2, y1), conditional(y3, y1))
+-592 failed     couldn't get the pendulum upright
+-624 failed     too slow
+-511 failed     passed right at very end but is very slow   vel(neg(x1), neg(y3), conditional(y1, y2), vel(y2, x1, x2, y2))
+-303 passed     vel(conditional(conditional(y2, y3), y1), add(conditional(y1, y2), neg(y2)), neg(vel(y3, y3, y2, x2)), add(add(add(x2, x2), x1), conditional(x2, add(conditional(y1, x2), neg(y2)))))
+avg = 504
+conclusion: the torque used to stablilized the ones that passed was more erratic swaping from low toque to high torque almost instantly,
+            a lot less smooth than normal. Other than that, same pass and fail percentage comapred to normal

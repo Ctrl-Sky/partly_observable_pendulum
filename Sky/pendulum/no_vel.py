@@ -73,7 +73,7 @@ pset.addPrimitive(vel, 4)
 
 # pset.addPrimitive(operator.sub, 2)
 # pset.addPrimitive(limit, 3)
-# pset.addPrimitive(operator.neg, 1)
+pset.addPrimitive(operator.neg, 1)
 
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(max, 2)
@@ -242,7 +242,10 @@ def main():
     graph(hof[0], 'out')
     print(hof[0].fitness.values)
     print(hof[0])
+    
     return pop, log, hof
+
+    
 
 if __name__ == "__main__":
     main()

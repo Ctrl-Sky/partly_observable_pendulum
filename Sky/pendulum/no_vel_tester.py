@@ -134,6 +134,8 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
+                print(truncate(observation[0], 3), truncate(prev_y, 3), truncate(last_y, 3), truncate(observation[1], 3), truncate(prev_x, 3), truncate(last_x, 3))
+
                 if num_steps == 0:
                     action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
                     prev_y = observation[0]
@@ -183,6 +185,7 @@ def evalIndividual(individual, test=False):
 
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
+
 
 print(evalIndividual(str, True))
 
