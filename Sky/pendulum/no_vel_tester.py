@@ -184,7 +184,6 @@ def evalIndividual(individual, test=False):
 # str = 'vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))'
 
 
-
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
 

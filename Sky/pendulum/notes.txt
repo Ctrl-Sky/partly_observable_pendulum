@@ -92,3 +92,10 @@ with max
 -419 failed     could not hold it up
 -468 passed     vel(max(add(conditional(max(x3, y3), conditional(y3, y3)), y3), y3), max(max(vel(x3, y3, y3, x1), max(max(x2, x3), vel(y3, y1, x3, y1))), vel(x2, x1, y1, y2)), vel(add(y1, x1), vel(y1, x2, y1, y1), conditional(x1, x2), vel(x1, y2, x2, x1)), add(max(x2, y2), vel(y3, x2, x1, y3)))
 -553 failed     very very close
+-511 failed     failed to stabilize it
+-504 passed     technically passed but fails often vel(vel(vel(x2, y2, y1, x2), max(y3, x3), max(y2, y1), max(conditional(x2, x2), y1)), conditional(vel(y2, y1, y3, x2), add(x1, x2)), vel(max(x3, x2), conditional(y1, y2), max(y3, y1), conditional(y3, x1)), add(max(y3, y2), conditional(x1, y2)))
+-475 passed     could only hold it up for a few seconds add(vel(vel(y3, x2, x3, x1), vel(conditional(y1, conditional(max(x1, x2), add(y2, x2))), conditional(y3, x1), conditional(x3, x3), add(x3, max(y2, x3))), max(y1, y1), add(x1, x3)), max(add(x1, conditional(max(y3, x2), conditional(x1, y1))), y2))
+-503 passed     passed from time to time but failed multiple times vel(max(y1, vel(conditional(max(y2, y1), conditional(x1, x2)), x3, y2, x2)), vel(y3, x2, x3, x2), add(x2, x3), conditional(y1, y1))
+-477 failed     could not balance the pendulum
+avg = 498 
+conclusion: Brings a better pass chance and is to be implemented

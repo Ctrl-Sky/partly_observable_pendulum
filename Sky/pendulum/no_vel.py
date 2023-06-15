@@ -77,6 +77,8 @@ pset.addPrimitive(vel, 4)
 
 # pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(max, 2)
+pset.addPrimitive(math.cos, 1)
+pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(operator.abs, 1)
 
 
