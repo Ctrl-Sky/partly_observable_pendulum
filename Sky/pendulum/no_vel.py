@@ -73,10 +73,10 @@ pset.addPrimitive(vel, 4)
 
 # pset.addPrimitive(operator.sub, 2)
 # pset.addPrimitive(limit, 3)
-pset.addPrimitive(operator.neg, 1)
+# pset.addPrimitive(operator.neg, 1)
 
 # pset.addPrimitive(if_then_else, 3)
-# pset.addPrimitive(max, 2)
+pset.addPrimitive(max, 2)
 # pset.addPrimitive(operator.abs, 1)
 
 
@@ -144,6 +144,11 @@ def evalIndividual(individual, test=False):
         prev_x = 0
         last_y = 0
         last_x = 0
+
+        # prev_y = observation[0]
+        # prev_x = observation[1]
+        # last_y = observation[0]
+        # last_x = observation[1]
 
         while not (done or truncated):
             if failed:
