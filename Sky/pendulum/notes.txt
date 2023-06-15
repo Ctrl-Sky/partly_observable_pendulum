@@ -51,6 +51,44 @@ with neg
 -624 failed     too slow
 -511 failed     passed right at very end but is very slow   vel(neg(x1), neg(y3), conditional(y1, y2), vel(y2, x1, x2, y2))
 -303 passed     vel(conditional(conditional(y2, y3), y1), add(conditional(y1, y2), neg(y2)), neg(vel(y3, y3, y2, x2)), add(add(add(x2, x2), x1), conditional(x2, add(conditional(y1, x2), neg(y2)))))
-avg = 504
+avg = -504
 conclusion: the torque used to stablilized the ones that passed was more erratic swaping from low toque to high torque almost instantly,
-            a lot less smooth than normal. Other than that, same pass and fail percentage comapred to normal
+            a lot less smooth than normal. Other than that, same pass and fail percentage comapred to normal. Will not use as it makes the
+            torque act irratically.
+
+
+with sub
+-441 passed     vel(sub(x3, y2), sub(conditional(x2, y3), x3), vel(x3, y2, x3, y2), add(vel(add(y2, y1), conditional(x2, x1), vel(y2, x2, x2, x1), conditional(x2, x1)), y1))
+-485 failed     could not stabilize the pendulum, pushed it too far
+-466 failed     same as above
+-489 failed     same as above
+-471 failed     same as above
+-560 failed     same as above
+-308 passed     yes? held it up at an angle, very shaky add(vel(vel(x2, y1, x3, add(vel(y2, y3, x3, x2), sub(y2, y2))), vel(y1, y2, y2, x2), conditional(x1, sub(conditional(x2, x2), conditional(x3, x1))), y2), add(x3, x2))
+-464 failed     the usual
+-546 failed     the usual
+-445 failed     the usual
+avg = 467.5
+conclusion: lower avg than usual but less success rate only at 20%. Never lost control of the pendulum (didn't let it swing wildly in cirles)
+            but had a lower chance of stabilizing the pendulum. Consider adding it if needed.
+
+
+with if_then_else
+-555 failed     could not get the pendulum upwards
+-447 failed     close to stabilize the pendulum but drifted to the left too much
+-510 failed     ^^
+-494 failed     very weak attempt at stabilizing
+-461 failed     very close at stabilizing but right at the end lost control
+-805 failed     slow attempt to bring the pendulum up
+-411 failed     close but tried to stabilize pendulum when it was at an angle and failed
+-784 failed     no attempt at stabilizing pendulum at top
+-814 failed     out of control 
+-386 failed     very close but couldn't quite stabilize it
+conclusion: if_then_else introduces a failure for the pendulum to stabilize itself therefore, should not be used.
+
+with max
+-626 passed     vel(max(vel(x3, x1, x1, y1), max(x3, conditional(conditional(x2, x1), conditional(x1, x3)))), add(conditional(y3, max(x3, x2)), max(x2, x3)), y3, vel(add(y3, x2), add(x1, conditional(x2, x2)), max(x3, max(add(y3, x1), max(y2, y3))), max(x1, x3)))
+-450 failed     very very close
+-419 failed     could not hold it up
+-468 passed     vel(max(add(conditional(max(x3, y3), conditional(y3, y3)), y3), y3), max(max(vel(x3, y3, y3, x1), max(max(x2, x3), vel(y3, y1, x3, y1))), vel(x2, x1, y1, y2)), vel(add(y1, x1), vel(y1, x2, y1, y1), conditional(x1, x2), vel(x1, y2, x2, x1)), add(max(x2, y2), vel(y3, x2, x1, y3)))
+-553 failed     very very close

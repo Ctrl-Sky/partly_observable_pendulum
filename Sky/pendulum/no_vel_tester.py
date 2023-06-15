@@ -123,10 +123,15 @@ def evalIndividual(individual, test=False):
         episode_reward = 0
 
         num_steps = 0
-        prev_y = 0
-        prev_x = 0
-        last_y = 0
-        last_x = 0
+        prev_y = observation[0]
+        prev_x = observation[1]
+        last_y = observation[0]
+        last_x = observation[1]
+
+        # prev_y = 0
+        # prev_x = 0
+        # last_y = 0
+        # last_x = 0
 
 
         while not (done or truncated):
@@ -173,15 +178,11 @@ def evalIndividual(individual, test=False):
     print(individual)       
     return (0,) if failed else (fitness,)
     
-# str = "vel(conditional(y2, y1), conditional(y1, x2), x3, add(x1, x3))"
 
-# str = "vel(vel(vel(x3, y3, y1, y3), x1, y3, y1), if_then_else(y3, if_then_else(y1, x2, x3), x3), add(y1, conditional(add(y3, x2), conditional(x2, add(y1, x2)))), if_then_else(y3, x2, y2))"
-# high success rate
-# very shaky and wobly at top
-# Can not succeed if it does not start with enough velocity
-# Can only bring the pendulum up using counter clockwise force
+# str = 'vel(sub(x3, y2), sub(conditional(x2, y3), x3), vel(x3, y2, x3, y2), add(vel(add(y2, y1), conditional(x2, x1), vel(y2, x2, x2, x1), conditional(x2, x1)), y1))'
 
-# str = "vel(vel(y3, add(conditional(y2, y1), conditional(x2, x3)), y2, y1), vel(x1, y2, y3, y3), x3, vel(x3, x2, y3, x3))"
+# str = 'vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))'
+
 
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
