@@ -84,6 +84,7 @@ pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
 pset.addPrimitive(vel, 4)
+pset.addPrimitive(math.cos, 1)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
@@ -186,7 +187,7 @@ def evalIndividual(individual, test=False):
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
-
+str = 'vel(y2, x3, cos(x2), vel(y2, x2, y2, x1))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)

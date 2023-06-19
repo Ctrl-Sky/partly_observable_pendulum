@@ -63,12 +63,30 @@ def vel(y2, y1, x2, x1):
     v = protectedDiv(y, x)
     return v
 
+def cos_angle(x, y):
+    if x/y < 1 and x/y > -1:
+        return math.acos(x/y)
+    elif y/x < 1 and y/x > -1:
+        return math.acos(y/x)
+    else:
+        return x
+
+def sin_angle(x, y):
+    if x/y < 1 and x/y > -1:
+        return math.asin(x/y)
+    elif y/x < 1 and y/x > -1:
+        return math.asin(y/x)
+    else:
+        return x
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
+
+pset.addPrimitive(sin_angle, 2)
+pset.addPrimitive(cos_angle, 2)
 # pset.addPrimitive(protectedDiv, 2)
 
 # pset.addPrimitive(operator.sub, 2)
@@ -77,8 +95,8 @@ pset.addPrimitive(vel, 4)
 
 # pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(max, 2)
-pset.addPrimitive(math.cos, 1)
-pset.addPrimitive(math.sin, 1)
+# pset.addPrimitive(math.cos, 1)
+# pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(operator.abs, 1)
 
 
