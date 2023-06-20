@@ -84,21 +84,18 @@ pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
+pset.addPrimitive(delta, 2)
 
-pset.addPrimitive(sin_angle, 2)
-pset.addPrimitive(cos_angle, 2)
-pset.addPrimitive(math.cos, 1)
-pset.addPrimitive(math.sin, 1)
+# pset.addPrimitive(sin_angle, 2)
+# pset.addPrimitive(cos_angle, 2)
+# pset.addPrimitive(math.cos, 1)
+# pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(protectedDiv, 2)
-
+# pset.addPrimitive(max, 2)
 # pset.addPrimitive(operator.sub, 2)
 # pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
-
 # pset.addPrimitive(if_then_else, 3)
-pset.addPrimitive(max, 2)
-# pset.addPrimitive(math.cos, 1)
-# pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(operator.abs, 1)
 
 
@@ -145,7 +142,7 @@ def graph(expr, str):
 # Function to calculate the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -236,7 +233,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -250,17 +247,15 @@ def main():
     for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
         tl.set_color("b")
 
-    ax2 = ax1.twinx() # Creates ax2 that shares the same x axis and ax1
-    line2 = ax2.plot(gen, size_avgs, "r-", label="Average Size")
-    ax2.set_ylabel("Size", color="r")
-    for tl in ax2.get_yticklabels():
-        tl.set_color("r")
-
-    lns = line1 + line2 # lns is a list containing both lines [line1, line2]
+    lns = line1 # lns is a list containing both lines [line1, line2]
     labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
+    plt.axis([min(gen), max(gen), -1000, 0])
+    plt.savefig("graph.pdf", format='pdf')
     plt.show()
+
+    
 
     # evaluate best individual with visualization
     evalIndividual(hof[0], True)
