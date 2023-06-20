@@ -86,8 +86,8 @@ pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
 pset.addPrimitive(delta, 2)
 
-# pset.addPrimitive(sin_angle, 2)
-# pset.addPrimitive(cos_angle, 2)
+pset.addPrimitive(sin_angle, 2)
+pset.addPrimitive(cos_angle, 2)
 # pset.addPrimitive(math.cos, 1)
 # pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(protectedDiv, 2)
@@ -109,7 +109,6 @@ pset.renameArguments(ARG2='y2')
 pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
-
 
 # Prepare individual and mountain car
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -142,7 +141,7 @@ def graph(expr, str):
 # Function to calculate the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 30 # Basically the amount of simulations ran
+    num_episode = 20 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -222,7 +221,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=50)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -233,7 +232,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -251,23 +250,19 @@ def main():
     labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
-    plt.axis([min(gen), max(gen), -1000, 0])
-    plt.savefig("graph.pdf", format='pdf')
-    plt.show()
+    st = truncate(hof[0].fitness.values[0], 0)
+    graph(hof[0], 'out')
+    print(st)
+    print(hof[0])
 
-    
+    plt.axis([min(gen), max(gen), -1000, 0])
+    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/'+str(st)+'.pdf')
+    plt.show()
 
     # evaluate best individual with visualization
     evalIndividual(hof[0], True)
-    # save graph of best individual
-
-    graph(hof[0], 'out')
-    print(hof[0].fitness.values)
-    print(hof[0])
     
     return pop, log, hof
-
-    
 
 if __name__ == "__main__":
     main()
