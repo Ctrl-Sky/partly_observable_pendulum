@@ -71,6 +71,22 @@ def vel(y2, y1, x2, x1):
     v = protectedDiv(y, x)
     return v
 
+def cos_angle(x, y):
+    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
+        return math.acos(x/y)
+    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+        return math.acos(y/x)
+    else:
+        return x
+
+def sin_angle(x, y):
+    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
+        return math.asin(x/y)
+    elif protectedDiv(y, x) < 1 and y/x > -1:
+        return math.asin(y/x)
+    else:
+        return x
+
 
 
 # Set up primitives and terminals
@@ -84,6 +100,9 @@ pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
 pset.addPrimitive(vel, 4)
+pset.addPrimitive(cos_angle, 2)
+pset.addPrimitive(sin_angle, 2)
+pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
@@ -187,7 +206,6 @@ def evalIndividual(individual, test=False):
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
-str = 'vel(y2, x3, cos(x2), vel(y2, x2, y2, x1))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)
