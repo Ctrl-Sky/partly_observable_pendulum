@@ -84,10 +84,10 @@ pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
-pset.addPrimitive(delta, 2)
+# pset.addPrimitive(delta, 2)
 
-pset.addPrimitive(sin_angle, 2)
-pset.addPrimitive(cos_angle, 2)
+# pset.addPrimitive(sin_angle, 2)
+# pset.addPrimitive(cos_angle, 2)
 # pset.addPrimitive(math.cos, 1)
 # pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(protectedDiv, 2)
@@ -125,7 +125,7 @@ env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering 
 
 
 # Used to graph the best individual and output to out.png
-def graph(expr, str):
+def graph(expr, st):
     nodes, edges, labels = gp.graph(expr)
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
@@ -135,13 +135,13 @@ def graph(expr, str):
     for i in nodes:
         n = g.get_node(i)
         n.attr["label"] = labels[i]
-    g.draw(str+".png")
+    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/trees/'+str(st)+".pdf")
 
 
 # Function to calculate the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -221,7 +221,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 
 def main():
-    pop = toolbox.population(n=50)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -233,6 +233,7 @@ def main():
     mstats.register("max", numpy.max)
 
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
+    colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -240,7 +241,7 @@ def main():
     # Simply change the lines in quottation above to change the values you want to graph
 
     fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
-    line1 = ax1.plot(gen, fit_mins, "b-", label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    line1 = ax1.plot(gen, fit_mins, random.choice(colours), label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
     ax1.set_xlabel("Generation")
     ax1.set_ylabel("Fitness", color="b")
     for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
@@ -251,16 +252,18 @@ def main():
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
     st = truncate(hof[0].fitness.values[0], 0)
-    graph(hof[0], 'out')
-    print(st)
-    print(hof[0])
+    
 
     plt.axis([min(gen), max(gen), -1000, 0])
     plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/'+str(st)+'.pdf')
     plt.show()
 
     # evaluate best individual with visualization
+    graph(hof[0], st)
+    print(st)
+    print(hof[0])
     evalIndividual(hof[0], True)
+    
     
     return pop, log, hof
 
