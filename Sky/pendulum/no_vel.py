@@ -7,6 +7,7 @@ import gymnasium as gym
 import operator
 import matplotlib.pyplot as plt
 import math
+from openpyxl import load_workbook
 
 from deap import algorithms
 from deap import base
@@ -102,7 +103,6 @@ pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(operator.abs, 1)
 
-
 # pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 # pset.addTerminal(0)
 # pset.addTerminal(1)
@@ -141,8 +141,34 @@ def graph(expr, st):
         n.attr["label"] = labels[i]
     g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/trees/'+str(st)+".pdf")
 
+def write_to_excel(fit):
+    workbook = load_workbook(filename="/Users/sky/Documents/Book1.xlsx")
+    sheet = workbook.active
 
-# Function to calculate the fitness of an individual
+    sheet.append(fit)
+
+    workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
+
+def plot(gen, fit_mins, st):
+    colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
+
+    # Simply change the lines in quottation above to change the values you want to graph
+
+    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
+    line1 = ax1.plot(gen, fit_mins, random.choice(colours), label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    lns = line1 # lns is a list containing both lines [line1, line2]
+    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
+    ax1.legend(lns, labs, loc="lower right") # Adds then a legend
+
+    plt.axis([min(gen), max(gen), -1000, 0])
+    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/'+str(st)+'.pdf')
+    plt.show()
+
 def evalIndividual(individual, test=False):
     env = env_train
     num_episode = 30 # Basically the amount of simulations ran
@@ -222,10 +248,8 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
-
-
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=50)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -236,38 +260,19 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
-    colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
-
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 5, stats=mstats, halloffame=hof, verbose=True)
+    
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
-    size_avgs = log.chapters["size"].select("avg")
-    # Simply change the lines in quottation above to change the values you want to graph
-
-    fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
-    line1 = ax1.plot(gen, fit_mins, random.choice(colours), label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
-    ax1.set_xlabel("Generation")
-    ax1.set_ylabel("Fitness", color="b")
-    for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis
-        tl.set_color("b")
-
-    lns = line1 # lns is a list containing both lines [line1, line2]
-    labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
-    ax1.legend(lns, labs, loc="lower right") # Adds then a legend
-
     st = truncate(hof[0].fitness.values[0], 0)
-    
 
-    plt.axis([min(gen), max(gen), -1000, 0])
-    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/'+str(st)+'.pdf')
-    plt.show()
-
-    # evaluate best individual with visualization
+    plot(gen, fit_mins, st)
     graph(hof[0], st)
+    write_to_excel(fit_mins)
+
     print(st)
     print(hof[0])
     evalIndividual(hof[0], True)
-    
     
     return pop, log, hof
 
