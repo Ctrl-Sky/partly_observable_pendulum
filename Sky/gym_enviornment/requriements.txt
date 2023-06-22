@@ -4,3 +4,4 @@ pygraghviz
 gym
 gymnasium
 pygame
+xlsxwritter

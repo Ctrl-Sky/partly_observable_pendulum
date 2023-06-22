@@ -14,5 +14,4 @@ until it reaches the peak
 next steps:
 
 Continue testing
-Look to implement lt, gt, and eq to operators
-experiment with taking out and vel and including delta and protectedDiv
+properly implement the graphing system so it can properly graph everything

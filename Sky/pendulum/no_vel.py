@@ -36,7 +36,7 @@ def limit(input, minimum, maximum):
         return input
     
 def protectedDiv(left, right):
-    try: return left / right
+    try: return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError: return 1
 
 def truncate(number, decimals=0):
@@ -83,16 +83,20 @@ def delta(x, y):
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
-pset.addPrimitive(vel, 4)
-# pset.addPrimitive(delta, 2)
+# pset.addPrimitive(vel, 4)
+pset.addPrimitive(delta, 2)
+pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(operator.lt, 2)
+# pset.addPrimitive(operator.gt, 2)
+# pset.addPrimitive(operator.eq, 2)
 
-# pset.addPrimitive(sin_angle, 2)
-# pset.addPrimitive(cos_angle, 2)
-# pset.addPrimitive(math.cos, 1)
-# pset.addPrimitive(math.sin, 1)
-# pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(sin_angle, 2)
+pset.addPrimitive(cos_angle, 2)
+pset.addPrimitive(math.cos, 1)
+pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(max, 2)
-# pset.addPrimitive(operator.sub, 2)
+
 # pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
@@ -232,7 +236,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
     colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
     gen = log.select("gen") 
