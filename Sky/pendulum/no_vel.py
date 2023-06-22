@@ -88,9 +88,6 @@ pset.addPrimitive(conditional, 2)
 pset.addPrimitive(delta, 2)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
-# pset.addPrimitive(operator.lt, 2)
-# pset.addPrimitive(operator.gt, 2)
-# pset.addPrimitive(operator.eq, 2)
 
 pset.addPrimitive(sin_angle, 2)
 pset.addPrimitive(cos_angle, 2)
@@ -128,8 +125,8 @@ env_train = gym.make('Pendulum-v1', g=9.81) # For training
 env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering the best one
 
 
-# Used to graph the best individual and output to out.png
-def graph(expr, st):
+# Takes an individual and makes a tree graph and saves it into trees file
+def graph(expr, best_fit):
     nodes, edges, labels = gp.graph(expr)
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
@@ -139,8 +136,9 @@ def graph(expr, st):
     for i in nodes:
         n = g.get_node(i)
         n.attr["label"] = labels[i]
-    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/trees/'+str(st)+".pdf")
+    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/trees/'+str(best_fit)+".pdf")
 
+# Append the fitness information 
 def write_to_excel(fit):
     workbook = load_workbook(filename="/Users/sky/Documents/Book1.xlsx")
     sheet = workbook.active
@@ -149,7 +147,7 @@ def write_to_excel(fit):
 
     workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
 
-def plot(gen, fit_mins, st):
+def plot(gen, fit_mins, best_fit):
     colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
     # Simply change the lines in quottation above to change the values you want to graph
@@ -166,7 +164,7 @@ def plot(gen, fit_mins, st):
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
     plt.axis([min(gen), max(gen), -1000, 0])
-    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/15_gen_graphs/'+str(st)+'.pdf')
+    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+'.pdf')
     plt.show()
 
 def evalIndividual(individual, test=False):
@@ -218,25 +216,19 @@ def evalIndividual(individual, test=False):
                     last_y = temp_y
                     last_x = temp_x
                 
-
-                
-
                 action = (action, )
 
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, done, truncated, info
             except:
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
-                print('hi')
             episode_reward += reward
 
             num_steps += 1
             
-
         fitness += episode_reward
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
-
 
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
@@ -249,7 +241,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=50)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -260,17 +252,17 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 5, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
     
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
-    st = truncate(hof[0].fitness.values[0], 0)
+    best_fit = truncate(hof[0].fitness.values[0], 0)
 
-    plot(gen, fit_mins, st)
-    graph(hof[0], st)
+    plot(gen, fit_mins, best_fit)
+    graph(hof[0], best_fit)
     write_to_excel(fit_mins)
 
-    print(st)
+    print(best_fit)
     print(hof[0])
     evalIndividual(hof[0], True)
     
