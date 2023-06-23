@@ -80,6 +80,11 @@ def sin_angle(x, y):
 def delta(x, y):
     return (x - y)
 
+def stabilize(x, y):
+    if x < 0: 
+        return -y
+    else:
+        return y
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -96,6 +101,7 @@ pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(max, 2)
 
 pset.addPrimitive(limit, 3)
+pset.addPrimitive(stabilize, 2)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(operator.abs, 1)
@@ -271,12 +277,14 @@ def main():
     fit_mins.append(best_fit)
     fit_mins.append(inp)
     if inp == 'passed':
-        fit_mins.append(hof[0])
+        fit_mins.append(str(hof[0]))
     else:
         fit_mins.append('N/A')
     fit_mins.append(notes)
+
+    print(fit_mins)
     
-    write_to_excel(fit_mins)
+    # write_to_excel(fit_mins)
 
     return pop, log, hof
 
