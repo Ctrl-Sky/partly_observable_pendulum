@@ -84,9 +84,9 @@ def delta(x, y):
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
-# pset.addPrimitive(vel, 4)
-pset.addPrimitive(delta, 2)
-pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(vel, 4)
+# pset.addPrimitive(delta, 2)
+# pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
 
 pset.addPrimitive(sin_angle, 2)
@@ -95,7 +95,7 @@ pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(max, 2)
 
-# pset.addPrimitive(limit, 3)
+pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(operator.abs, 1)
@@ -136,9 +136,9 @@ def graph(expr, best_fit):
     for i in nodes:
         n = g.get_node(i)
         n.attr["label"] = labels[i]
-    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/trees/'+str(best_fit)+".pdf")
+    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+".pdf")
 
-# Append the fitness information 
+# Append the fitness information to an excel sheet
 def write_to_excel(fit):
     workbook = load_workbook(filename="/Users/sky/Documents/Book1.xlsx")
     sheet = workbook.active
@@ -147,6 +147,7 @@ def write_to_excel(fit):
 
     workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
 
+# Creates and shows the graph of the fitness for then entire population
 def plot(gen, fit_mins, best_fit):
     colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
@@ -164,9 +165,9 @@ def plot(gen, fit_mins, best_fit):
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
     plt.axis([min(gen), max(gen), -1000, 0])
-    plt.savefig('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+'.pdf')
     plt.show()
 
+# evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
     num_episode = 30 # Basically the amount of simulations ran
@@ -258,14 +259,25 @@ def main():
     fit_mins = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
 
-    plot(gen, fit_mins, best_fit)
-    graph(hof[0], best_fit)
-    write_to_excel(fit_mins)
-
     print(best_fit)
     print(hof[0])
+    plot(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
+
+    inp = input("Pass or fail?: ")
+    notes = input("notes: ")
     
+    graph(hof[0], best_fit)
+    fit_mins.append(best_fit)
+    fit_mins.append(inp)
+    if inp == 'passed':
+        fit_mins.append(hof[0])
+    else:
+        fit_mins.append('N/A')
+    fit_mins.append(notes)
+    
+    write_to_excel(fit_mins)
+
     return pop, log, hof
 
 if __name__ == "__main__":
