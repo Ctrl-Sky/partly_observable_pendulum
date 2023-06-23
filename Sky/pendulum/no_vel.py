@@ -98,10 +98,12 @@ pset.addPrimitive(sin_angle, 2)
 pset.addPrimitive(cos_angle, 2)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
+# pset.addPrimitive(math.atan, 1)
+# pset.addPrimitive(math.tan, 1)
 # pset.addPrimitive(max, 2)
 
 pset.addPrimitive(limit, 3)
-pset.addPrimitive(stabilize, 2)
+# pset.addPrimitive(stabilize, 2)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(operator.abs, 1)
@@ -282,9 +284,8 @@ def main():
         fit_mins.append('N/A')
     fit_mins.append(notes)
 
-    print(fit_mins)
     
-    # write_to_excel(fit_mins)
+    write_to_excel(fit_mins)
 
     return pop, log, hof
 
