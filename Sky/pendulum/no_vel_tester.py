@@ -90,8 +90,12 @@ def sin_angle(x, y):
 def delta(x, y):
     return (x-y)
 
-
-
+def stabilize(x, y):
+    if x < 0: 
+        return -y
+    else:
+        return y
+    
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -109,6 +113,7 @@ pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(delta, 2)
+pset.addPrimitive(stabilize, 2)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
@@ -210,9 +215,7 @@ def evalIndividual(individual, test=False):
 
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
-
-
-str = 'protectedDiv(cos(x2), delta(x3, x1))'
+str = 'add(vel(vel(y3, x3, x3, x1), add(x1, x1), add(y1, conditional(x2, x3)), vel(x2, y3, y2, x1)), add(add(vel(add(y3, y3), x1, add(x2, x3), conditional(add(x2, x2), conditional(x3, y2))), x3), x2))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)

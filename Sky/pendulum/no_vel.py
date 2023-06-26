@@ -92,17 +92,17 @@ pset.addPrimitive(conditional, 2)
 pset.addPrimitive(vel, 4)
 # pset.addPrimitive(delta, 2)
 # pset.addPrimitive(protectedDiv, 2)
-pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(operator.sub, 2)
 
-pset.addPrimitive(sin_angle, 2)
-pset.addPrimitive(cos_angle, 2)
-pset.addPrimitive(math.cos, 1)
-pset.addPrimitive(math.sin, 1)
+# pset.addPrimitive(sin_angle, 2)
+# pset.addPrimitive(cos_angle, 2)
+# pset.addPrimitive(math.cos, 1)
+# pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(math.atan, 1)
 # pset.addPrimitive(math.tan, 1)
 # pset.addPrimitive(max, 2)
 
-pset.addPrimitive(limit, 3)
+# pset.addPrimitive(limit, 3)
 # pset.addPrimitive(stabilize, 2)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
@@ -134,8 +134,7 @@ env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering 
 
 
 # Takes an individual and makes a tree graph and saves it into trees file
-def graph(expr, best_fit):
-    nodes, edges, labels = gp.graph(expr)
+def plot_as_tree(nodes, edges, labels, best_fit):
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
     g.add_edges_from(edges)
@@ -156,7 +155,7 @@ def write_to_excel(fit):
     workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
 
 # Creates and shows the graph of the fitness for then entire population
-def plot(gen, fit_mins, best_fit):
+def plot_onto_graph(gen, fit_mins, best_fit):
     colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
     # Simply change the lines in quottation above to change the values you want to graph
@@ -239,6 +238,17 @@ def evalIndividual(individual, test=False):
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
 
+def find_unused_functions(labels):
+    used_functions = set(list(labels.values()))
+    all_functions = {'conditional', 'vel', 'add', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
+    unused_functions = all_functions.difference(used_functions)
+
+    string = ''
+    for i in unused_functions:
+        string = string + i +', '
+
+    return string
+
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=3)
@@ -261,30 +271,31 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 1, stats=mstats, halloffame=hof, verbose=True)
     
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
+    nodes, edges, labels = gp.graph(hof[0])
 
     print(best_fit)
     print(hof[0])
-    plot(gen, fit_mins, best_fit)
+    plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
+    plot_as_tree(nodes, edges, labels, best_fit)
+    unused = find_unused_functions(labels)
 
     inp = input("Pass or fail?: ")
     notes = input("notes: ")
-    
-    graph(hof[0], best_fit)
     fit_mins.append(best_fit)
     fit_mins.append(inp)
     if inp == 'passed':
         fit_mins.append(str(hof[0]))
     else:
         fit_mins.append('N/A')
+    fit_mins.append(unused)
     fit_mins.append(notes)
 
-    
     write_to_excel(fit_mins)
 
     return pop, log, hof
