@@ -292,7 +292,7 @@ def main():
     print(hof[0])
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
-    # plot_as_tree(nodes, edges, labels, best_fit)
+    plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
 
     # inp = input("Pass or fail?: ")
