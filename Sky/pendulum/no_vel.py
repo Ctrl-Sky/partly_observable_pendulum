@@ -61,7 +61,12 @@ def vel(y2, y1, x2, x1):
     v = protectedDiv(y, x)
     return v
 
-def cos_angle(x, y):
+def ang_vel(y2, y1, x2, x1):
+    top = acos(x2, y2) - acos(x1, y1)
+    bottom = y2 - y1
+    return protectedDiv(top, bottom)
+
+def acos(x, y):
     if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
         return math.acos(x/y)
     elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
@@ -69,9 +74,9 @@ def cos_angle(x, y):
     else:
         return x
 
-def sin_angle(x, y):
-    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
-        return math.asin(x/y)
+def asin(x, y):
+    if protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+        return math.asin(y/x)
     elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
         return math.asin(y/x)
     else:
@@ -80,30 +85,31 @@ def sin_angle(x, y):
 def delta(x, y):
     return (x - y)
 
-def stabilize(x, y):
-    if x < 0: 
-        return -y
+
+    if (x2 - x1) < 0:
+        return -y1
     else:
-        return y
+        return y2
+    
+
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
-pset.addPrimitive(conditional, 2)
-pset.addPrimitive(vel, 4)
-# pset.addPrimitive(delta, 2)
-# pset.addPrimitive(protectedDiv, 2)
-# pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(conditional, 2)
+pset.addPrimitive(ang_vel, 4)
+pset.addPrimitive(delta, 2)
+pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(operator.sub, 2)
 
-# pset.addPrimitive(sin_angle, 2)
-# pset.addPrimitive(cos_angle, 2)
-# pset.addPrimitive(math.cos, 1)
-# pset.addPrimitive(math.sin, 1)
+pset.addPrimitive(asin, 2)
+pset.addPrimitive(acos, 2)
+pset.addPrimitive(math.cos, 1)
+pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(math.atan, 1)
 # pset.addPrimitive(math.tan, 1)
-# pset.addPrimitive(max, 2)
+pset.addPrimitive(max, 2)
 
-# pset.addPrimitive(limit, 3)
-# pset.addPrimitive(stabilize, 2)
+pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(operator.abs, 1)
@@ -177,7 +183,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 30 # Basically the amount of simulations ran
+    num_episode = 20 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -240,14 +246,18 @@ def evalIndividual(individual, test=False):
 
 def find_unused_functions(labels):
     used_functions = set(list(labels.values()))
-    all_functions = {'conditional', 'vel', 'add', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
+    all_functions = {'add', 'conditonal', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'limit', 'delta', 'protectedDiv', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
     unused_functions = all_functions.difference(used_functions)
 
-    string = ''
+    string1 = ''
     for i in unused_functions:
-        string = string + i +', '
+        string1 = string1 + i +', '
 
-    return string
+    string2 = ''
+    for i in used_functions:
+        string2 = string2 + i + ', '
+
+    return string1, string2
 
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
@@ -260,7 +270,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=75)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -271,7 +281,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 1, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
     
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -282,21 +292,22 @@ def main():
     print(hof[0])
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
-    plot_as_tree(nodes, edges, labels, best_fit)
-    unused = find_unused_functions(labels)
+    # plot_as_tree(nodes, edges, labels, best_fit)
+    # unused, used = find_unused_functions(labels)
 
-    inp = input("Pass or fail?: ")
-    notes = input("notes: ")
-    fit_mins.append(best_fit)
-    fit_mins.append(inp)
-    if inp == 'passed':
-        fit_mins.append(str(hof[0]))
-    else:
-        fit_mins.append('N/A')
-    fit_mins.append(unused)
-    fit_mins.append(notes)
+    # inp = input("Pass or fail?: ")
+    # notes = input("notes: ")
+    # fit_mins.append(best_fit)
+    # fit_mins.append(inp)
+    # if inp == 'passed':
+    #     fit_mins.append(str(hof[0]))
+    # else:
+    #     fit_mins.append(' ')
+    # fit_mins.append(unused)
+    # fit_mins.append(used)
+    # fit_mins.append(notes)
 
-    write_to_excel(fit_mins)
+    # write_to_excel(fit_mins)
 
     return pop, log, hof
 

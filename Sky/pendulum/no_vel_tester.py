@@ -44,13 +44,10 @@ def limit(input, minimum, maximum):
         return input
     
 def protectedDiv(left, right):
-    try: return left / right
+    try: return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError: return 1
 
 def truncate(number, decimals=0):
-    """
-    Returns a value truncated to a specific number of decimal places.
-    """
     if not isinstance(decimals, int):
         raise TypeError("decimal places must be an integer.")
     elif decimals < 0:
@@ -71,7 +68,12 @@ def vel(y2, y1, x2, x1):
     v = protectedDiv(y, x)
     return v
 
-def cos_angle(x, y):
+def ang_vel(y2, y1, x2, x1):
+    top = acos(x2, y2) - acos(x1, y1)
+    bottom = y2 - y1
+    return protectedDiv(top, bottom)
+
+def acos(x, y):
     if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
         return math.acos(x/y)
     elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
@@ -79,23 +81,28 @@ def cos_angle(x, y):
     else:
         return x
 
-def sin_angle(x, y):
-    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
-        return math.asin(x/y)
-    elif protectedDiv(y, x) < 1 and y/x > -1:
+def asin(x, y):
+    if protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+        return math.asin(y/x)
+    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
         return math.asin(y/x)
     else:
         return x
     
 def delta(x, y):
-    return (x-y)
+    return (x - y)
 
-def stabilize(x, y):
-    if x < 0: 
-        return -y
+def stabilize(x1, x2, y1, y2):
+
+    if (x2 - x1) < 0:
+        return -y1
     else:
-        return y
+        return y2
     
+    top = acos(x2, y2) - acos(x1, y1)
+    bottom = y2 - y1
+    return protectedDiv(top, bottom)
+
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -107,13 +114,15 @@ pset.addPrimitive(if_then_else, 3)
 pset.addPrimitive(conditional, 2)
 pset.addPrimitive(limit, 3)
 pset.addPrimitive(vel, 4)
-pset.addPrimitive(cos_angle, 2)
-pset.addPrimitive(sin_angle, 2)
+pset.addPrimitive(acos, 2)
+pset.addPrimitive(asin, 2)
 pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(delta, 2)
 pset.addPrimitive(stabilize, 2)
+pset.addPrimitive(ang_vel, 4)
+pset.addPrimitive(protectedDiv, 2)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
@@ -215,7 +224,8 @@ def evalIndividual(individual, test=False):
 
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
-str = 'add(vel(vel(y3, x3, x3, x1), add(x1, x1), add(y1, conditional(x2, x3)), vel(x2, y3, y2, x1)), add(add(vel(add(y3, y3), x1, add(x2, x3), conditional(add(x2, x2), conditional(x3, y2))), x3), x2))'
+
+str = 'ang_vel(asin(x2, x1), sin(x2), delta(limit(y1, cos(asin(max(y1, x1), x1)), x1), x2), cos(ang_vel(x2, y1, y2, max(x2, y2))))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)

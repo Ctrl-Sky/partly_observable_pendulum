@@ -15,3 +15,7 @@ next steps:
 
 Continue testing
 properly implement the graphing system so it can properly graph everything
+
+change acos(x, y) to just acos
+change asin(x, y) to just asin
+do more research with vel
