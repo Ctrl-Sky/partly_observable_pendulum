@@ -82,9 +82,6 @@ def asin(x, y):
     else:
         return x
     
-def delta(x, y):
-    return (x - y)
-
 
     if (x2 - x1) < 0:
         return -y1
@@ -97,7 +94,6 @@ pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 # pset.addPrimitive(conditional, 2)
 pset.addPrimitive(ang_vel, 4)
-pset.addPrimitive(delta, 2)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
 
@@ -246,7 +242,7 @@ def evalIndividual(individual, test=False):
 
 def find_unused_functions(labels):
     used_functions = set(list(labels.values()))
-    all_functions = {'add', 'conditonal', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'limit', 'delta', 'protectedDiv', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
+    all_functions = {'add', 'conditional', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'limit', 'delta', 'protectedDiv', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
     unused_functions = all_functions.difference(used_functions)
 
     string1 = ''
