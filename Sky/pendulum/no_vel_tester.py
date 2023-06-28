@@ -88,9 +88,6 @@ def asin(x, y):
         return math.asin(y/x)
     else:
         return x
-    
-def delta(x, y):
-    return (x - y)
 
 def stabilize(x1, x2, y1, y2):
 
@@ -103,6 +100,8 @@ def stabilize(x1, x2, y1, y2):
     bottom = y2 - y1
     return protectedDiv(top, bottom)
 
+def delta(x, y):
+    return (x - y)
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -119,10 +118,10 @@ pset.addPrimitive(asin, 2)
 pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(protectedDiv, 2)
-pset.addPrimitive(delta, 2)
 pset.addPrimitive(stabilize, 2)
 pset.addPrimitive(ang_vel, 4)
 pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(delta, 2)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
@@ -193,14 +192,7 @@ def evalIndividual(individual, test=False):
                     last_y = temp_y
                     last_x = temp_x
 
-                    
 
-                # if test:
-                #     x = round(observation[1], 2)
-                #     vel = round(observation[2], 2)
-                #     xs.append(x)
-                #     vel = -vel
-                #     vels.append(vel)
                 
                 action = (action,)
 
@@ -225,7 +217,7 @@ def evalIndividual(individual, test=False):
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
-str = 'ang_vel(asin(x2, x1), sin(x2), delta(limit(y1, cos(asin(max(y1, x1), x1)), x1), x2), cos(ang_vel(x2, y1, y2, max(x2, y2))))'
+str = 'protectedDiv(delta(sub(x3, x2), x1), acos(y3, y2))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)
