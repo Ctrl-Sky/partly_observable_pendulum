@@ -217,7 +217,7 @@ def evalIndividual(individual, test=False):
 
 str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
 
-str = 'protectedDiv(delta(sub(x3, x2), x1), acos(y3, y2))'
+str = 'protectedDiv(cos(y2), sub(x2, asin(x1, acos(y3, sub(add(asin(x1, asin(conditional(x2, x1), conditional(y3, acos(cos(y1), ang_vel(x3, x3, y2, x2))))), asin(y3, y1)), x2)))))'
 print(evalIndividual(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)

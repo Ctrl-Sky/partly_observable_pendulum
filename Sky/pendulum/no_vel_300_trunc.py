@@ -20,8 +20,6 @@ import pygraphviz as pgv
 #parallel
 import multiprocessing
 
-
-
 # user defined funcitons
 def conditional(input1, input2):
     if input1 < input2:
@@ -85,16 +83,12 @@ def asin(x, y):
         return math.asin(y/x)
     else:
         return x
-    
-def delta(x, y):
-    return (x - y)
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
-pset.addPrimitive(ang_vel, 4)
-pset.addPrimitive(delta, 2)
+# pset.addPrimitive(ang_vel, 4)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
 
@@ -104,7 +98,7 @@ pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
 # pset.addPrimitive(math.atan, 1)
 # pset.addPrimitive(math.tan, 1)
-pset.addPrimitive(max, 2)
+# pset.addPrimitive(max, 2)
 
 pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
@@ -174,7 +168,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
-    plt.axis([min(gen), max(gen), -1000, 0])
+    plt.axis([min(gen), max(gen), -1500, 0])
     plt.show()
 
 # evaluates the fitness of an individual
@@ -203,11 +197,6 @@ def evalIndividual(individual, test=False):
         prev_x = 0
         last_y = 0
         last_x = 0
-
-        # prev_y = observation[0]
-        # prev_x = observation[1]
-        # last_y = observation[0]
-        # last_x = observation[1]
 
         while not (done or timeout):
             if failed:
@@ -243,6 +232,12 @@ def evalIndividual(individual, test=False):
                 timeout = True
             
         fitness += episode_reward
+
+        if test:
+            quit = input("Quit (y/n): ")
+            if quit == 'y':
+                break
+
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
 
@@ -272,7 +267,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=50)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -296,25 +291,25 @@ def main():
     nodes, edges, labels = gp.graph(hof[0])
 
     print(best_fit)
-    print(hof[0])
+    # print(hof[0])
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
-    plot_as_tree(nodes, edges, labels, best_fit)
-    # unused, used = find_unused_functions(labels)
+    # plot_as_tree(nodes, edges, labels, best_fit)
+    unused, used = find_unused_functions(labels)
 
-    # inp = input("Pass or fail?: ")
-    # notes = input("notes: ")
-    # fit_mins.append(best_fit)
-    # fit_mins.append(inp)
-    # if inp == 'passed':
-    #     fit_mins.append(str(hof[0]))
-    # else:
-    #     fit_mins.append(' ')
-    # fit_mins.append(unused)
-    # fit_mins.append(used)
-    # fit_mins.append(notes)
+    inp = input("Pass or fail?: ")
+    notes = input("notes: ")
+    fit_mins.append(best_fit)
+    fit_mins.append(inp)
+    if inp == 'passed':
+        fit_mins.append(str(hof[0]))
+    else:
+        fit_mins.append(' ')
+    fit_mins.append(unused)
+    fit_mins.append(used)
+    fit_mins.append(notes)
 
-    # write_to_excel(fit_mins)
+    write_to_excel(fit_mins)
 
     return pop, log, hof
 
