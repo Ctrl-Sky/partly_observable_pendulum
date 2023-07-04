@@ -26,6 +26,12 @@ def conditional(input1, input2):
         return -input1
     else: return input1
 
+def con2(input1, input2):
+    if input1 < input2:
+        return input2
+    else:
+        return -input2
+
 def if_then_else(input, output1, output2):
     if input: return output1
     else: return output2
@@ -88,17 +94,19 @@ def asin(x, y):
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
+pset.addPrimitive(ang_vel, 4)
 # pset.addPrimitive(ang_vel, 4)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
+pset.addPrimitive(con2, 2)
 
 pset.addPrimitive(asin, 2)
 pset.addPrimitive(acos, 2)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
-# pset.addPrimitive(math.atan, 1)
-# pset.addPrimitive(math.tan, 1)
-# pset.addPrimitive(max, 2)
+pset.addPrimitive(math.atan, 1)
+pset.addPrimitive(math.tan, 1)
+pset.addPrimitive(max, 2)
 
 pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
@@ -151,6 +159,17 @@ def write_to_excel(fit):
 
     workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
 
+def plot_as_tree(nodes, edges, labels, best_fit):
+    g = pgv.AGraph()
+    g.add_nodes_from(nodes)
+    g.add_edges_from(edges)
+    g.layout(prog="dot")
+
+    for i in nodes:
+        n = g.get_node(i)
+        n.attr["label"] = labels[i]
+    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+".pdf")
+
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(gen, fit_mins, best_fit):
     colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
@@ -171,13 +190,28 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     plt.axis([min(gen), max(gen), -1500, 0])
     plt.show()
 
+def find_unused_functions(labels):
+    used_functions = set(list(labels.values()))
+    all_functions = {'add', 'conditional', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'protectedDiv', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
+    unused_functions = all_functions.difference(used_functions)
+
+    string1 = ''
+    for i in unused_functions:
+        string1 = string1 + i +', '
+
+    string2 = ''
+    for i in used_functions:
+        string2 = string2 + i + ', '
+
+    return string1, string2
+
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
     num_episode = 20 # Basically the amount of simulations ran
     if test:
         env = env_test
-        num_episode = 3
+        num_episode = 1
     
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)
@@ -233,34 +267,14 @@ def evalIndividual(individual, test=False):
             
         fitness += episode_reward
 
-        if test:
-            quit = input("Quit (y/n): ")
-            if quit == 'y':
-                break
-
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
-
-def find_unused_functions(labels):
-    used_functions = set(list(labels.values()))
-    all_functions = {'add', 'conditonal', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'limit', 'delta', 'protectedDiv', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
-    unused_functions = all_functions.difference(used_functions)
-
-    string1 = ''
-    for i in unused_functions:
-        string1 = string1 + i +', '
-
-    string2 = ''
-    for i in used_functions:
-        string2 = string2 + i + ', '
-
-    return string1, string2
 
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("mate", gp.cxOnePoint)
-toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
+toolbox.register("expr_mut", gp.genFull, min_=0, max_=3)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
@@ -278,10 +292,10 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=8) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=4) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.6, 25, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close() # parallel
     
@@ -291,7 +305,7 @@ def main():
     nodes, edges, labels = gp.graph(hof[0])
 
     print(best_fit)
-    # print(hof[0])
+    print(hof[0])
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
     # plot_as_tree(nodes, edges, labels, best_fit)
@@ -302,6 +316,7 @@ def main():
     fit_mins.append(best_fit)
     fit_mins.append(inp)
     if inp == 'passed':
+        plot_as_tree(nodes, edges, labels, best_fit)
         fit_mins.append(str(hof[0]))
     else:
         fit_mins.append(' ')

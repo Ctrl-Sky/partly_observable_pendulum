@@ -102,6 +102,12 @@ def stabilize(x1, x2, y1, y2):
 
 def delta(x, y):
     return (x - y)
+
+def con2(input1, input2):
+    if input1 < input2:
+        return input2
+    else:
+        return -input2
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -115,6 +121,8 @@ pset.addPrimitive(limit, 3)
 pset.addPrimitive(vel, 4)
 pset.addPrimitive(acos, 2)
 pset.addPrimitive(asin, 2)
+pset.addPrimitive(math.atan, 1)
+pset.addPrimitive(math.tan, 1)
 pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(protectedDiv, 2)
@@ -122,6 +130,7 @@ pset.addPrimitive(stabilize, 2)
 pset.addPrimitive(ang_vel, 4)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(delta, 2)
+pset.addPrimitive(con2, 2)
 
 pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 pset.addTerminal(0)
@@ -139,6 +148,17 @@ env_test = gym.make('Pendulum-v1', g = 9.81, render_mode="human") # For renderin
 
 xs = []
 vels = []
+
+def plot_as_tree(nodes, edges, labels, best_fit):
+    g = pgv.AGraph()
+    g.add_nodes_from(nodes)
+    g.add_edges_from(edges)
+    g.layout(prog="dot")
+
+    for i in nodes:
+        n = g.get_node(i)
+        n.attr["label"] = labels[i]
+    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+best_fit+".pdf")
 
 def evalIndividual(individual, test=False):
     env = env_train
@@ -209,19 +229,83 @@ def evalIndividual(individual, test=False):
     print(individual)       
     return (0,) if failed else (fitness,)
     
+def evalIndividual300(individual, test=False):
+    env = env_train
+    num_episode = 20 # Basically the amount of simulations ran
+    if test:
+        env = env_test
+        num_episode = 1
+    
+    # Transform the tree expression to functional Python code
+    get_action = gp.compile(individual, pset)
+    fitness = 0
+    failed = False
+    for x in range(0, num_episode):
+        done = False
+        truncated = False
+        observation = env.reset() # Reset the pole to some random location and defines the things in observation
+        observation = observation[0]
+        episode_reward = 0
+        num_steps = 0
+        max_steps = 300
+        timeout = False
 
+        prev_y = 0
+        prev_x = 0
+        last_y = 0
+        last_x = 0
+
+        while not (done or timeout):
+            if failed:
+                action = 0
+            else:
+                # use the tree to compute action, plugs values of observation into get_action
+                
+                                    
+                if num_steps == 0:
+                    action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
+                    prev_y = observation[0]
+                    prev_x = observation[1]
+                else:
+                    action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
+                    temp_y = prev_y
+                    temp_x = prev_x
+                    prev_y = observation[0]
+                    prev_x = observation[1]
+                    last_y = temp_y
+                    last_x = temp_x
+                # action = get_action(observation[0], observation[1], observation[2])
+                
+                action = (action, )
+
+            try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, done, truncated, info
+            except:
+                failed = True
+                observation, reward, done, truncated, info = env.step(0)
+            episode_reward += reward
+
+            num_steps += 1
+            if num_steps >= max_steps:
+                timeout = True
+            
+        fitness += episode_reward
+
+    fitness = fitness/num_episode        
+    return (0,) if failed else (fitness,)
 # str = 'vel(sub(x3, y2), sub(conditional(x2, y3), x3), vel(x3, y2, x3, y2), add(vel(add(y2, y1), conditional(x2, x1), vel(y2, x2, x2, x1), conditional(x2, x1)), y1))'
 
 # str = 'vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))'
 
 
-str = 'vel(vel(x3, y3, x2, x3),  x3,  vel(y3, y3, y2, x1),  vel(y1, y2, add(conditional(y2, y1), conditional(x2, x3)), y3))'
+str = 'protectedDiv(asin(ang_vel(sin(ang_vel(y1, x1, y3, y3)), y3, ang_vel(x1, x2, x3, x3), x1), cos(asin(max(conditional(acos(x2, x3), protectedDiv(x1, y1)), y2), x2))), sin(acos(y1, y2)))'
 
-str = 'protectedDiv(cos(y2), sub(x2, asin(x1, acos(y3, sub(add(asin(x1, asin(conditional(x2, x1), conditional(y3, acos(cos(y1), ang_vel(x3, x3, y2, x2))))), asin(y3, y1)), x2)))))'
-print(evalIndividual(str, True))
+str = 'protectedDiv(sub(protectedDiv(x2, asin(asin(protectedDiv(y1, y2), tan(x1)), tan(x1))), sin(max(y3, atan(ang_vel(acos(y1, x3), asin(ang_vel(atan(y3), sin(x2), conditional(y3, y3), asin(y2, y1)), x3), add(limit(asin(sub(y3, x3), limit(y2, x1, sub(sub(x3, y2), tan(x3)))), protectedDiv(ang_vel(x1, x3, conditional(sub(y1, x1), y3), x2), cos(y3)), cos(con2(limit(con2(y3, sub(x2, x3)), conditional(x1, y2), max(x2, y1)), sub(acos(x3, x1), limit(y3, y2, y3))))), y3), x2))))), limit(atan(x1), sin(x3), conditional(y1, x2)))'
+print(evalIndividual300(str, True))
 
 s = gp.PrimitiveTree.from_string(str, pset)
 graph(s, 'test')
+nodes, edges, labels = gp.graph(s)
+plot_as_tree(nodes, edges, labels, 'j')
 
 counts = range(len(xs))
 
@@ -241,5 +325,6 @@ for tl in ax2.get_yticklabels():
 lns = line1 + line2 # lns is a list containing both lines [line1, line2]
 labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
 ax1.legend(lns, labs, loc="lower right") # Adds then a legend
+
 
 # plt.show()
