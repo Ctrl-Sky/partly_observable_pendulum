@@ -69,7 +69,7 @@ def vel(y2, y1, x2, x1):
     return v
 
 def ang_vel(y2, y1, x2, x1):
-    top = acos(x2, y2) - acos(x1, y1)
+    top = atan(y2, x2) - atan(y1, x1)
     bottom = y2 - y1
     return protectedDiv(top, bottom)
 
@@ -88,6 +88,9 @@ def asin(x, y):
         return math.asin(y/x)
     else:
         return x
+
+def atan(x, y):
+    return math.atan(protectedDiv(x, y))
 
 def stabilize(x1, x2, y1, y2):
 
@@ -121,7 +124,7 @@ pset.addPrimitive(limit, 3)
 pset.addPrimitive(vel, 4)
 pset.addPrimitive(acos, 2)
 pset.addPrimitive(asin, 2)
-pset.addPrimitive(math.atan, 1)
+pset.addPrimitive(atan, 2)
 pset.addPrimitive(math.tan, 1)
 pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(math.cos, 1)
@@ -231,7 +234,7 @@ def evalIndividual(individual, test=False):
     
 def evalIndividual300(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -247,18 +250,20 @@ def evalIndividual300(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 300
+        max_steps = 400
         timeout = False
 
-        prev_y = 0
-        prev_x = 0
-        last_y = 0
-        last_x = 0
+        prev_y = observation[0]
+        prev_x = observation[1]
+        last_y = observation[0]
+        last_x = observation[1]
 
         while not (done or timeout):
             if failed:
                 action = 0
             else:
+                print(truncate(observation[0], 3), truncate(prev_y, 3), truncate(last_y, 3), truncate(observation[1], 3), truncate(prev_x, 3), truncate(last_x, 3))
+
                 # use the tree to compute action, plugs values of observation into get_action
                 
                                     
@@ -290,22 +295,23 @@ def evalIndividual300(individual, test=False):
             
         fitness += episode_reward
 
-    fitness = fitness/num_episode        
+    fitness = fitness/num_episode
     return (0,) if failed else (fitness,)
+
+
 # str = 'vel(sub(x3, y2), sub(conditional(x2, y3), x3), vel(x3, y2, x3, y2), add(vel(add(y2, y1), conditional(x2, x1), vel(y2, x2, x2, x1), conditional(x2, x1)), y1))'
-
 # str = 'vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))'
+# str = 'protectedDiv(asin(ang_vel(sin(ang_vel(y1, x1, y3, y3)), y3, ang_vel(x1, x2, x3, x3), x1), cos(asin(max(conditional(acos(x2, x3), protectedDiv(x1, y1)), y2), x2))), sin(acos(y1, y2)))'
 
 
-str = 'protectedDiv(asin(ang_vel(sin(ang_vel(y1, x1, y3, y3)), y3, ang_vel(x1, x2, x3, x3), x1), cos(asin(max(conditional(acos(x2, x3), protectedDiv(x1, y1)), y2), x2))), sin(acos(y1, y2)))'
-
-str = 'protectedDiv(sub(protectedDiv(x2, asin(asin(protectedDiv(y1, y2), tan(x1)), tan(x1))), sin(max(y3, atan(ang_vel(acos(y1, x3), asin(ang_vel(atan(y3), sin(x2), conditional(y3, y3), asin(y2, y1)), x3), add(limit(asin(sub(y3, x3), limit(y2, x1, sub(sub(x3, y2), tan(x3)))), protectedDiv(ang_vel(x1, x3, conditional(sub(y1, x1), y3), x2), cos(y3)), cos(con2(limit(con2(y3, sub(x2, x3)), conditional(x1, y2), max(x2, y1)), sub(acos(x3, x1), limit(y3, y2, y3))))), y3), x2))))), limit(atan(x1), sin(x3), conditional(y1, x2)))'
-print(evalIndividual300(str, True))
-
+str = 'atan(acos(atan(protectedDiv(acos(atan(y1, y3), x1), protectedDiv(sub(x1, x2), protectedDiv(y1, x2))), asin(x2, y1)), x3), sub(x3, x1))'
 s = gp.PrimitiveTree.from_string(str, pset)
+print(evalIndividual300(s, True))
+
+
 graph(s, 'test')
 nodes, edges, labels = gp.graph(s)
-plot_as_tree(nodes, edges, labels, 'j')
+# plot_as_tree(nodes, edges, labels, 'a')
 
 counts = range(len(xs))
 

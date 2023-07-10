@@ -95,8 +95,8 @@ pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
 
-# pset.addPrimitive(asin, 2)
-# pset.addPrimitive(acos, 2)
+pset.addPrimitive(asin, 2)
+pset.addPrimitive(acos, 2)
 # pset.addPrimitive(math.cos, 1)
 # pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(atan, 2)
@@ -203,7 +203,7 @@ def find_unused_functions(labels):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -219,7 +219,7 @@ def evalIndividual(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 300
+        max_steps = 400
         timeout = False
 
         prev_y = observation[0]
@@ -232,8 +232,7 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                
-                                    
+                           
                 if num_steps == 0:
                     action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
                     prev_y = observation[0]
@@ -270,13 +269,13 @@ toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=5)
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
-toolbox.register("mutate", gp.mutNodeReplacement, expr=toolbox.expr_mut, pset=pset)
+toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=200)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -301,17 +300,18 @@ def main():
 
     print(best_fit)
     print(hof[0])
-    plot_onto_graph(gen, fit_mins, best_fit)
-    evalIndividual(hof[0], True)
+    # plot_onto_graph(gen, fit_mins, best_fit)
+    # evalIndividual(hof[0], True)
     # plot_as_tree(nodes, edges, labels, best_fit)
     unused, used = find_unused_functions(labels)
 
-    inp = input("Pass or fail?: ")
-    notes = input("notes: ")
+    # inp = input("Pass or fail?: ")
+    # notes = input("notes: ")
+    inp = 'passed'
+    notes = 'Replace this'
     fit_mins.append(best_fit)
     fit_mins.append(inp)
     if inp == 'passed':
-        plot_as_tree(nodes, edges, labels, best_fit)
         fit_mins.append(str(hof[0]))
     else:
         fit_mins.append(' ')
@@ -324,4 +324,5 @@ def main():
     return pop, log, hof
 
 if __name__ == "__main__":
-    main()
+    for i in range(10):
+        main()
