@@ -1,16 +1,3 @@
-things to try
-
-Increase gen full tree size: first anazlze how large the trees that works are
-Increase cross over and decrease mutation chance
-maybe get rid of max and cos
-
-add, cond, ang_vel, div, sub, sin, cos, asin, acos, max extend to 35 gen see if it keeps climbing
-
-try adding tan, atan
-
-study one of the short trees with protectedDiv
-
-increase pop size
-look to play around with tournmanet
-play around with mutation chance 
-and play around with finding a pattern for ones that work
+Cut population in half from 200 - 100
+Cut episodes back to 20
+drive back trunc to 400
