@@ -22,49 +22,6 @@ import pygraphviz as pgv
 #parallel
 import multiprocessing
 
-def generate_safe(pset, min_, max_, terminal_types, type_=None):
-    if type_ is None:
-        type_ = pset.ret
-    expr = []
-    height = random.randint(min_, max_)
-    stack = [(0, type_)]
-    while len(stack) != 0:
-        depth, type_ = stack.pop()
-
-        if type_ in terminal_types:
-            try:
-                term = random.choice(pset.terminals[type_])
-            except IndexError:
-                _, _, traceback = sys.exc_info()
-                raise IndexError("The gp.generate_safe1 function tried to add "
-                                 "a terminal of type '%s', but there is "
-                                 "none available." % (type_,)).with_traceback(traceback)
-            if inspect.isclass(term):
-                term = term()
-            expr.append(term)
-        else:
-            try:
-                # Might not be respected if there is a type without terminal args
-                if height <= depth or (depth >= min_ and random.random() < pset.terminalRatio):
-                    primitives_with_only_terminal_args = [p for p in pset.primitives[type_] if
-                                                          all([arg in terminal_types for arg in p.args])]
-
-                    if len(primitives_with_only_terminal_args) == 0:
-                        prim = random.choice(pset.primitives[type_])
-                    else:
-                        prim = random.choice(primitives_with_only_terminal_args)
-                else:
-                    prim = random.choice(pset.primitives[type_])
-            except IndexError:
-                _, _, traceback = sys.exc_info()
-                raise IndexError("The gp.generate_safe2 function tried to add "
-                                 "a primitive of type '%s', but there is "
-                                 "none available." % (type_,)).with_traceback(traceback)
-            expr.append(prim)
-            for arg in reversed(prim.args):
-                stack.append((depth + 1, arg))
-    return expr
-
 # user defined funcitons
 
 def read(memory, index):
@@ -74,7 +31,7 @@ def read(memory, index):
 def write(memory, index, data):
     idx = int(abs(index))
     memory[idx % len(memory)] = data
-    return [idx % len(memory)]
+    return memory[idx % len(memory)]
 
 def limit(input, minimum, maximum):
     if input < minimum:
@@ -110,9 +67,11 @@ def conditional(input1, input2):
         return -input1
     else: return input1
 
+# make a revered copy of input (a list) and return it
 def listReverse(input):
-    # input.reverse()
-    return input
+    rev = input
+    rev.reverse()
+    return rev
 
 # def listLength(input):
 #     return len(input)
@@ -149,7 +108,7 @@ pset.addPrimitive(math.sin, [float], float)
 # pset.addPrimitive(math.exp, [float], float)
 # pset.addPrimitive(operator.neg, [float], float)
 pset.addPrimitive(operator.abs, [float], float)
-# pset.addPrimitive(listReverse, [list], list)
+pset.addPrimitive(listReverse, [list], list)
 pset.addTerminal(0, float)
 pset.addTerminal(1, float)
 pset.addTerminal(2, float)
@@ -169,9 +128,9 @@ creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
 toolbox = base.Toolbox()
 # toolbox.register("expr", gp.genFull, pset=pset, min_=2, max_=3)
-terminal_types = [list, float]
-toolbox.register("expr", generate_safe, pset=pset, min_=1, max_=10, terminal_types=terminal_types)
-# toolbox.register("expr", gp.genGrow, pset=pset, min_=2, max_=5)
+# terminal_types = [list, float]
+# toolbox.register("expr", generate_safe, pset=pset, min_=1, max_=10, terminal_types=terminal_types)
+toolbox.register("expr", gp.genGrow, pset=pset, min_=2, max_=5)
 toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -223,7 +182,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 20
     if test:
         env = env_test
         num_episode = 3
@@ -241,14 +200,14 @@ def evalIndividual(individual, test=False):
         num_steps = 0
         max_steps = 300
         timeout = False
-        m = [0.0, 0.0, 0.0, 0.0]
+        memory = [0.0, 0.0, 0.0, 0.0] # a list of floats that will be persistent throughout each episode
         while not (done or timeout):
             
             if failed:
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                action = get_action(m, observation[0], observation[1], observation[2])
+                action = get_action(memory, observation[0], observation[1], observation[2])
                 action = (action, )
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, done, truncated, info
             except:
@@ -289,8 +248,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    print(len(pset.terminals))
-    pop = toolbox.population(n=200)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -304,7 +262,7 @@ def main():
     pool = multiprocessing.Pool(processes=18) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.25, 0.5, 50, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.25, 0.5, 100, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close() # parallel
     
@@ -315,8 +273,8 @@ def main():
 
     print(best_fit)
     print(hof[0])
-    plot_onto_graph(gen, best_fits, best_fit)
-    evalIndividual(hof[0], True) # visualize
+    # plot_onto_graph(gen, best_fits, best_fit)
+    # evalIndividual(hof[0], True) # visualize
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
 

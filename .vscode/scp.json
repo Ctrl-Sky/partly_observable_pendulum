@@ -1,0 +1,9 @@
+{
+    "host": "cedar.computecanada.ca",
+    "port": 22,
+    "user": "skelly",
+    "ignore":[".git",".vscode"],
+    "remotePath": "/home/skelly",
+    "identity_file": "~/.ssh/id_rsa",
+    "uploadOnSave": true
+}
