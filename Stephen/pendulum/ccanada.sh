@@ -5,6 +5,15 @@
 #SBATCH --ntasks=48 
 #SBATCH --nodes=1
 
+seed=1
+
+while getopts s: flag
+do
+   case "${flag}" in
+      s) seed=${OPTARG};;
+   esac
+done
+
 module load python
 source /home/skelly/deap_env/bin/activate
-python -u memory_01.py > memory_01-`date +%Y-%m-%d-%H-%M-%S`.std
+python -u memory_01.py $seed > memory_01-$seed.std #`date +%Y-%m-%d-%H-%M-%S`.std

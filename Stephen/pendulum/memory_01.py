@@ -421,7 +421,7 @@ def write_to_excel(fit):
 
 
 # Creates and shows the graph of the fitness for then entire population
-def plot_onto_graph(gen, fit_mins, best_fit):
+def plot_onto_graph(seed, gen, fit_mins, best_fit):
     colours = ["r-", "g-", "b-", "c-", "m-", "k-"]
 
     # Simply change the lines in quottation above to change the values you want to graph
@@ -446,7 +446,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
 
     plt.axis([min(gen), max(gen), min(fit_mins), 0])
     # plt.show()
-    plt.savefig('fit_curve.png')
+    plt.savefig(str(seed) + "_fit_curve.png")
 
 
 # evaluates the fitness of an individual
@@ -511,6 +511,8 @@ toolbox.decorate(
 )
 
 def main():
+    seed = sys.argv[1] # do args better
+    random.seed(seed)
     pop = toolbox.population(n=400)
     hof = tools.HallOfFame(1)
 
@@ -546,7 +548,7 @@ def main():
 
     print(best_fit)
     print(hof[0])
-    plot_onto_graph(gen, best_fits, best_fit)
+    plot_onto_graph(seed, gen, best_fits, best_fit)
     # evalIndividual(hof[0], True) # visualize
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
