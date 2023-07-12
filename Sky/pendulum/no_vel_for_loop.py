@@ -89,24 +89,26 @@ def atan(x, y):
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
-# pset.addPrimitive(operator.add, 2)
-# pset.addPrimitive(conditional, 2)
-# pset.addPrimitive(ang_vel, 4)
+pset.addPrimitive(operator.add, 2)
+pset.addPrimitive(conditional, 2)
+pset.addPrimitive(ang_vel, 4)
 pset.addPrimitive(protectedDiv, 2)
 pset.addPrimitive(operator.sub, 2)
 
 pset.addPrimitive(asin, 2)
 pset.addPrimitive(acos, 2)
-# pset.addPrimitive(math.cos, 1)
-# pset.addPrimitive(math.sin, 1)
+pset.addPrimitive(math.cos, 1)
+pset.addPrimitive(math.sin, 1)
 pset.addPrimitive(atan, 2)
-# pset.addPrimitive(math.tan, 1)
-# pset.addPrimitive(max, 2)
+pset.addPrimitive(math.tan, 1)
+pset.addPrimitive(max, 2)
 
-# pset.addPrimitive(limit, 3)
-# pset.addPrimitive(operator.neg, 1)
-# pset.addPrimitive(if_then_else, 3)
-# pset.addPrimitive(operator.abs, 1)
+pset.addPrimitive(limit, 3)
+
+pset.addPrimitive(min, 2)
+pset.addPrimitive(operator.neg, 1)
+pset.addPrimitive(if_then_else, 3)
+pset.addPrimitive(operator.abs, 1)
 
 # pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 # pset.addTerminal(0)
@@ -192,11 +194,11 @@ def find_unused_functions(labels):
 
     string1 = ''
     for i in unused_functions:
-        string1 = string1 + i +', '
+        string1 = string1 + str(i) +', '
 
     string2 = ''
     for i in used_functions:
-        string2 = string2 + i + ', '
+        string2 = string2 + str(i) + ', '
 
     return string1, string2
 

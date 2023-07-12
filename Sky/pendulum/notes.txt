@@ -1,3 +1,3 @@
-Cut population in half from 200 - 100
-Cut episodes back to 20
-drive back trunc to 400
+Try increasing even more, more gen, more ep
+Try swapping cross and mut
+Add more functions
