@@ -290,16 +290,18 @@ def protectedLog(input):
 
 
 def protectedDiv(left, right):
-    if math.isinf(right) or math.isnan(right):
+    if math.isinf(right) or math.isnan(right) or right == 0:
         return 0
     try:
-        return truncate(left, 8) / truncate(right, 8)
+        return left / right #truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError:
         return 0
     return left / right
 
 
 def truncate(number, decimals=0):
+    if math.isinf(number) or math.isnan(number):
+        return 0
     if not isinstance(decimals, int):
         raise TypeError("decimal places must be an integer.")
     elif decimals < 0:
@@ -443,7 +445,8 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     ax1.legend(lns, labs, loc="lower right")  # Adds then a legend
 
     plt.axis([min(gen), max(gen), min(fit_mins), 0])
-    plt.show()
+    # plt.show()
+    plt.savefig('fit_curve.png')
 
 
 # evaluates the fitness of an individual
