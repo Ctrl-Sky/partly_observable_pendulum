@@ -4,6 +4,7 @@
 #SBATCH --mem=0 
 #SBATCH --ntasks=48 
 #SBATCH --nodes=1
+#SBATCH --job-name=deap-pendulum
 
 seed=1
 
