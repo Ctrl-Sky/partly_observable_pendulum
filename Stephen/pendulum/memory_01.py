@@ -260,6 +260,8 @@ def generate_typed_safe(pset, min_, max_, type_=None):
 
 
 def read(memory, index):
+    if math.isinf(index) or math.isnan(index):
+        idx = 0
     idx = int(abs(index))
     return memory[idx % len(memory)]
 
@@ -290,10 +292,10 @@ def protectedLog(input):
 
 
 def protectedDiv(left, right):
-    if math.isinf(right) or math.isnan(right) or right == 0:
+    if math.isinf(right) or math.isnan(right) or right == 0 or math.isinf(left) or math.isnan(left):
         return 0
     try:
-        return left / right #truncate(left, 8) / truncate(right, 8)
+        return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError:
         return 0
     return left / right
