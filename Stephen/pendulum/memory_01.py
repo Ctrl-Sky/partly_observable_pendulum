@@ -299,13 +299,15 @@ def protectedDiv(left, right):
         or right == 0
         or math.isinf(left)
         or math.isnan(left)
+        or left == 0
     ):
         return 0
-    try:
-        return truncate(left, 8) / truncate(right, 8)
-    except ZeroDivisionError:
-        return 0
-    return left / right
+    # try:
+    #     return truncate(left, 8) / truncate(right, 8)
+    # except ZeroDivisionError:
+    #     return 0
+    else:
+       return left / right
 
 
 def truncate(number, decimals=0):
@@ -506,15 +508,14 @@ def evalIndividual(individual, test=False):
     fitness = fitness / num_episode
     return (0,) if failed else (fitness,)
 
-
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
 toolbox.register(
     "select",
     tools.selDoubleTournament,
     fitness_size=3,
-    parsimony_size=1.5,
-    fitness_first=True,
+    parsimony_size=1.2,
+    fitness_first=True
 )
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr, pset=pset)
