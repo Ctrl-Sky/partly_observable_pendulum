@@ -1,6 +1,2 @@
-Try increasing even more, more gen, more ep
-Try swapping cross and mut
-Add more functions
-
-Work on normal pendulum fully observable and get a the best individual
-Then take best and test it in pendulum with different gravity and 100 episodes and find gap between fitness
+Try training with gravity of 12 and see if it can solve it and then test different gravity
+Try training with gravity of 13 and see if it can solve it and then test different gravity

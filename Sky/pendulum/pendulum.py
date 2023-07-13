@@ -16,7 +16,6 @@ from deap import gp
 
 import pygraphviz as pgv
 
-
 # user defined funcitons
 def conditional(input1, input2):
     if input1 < input2:
@@ -36,28 +35,39 @@ def limit(input, minimum, maximum):
         return input
     
 def protectedDiv(left, right):
-    try: return left / right
+    try: return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError: return 1
 
+def truncate(number, decimals=0):
+    if not isinstance(decimals, int):
+        raise TypeError("decimal places must be an integer.")
+    elif decimals < 0:
+        raise ValueError("decimal places has to be 0 or more.")
+    elif decimals == 0:
+        return math.trunc(number)
+
+    factor = 10.0 ** decimals
+    return math.trunc(number * factor) / factor
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
-
-# pset.addPrimitive(operator.sub, 2)
-# pset.addPrimitive(limit, 3)
+pset.addPrimitive(protectedDiv, 2)
+pset.addPrimitive(operator.sub, 2)
+pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
-
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(max, 2)
 # pset.addPrimitive(operator.abs, 1)
-
 
 # pset.addEphemeralConstant("rand101", lambda: random.randint(-1,1))
 # pset.addTerminal(0)
 # pset.addTerminal(1)
 
+pset.renameArguments(ARG0='y')
+pset.renameArguments(ARG1='x')
+pset.renameArguments(ARG2='vel')
 
 # Prepare individual and mountain car
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -72,7 +82,6 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 env_train = gym.make('Pendulum-v1', g=9.81) # For training
 env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering the best one
 
-
 # Used to graph the best individual and output to out.png
 def graph(expr, str):
     nodes, edges, labels = gp.graph(expr)
@@ -85,7 +94,6 @@ def graph(expr, str):
         n = g.get_node(i)
         n.attr["label"] = labels[i]
     g.draw(str+".png")
-
 
 # Function to calculate the fitness of an individual
 def evalIndividual(individual, test=False):
@@ -112,13 +120,6 @@ def evalIndividual(individual, test=False):
                 # use the tree to compute action, plugs values of observation into get_action
                 action = get_action(observation[0], observation[1], observation[2])
 
-                # if action < -2:
-                #     action = -2
-                # elif action > 2:
-                #     action = 2
-
-                # because pendulum has ndarray of (1,) for action, action will not be iterable
-                # so must turn it into an iterable for env.step(action) that refers to action as action[0]
                 action = (action, )
 
             try: observation, reward, done, truncated, info = env.step(action) # env.step will return the new observation, reward, done, truncated, info
@@ -130,7 +131,6 @@ def evalIndividual(individual, test=False):
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
 
-
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=3)
@@ -140,8 +140,6 @@ toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
-
-
 
 def main():
     pop = toolbox.population(n=100)
@@ -155,7 +153,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 25, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
@@ -185,7 +183,8 @@ def main():
     evalIndividual(hof[0], True)
     # save graph of best individual
 
-    graph(hof[0], 'out')
+    # graph(hof[0], 'out')
+    print(hof[0])
     print(hof[0].fitness.values)
     return pop, log, hof
 
