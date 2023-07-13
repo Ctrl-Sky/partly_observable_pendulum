@@ -512,7 +512,7 @@ toolbox.register(
     "select",
     tools.selDoubleTournament,
     fitness_size=3,
-    parsimony_size=1.2,
+    parsimony_size=1.3,
     fitness_first=True
 )
 toolbox.register("mate", gp.cxOnePoint)
