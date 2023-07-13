@@ -464,7 +464,7 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 30
+    num_episode = 20
     if test:
         env = env_test
         num_episode = 3
