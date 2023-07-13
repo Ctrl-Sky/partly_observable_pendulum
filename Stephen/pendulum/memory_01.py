@@ -302,12 +302,10 @@ def protectedDiv(left, right):
         or left == 0
     ):
         return 0
-    # try:
-    #     return truncate(left, 8) / truncate(right, 8)
-    # except ZeroDivisionError:
-    #     return 0
-    else:
-       return left / right
+    try:
+        return truncate(left, 8) / truncate(right, 8)
+    except ZeroDivisionError:
+        return 0
 
 
 def truncate(number, decimals=0):
@@ -466,7 +464,7 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20
+    num_episode = 30
     if test:
         env = env_test
         num_episode = 3
@@ -482,7 +480,7 @@ def evalIndividual(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 300
+        max_steps = 400
         timeout = False
         memory = [0.0, 0.0]
         while not (done or timeout):
