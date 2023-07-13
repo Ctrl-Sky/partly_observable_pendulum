@@ -111,6 +111,7 @@ def con2(input1, input2):
         return input2
     else:
         return -input2
+
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -332,6 +333,5 @@ for tl in ax2.get_yticklabels():
 lns = line1 + line2 # lns is a list containing both lines [line1, line2]
 labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
 ax1.legend(lns, labs, loc="lower right") # Adds then a legend
-
 
 # plt.show()

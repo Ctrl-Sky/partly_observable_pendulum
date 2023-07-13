@@ -97,9 +97,9 @@ pset.addPrimitive(operator.sub, 2)
 
 pset.addPrimitive(asin, 2)
 pset.addPrimitive(acos, 2)
+pset.addPrimitive(atan, 2)
 pset.addPrimitive(math.cos, 1)
 pset.addPrimitive(math.sin, 1)
-pset.addPrimitive(atan, 2)
 pset.addPrimitive(math.tan, 1)
 pset.addPrimitive(max, 2)
 
@@ -119,7 +119,7 @@ pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
-# Prepare individual and mountain car
+# Prepare individual and pendulum
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
@@ -131,7 +131,6 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 env_train = gym.make('Pendulum-v1', g=9.81) # For training
 env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering the best one
-
 
 # Takes an individual and makes a tree graph and saves it into trees file
 def plot_as_tree(nodes, edges, labels, best_fit):
@@ -146,14 +145,30 @@ def plot_as_tree(nodes, edges, labels, best_fit):
     g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+".pdf")
 
 # Append the fitness information to an excel sheet
-def write_to_excel(fit):
+def write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof):
+    unused, used = find_unused_functions(labels)
+
+    inp = input("Pass or fail?: ")
+    notes = input("notes: ")
+    fit_mins.append(best_fit)
+    fit_mins.append(inp)
+    if inp == 'passed':
+        plot_as_tree(nodes, edges, labels, best_fit)
+        fit_mins.append(str(hof[0]))
+    else:
+        fit_mins.append(' ')
+    fit_mins.append(unused)
+    fit_mins.append(used)
+    fit_mins.append(notes)
+    
     workbook = load_workbook(filename="/Users/sky/Documents/Book1.xlsx")
     sheet = workbook.active
 
-    sheet.append(fit)
+    sheet.append(fit_mins)
 
     workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
 
+# Plot individual as a tree 
 def plot_as_tree(nodes, edges, labels, best_fit):
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
@@ -185,6 +200,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     plt.axis([min(gen), max(gen), -1500, 0])
     plt.show()
 
+# Find used and unused functions in individual
 def find_unused_functions(labels):
     used_functions = set(list(labels.values()))
     all_functions = {'add', 'conditional', 'ang_vel', 'sub', 'asin', 'acos', 'sin', 'cos', 'max', 'protectedDiv', 'limit', 'tan', 'atan', 'y1', 'y2', 'y3', 'x1', 'x2', 'x3'}
@@ -203,7 +219,7 @@ def find_unused_functions(labels):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     env = env_train
-    num_episode = 20 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -219,7 +235,7 @@ def evalIndividual(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 300
+        max_steps = 400
         timeout = False
 
         prev_y = observation[0]
@@ -232,7 +248,6 @@ def evalIndividual(individual, test=False):
                 action = 0
             else:
                 # use the tree to compute action, plugs values of observation into get_action
-                
                                     
                 if num_steps == 0:
                     action = get_action(observation[0], observation[1], prev_y, prev_x, last_y, last_x)
@@ -276,7 +291,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=200)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -304,22 +319,8 @@ def main():
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], True)
     # plot_as_tree(nodes, edges, labels, best_fit)
-    unused, used = find_unused_functions(labels)
 
-    inp = input("Pass or fail?: ")
-    notes = input("notes: ")
-    fit_mins.append(best_fit)
-    fit_mins.append(inp)
-    if inp == 'passed':
-        plot_as_tree(nodes, edges, labels, best_fit)
-        fit_mins.append(str(hof[0]))
-    else:
-        fit_mins.append(' ')
-    fit_mins.append(unused)
-    fit_mins.append(used)
-    fit_mins.append(notes)
-
-    write_to_excel(fit_mins)
+    write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof) # Write to specific excel sheet, comment out if not using Sky's Mac
 
     return pop, log, hof
 
