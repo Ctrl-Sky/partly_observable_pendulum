@@ -305,8 +305,7 @@ def evalIndividual300(individual, test=False):
 # str = 'vel(neg(x3), x2, vel(x1, y3, x1, y1), conditional(y2, add(x3, x1)))'
 # str = 'protectedDiv(asin(ang_vel(sin(ang_vel(y1, x1, y3, y3)), y3, ang_vel(x1, x2, x3, x3), x1), cos(asin(max(conditional(acos(x2, x3), protectedDiv(x1, y1)), y2), x2))), sin(acos(y1, y2)))'
 
-
-str = 'add(sin(x3), asin(min(ang_vel(y3, x3, y3, x3), min(limit(x2, x2, x1), conditional(x1, limit(limit(x2, x2, min(limit(add(protectedDiv(y3, acos(max(limit(y1, y2, y3), y3), max(y3, if_then_else(y2, x1, x2)))), conditional(x1, conditional(asin(x1, y3), limit(x2, y3, y2)))), x1, x1), acos(min(x2, x1), protectedDiv(y1, y2)))), y3, y1)))), x2))'
+str = 'sub(ang_vel(x3, asin(limit(y1, protectedDiv(y3, x2), conditional(atan(x3, y1), protectedDiv(y1, x1))), max(y1, sub(y2, x2))), x3, y3), ang_vel(x2, x3, x2, asin(limit(sin(y1), protectedDiv(y3, x2), conditional(atan(x3, add(x1, y2)), protectedDiv(y1, x2))), y1)))'
 s = gp.PrimitiveTree.from_string(str, pset)
 print(evalIndividual300(s, True))
 
