@@ -16,4 +16,4 @@ done
 
 module load python
 source /home/skelly/deap_env/bin/activate
-python -u memory_01.py $seed > memory_01-$seed.std #`date +%Y-%m-%d-%H-%M-%S`.std
+python -u memory_01.py $seed > memory_01-$seed-$SLURM_JOB_ID.std

@@ -11,6 +11,7 @@ from openpyxl import load_workbook
 import sys
 import inspect
 from inspect import isclass
+from operator import attrgetter
 
 from deap import algorithms
 from deap import base
@@ -292,13 +293,21 @@ def protectedLog(input):
 
 
 def protectedDiv(left, right):
-    if math.isinf(right) or math.isnan(right) or right == 0 or math.isinf(left) or math.isnan(left):
+    if (
+        math.isinf(right)
+        or math.isnan(right)
+        or right == 0
+        or math.isinf(left)
+        or math.isnan(left)
+        or left == 0
+    ):
         return 0
-    try:
-        return truncate(left, 8) / truncate(right, 8)
-    except ZeroDivisionError:
-        return 0
-    return left / right
+    # try:
+    #     return truncate(left, 8) / truncate(right, 8)
+    # except ZeroDivisionError:
+    #     return 0
+    else:
+       return left / right
 
 
 def truncate(number, decimals=0):
@@ -312,7 +321,10 @@ def truncate(number, decimals=0):
         return math.trunc(number)
 
     factor = 10.0**decimals
-    return math.trunc(number * factor) / factor
+    num = number * factor
+    if math.isinf(num) or math.isnan(num):
+        return 0
+    return math.trunc(num) / factor
 
 
 def conditional(input1, input2):
@@ -428,7 +440,7 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
 
     # Simply change the lines in quottation above to change the values you want to graph
     # Allows you to create multiple plots in one figure
-    
+
     (fig, ax1) = plt.subplots()
     # Plots using gen as x value and fit_mins as y, both are list
     line1 = ax1.plot(
@@ -482,9 +494,7 @@ def evalIndividual(individual, test=False):
                 action = (action,)
             try:
                 # returns the new observation, reward, done, truncated, info
-                observation, reward, done, truncated, info = env.step(
-                    action
-                )  
+                observation, reward, done, truncated, info = env.step(action)
             except:
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
@@ -498,10 +508,15 @@ def evalIndividual(individual, test=False):
     fitness = fitness / num_episode
     return (0,) if failed else (fitness,)
 
-
 # Register functions in the toolbox needed for evolution
 toolbox.register("evaluate", evalIndividual)
-toolbox.register("select", tools.selTournament, tournsize=3)
+toolbox.register(
+    "select",
+    tools.selDoubleTournament,
+    fitness_size=3,
+    parsimony_size=1.2,
+    fitness_first=True
+)
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr, pset=pset)
 
@@ -512,10 +527,11 @@ toolbox.decorate(
     "mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17)
 )
 
+
 def main():
-    seed = sys.argv[1] # do args better
+    seed = sys.argv[1]  # do args better
     random.seed(seed)
-    pop = toolbox.population(n=400)
+    pop = toolbox.population(n=500)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -538,7 +554,7 @@ def main():
         stats=mstats,
         halloffame=hof,
         verbose=True,
-        sufficient_fitness=-400,
+        sufficient_fitness=-200,
     )
 
     pool.close()  # parallel
