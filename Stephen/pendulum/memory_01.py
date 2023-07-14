@@ -480,7 +480,7 @@ def evalIndividual(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 400
+        max_steps = 300
         timeout = False
         memory = [0.0, 0.0]
         while not (done or timeout):
@@ -540,7 +540,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96)  # parllel
+    pool = multiprocessing.Pool(processes=16)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
     pop, log = eaSimple_early_stop(
