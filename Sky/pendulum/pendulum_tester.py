@@ -122,7 +122,7 @@ def evalIndividual(individual, grav, test=False):
     return (0,) if failed else (fitness,)
 
 def testGravity(s):
-    gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13]
+    gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
     for i in gravity:
         add_to_excel = []
         total = 0
@@ -135,9 +135,9 @@ def testGravity(s):
         add_to_excel.append(round(total/5, 2))
         write_to_excel(add_to_excel)
 
-str = 'protectedDiv(limit(add(x, conditional(limit(x, x, protectedDiv(vel, x)), protectedDiv(vel, vel))), protectedDiv(vel, x), limit(add(x, limit(protectedDiv(vel, x), vel, limit(y, vel, vel))), limit(y, x, x), y)), conditional(conditional(vel, vel), add(vel, y)))'
+str = 'sub(limit(x, protectedDiv(x, sub(add(y, protectedDiv(limit(y, sub(x, vel), protectedDiv(limit(vel, y, x), conditional(x, y))), sub(protectedDiv(protectedDiv(x, y), protectedDiv(vel, vel)), x))), conditional(limit(conditional(y, x), add(vel, x), conditional(y, vel)), y))), add(y, y)), protectedDiv(conditional(add(vel, vel), limit(add(limit(x, conditional(y, y), add(vel, add(add(y, x), protectedDiv(x, vel)))), x), limit(add(x, vel), y, limit(limit(y, y, y), limit(y, vel, vel), sub(vel, x))), sub(limit(y, x, vel), x))), protectedDiv(vel, y)))'
 s = gp.PrimitiveTree.from_string(str, pset)
-print(evalIndividual(s, 11, True))
+print(evalIndividual(s, 12, True))
 
 # testGravity(s)
 

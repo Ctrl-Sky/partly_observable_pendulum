@@ -79,8 +79,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Pendulum-v1', g=9.81) # For training
-env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering the best one
+env_train = gym.make('Pendulum-v1', g=13) # For training
+env_test = gym.make('Pendulum-v1', g=13, render_mode="human") # For rendering the best one
 
 # Used to graph the best individual and output to out.png
 def graph(expr, str):
@@ -142,7 +142,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=150)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
