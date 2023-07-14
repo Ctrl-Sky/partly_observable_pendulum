@@ -26,3 +26,15 @@ run 5 parallel experiments
 ```
 for seed in `seq 1 5`; do sbatch ./ccanada.sh -s $seed; done
 ```
+command to check running experiments
+```
+squeue -u <usrname>
+```
+to copy experiment folder to local computer, first get full path from inside exp directory:
+```
+pwd
+```
+...then on local computer, use scp to copy remote directory to local computer:
+```
+scp -r cedar.computecanada.ca:/path-to-experiment ./
+```
