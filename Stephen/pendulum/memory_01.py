@@ -379,8 +379,8 @@ pset.addPrimitive(math.sin, [float], float)
 pset.addPrimitive(operator.abs, [float], float)
 # pset.addPrimitive(listReverse, [list], list)
 pset.addTerminal(0, float)
-pset.addTerminal(1, float)
-pset.addTerminal(2, float)
+# pset.addTerminal(1, float)
+# pset.addTerminal(2, float)
 # pset.addTerminal(3, float)
 
 pset.addPrimitive(read, [list, float], float)
@@ -482,7 +482,7 @@ def evalIndividual(individual, test=False):
         num_steps = 0
         max_steps = 300
         timeout = False
-        memory = [0.0, 0.0, 0.0]
+        memory = [0.0]
         while not (done or timeout):
             if failed:
                 action = 0
