@@ -540,7 +540,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=16)  # parllel
+    pool = multiprocessing.Pool(processes=96)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
     pop, log = eaSimple_early_stop(
