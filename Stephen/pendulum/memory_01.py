@@ -378,7 +378,7 @@ pset.addPrimitive(math.sin, [float], float)
 # pset.addPrimitive(operator.neg, [float], float)
 pset.addPrimitive(operator.abs, [float], float)
 # pset.addPrimitive(listReverse, [list], list)
-# pset.addTerminal(0, float)
+pset.addTerminal(0, float)
 # pset.addTerminal(1, float)
 # pset.addTerminal(2, float)
 # pset.addTerminal(3, float)
@@ -389,7 +389,7 @@ pset.addPrimitive(write, [list, float, float], float)
 pset.renameArguments(ARG0="a0")
 pset.renameArguments(ARG1="a1")
 pset.renameArguments(ARG2="a2")
-pset.renameArguments(ARG3="a3")
+# pset.renameArguments(ARG3="a3")
 
 # Prepare individual
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -482,7 +482,7 @@ def evalIndividual(individual, test=False):
         num_steps = 0
         max_steps = 300
         timeout = False
-        memory = [0.0, 0.0]
+        memory = [0.0]
         while not (done or timeout):
             if failed:
                 action = 0
@@ -540,7 +540,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=16)  # parllel
+    pool = multiprocessing.Pool(processes=96)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
     pop, log = eaSimple_early_stop(
