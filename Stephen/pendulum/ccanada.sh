@@ -18,6 +18,6 @@ module load python/3.10
 virtualenv --no-download $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip
-pip install --no-index -r ../requirements_alliancecan.txt
+pip install --no-index -r requirements_alliancecan.txt
 
 python -u memory_01.py $seed > memory_01-$seed-$SLURM_JOB_ID.std
