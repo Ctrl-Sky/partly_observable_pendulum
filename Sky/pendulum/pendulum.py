@@ -53,9 +53,9 @@ def truncate(number, decimals=0):
 pset = gp.PrimitiveSet("MAIN", 3)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
-pset.addPrimitive(protectedDiv, 2)
-pset.addPrimitive(operator.sub, 2)
-pset.addPrimitive(limit, 3)
+# pset.addPrimitive(protectedDiv, 2)
+# pset.addPrimitive(operator.sub, 2)
+# pset.addPrimitive(limit, 3)
 # pset.addPrimitive(operator.neg, 1)
 # pset.addPrimitive(if_then_else, 3)
 # pset.addPrimitive(max, 2)
@@ -79,8 +79,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Pendulum-v1', g=13) # For training
-env_test = gym.make('Pendulum-v1', g=13, render_mode="human") # For rendering the best one
+env_train = gym.make('Pendulum-v1', g=16) # For training
+env_test = gym.make('Pendulum-v1', g=16, render_mode="human") # For rendering the best one
 
 # Used to graph the best individual and output to out.png
 def graph(expr, str):

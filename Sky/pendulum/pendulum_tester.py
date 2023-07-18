@@ -135,11 +135,12 @@ def testGravity(s):
         add_to_excel.append(round(total/5, 2))
         write_to_excel(add_to_excel)
 
-str = 'sub(limit(x, protectedDiv(x, sub(add(y, protectedDiv(limit(y, sub(x, vel), protectedDiv(limit(vel, y, x), conditional(x, y))), sub(protectedDiv(protectedDiv(x, y), protectedDiv(vel, vel)), x))), conditional(limit(conditional(y, x), add(vel, x), conditional(y, vel)), y))), add(y, y)), protectedDiv(conditional(add(vel, vel), limit(add(limit(x, conditional(y, y), add(vel, add(add(y, x), protectedDiv(x, vel)))), x), limit(add(x, vel), y, limit(limit(y, y, y), limit(y, vel, vel), sub(vel, x))), sub(limit(y, x, vel), x))), protectedDiv(vel, y)))'
-s = gp.PrimitiveTree.from_string(str, pset)
-print(evalIndividual(s, 12, True))
 
-# testGravity(s)
+str = 'add(vel, conditional(y, add(add(add(x, y), vel), add(x, x))))'
+s = gp.PrimitiveTree.from_string(str, pset)
+# print(evalIndividual(s, 12, True))
+
+testGravity(s)
 
 # nodes, edges, labels = gp.graph(s)
 # plot_as_tree(nodes, edges, labels, 'a')

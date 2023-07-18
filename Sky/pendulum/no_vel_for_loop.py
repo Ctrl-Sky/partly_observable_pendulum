@@ -129,8 +129,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Pendulum-v1', g=9.81) # For training
-env_test = gym.make('Pendulum-v1', g=9.81, render_mode="human") # For rendering the best one
+env_train = gym.make('Pendulum-v1', g=14) # For training
+env_test = gym.make('Pendulum-v1', g=14, render_mode="human") # For rendering the best one
 
 # Takes an individual and makes a tree graph and saves it into trees file
 def plot_as_tree(nodes, edges, labels, best_fit):
@@ -148,12 +148,14 @@ def plot_as_tree(nodes, edges, labels, best_fit):
 def write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof):
     unused, used = find_unused_functions(labels)
 
-    inp = input("Pass or fail?: ")
-    notes = input("notes: ")
+    # inp = input("Pass or fail?: ")
+    # notes = input("notes: ")
+    inp = 'passed'
+    notes = 'replace'
     fit_mins.append(best_fit)
     fit_mins.append(inp)
     if inp == 'passed':
-        plot_as_tree(nodes, edges, labels, best_fit)
+        # plot_as_tree(nodes, edges, labels, best_fit)
         fit_mins.append(str(hof[0]))
     else:
         fit_mins.append(' ')
@@ -285,7 +287,7 @@ toolbox.register("evaluate", evalIndividual)
 toolbox.register("select", tools.selTournament, tournsize=5)
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
-toolbox.register("mutate", gp.mutNodeReplacement, expr=toolbox.expr_mut, pset=pset)
+toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
 
 toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
@@ -325,5 +327,5 @@ def main():
     return pop, log, hof
 
 if __name__ == "__main__":
-    for i in range(10):
+    for i in range(5):
         main()
