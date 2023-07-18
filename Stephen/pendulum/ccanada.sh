@@ -15,5 +15,9 @@ do
 done
 
 module load python
-source /home/skelly/deap_env/bin/activate
+virtualenv $SLURM_TMPDIR/env
+source $SLURM_TMPDIR/env/bin/activate
+pip install --upgrade pip
+pip install -r requirements_alliancecan.txt
+
 python -u memory_01.py $seed > memory_01-$seed-$SLURM_JOB_ID.std
