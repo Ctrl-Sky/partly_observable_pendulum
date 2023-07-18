@@ -42,3 +42,6 @@ ideas ive cooked up for file organization
 break down into packages
 put functions for solving into different modules
 put functions for writing to excel and graphs into modules
+
+https://github.com/yngvem/python-project-structure 
+https://godatadriven.com/blog/a-practical-guide-to-setuptools-and-pyproject-toml/ 

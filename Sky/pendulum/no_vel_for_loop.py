@@ -129,8 +129,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Pendulum-v1', g=14) # For training
-env_test = gym.make('Pendulum-v1', g=14, render_mode="human") # For rendering the best one
+env_train = gym.make('Pendulum-v1', g=16) # For training
+env_test = gym.make('Pendulum-v1', g=16, render_mode="human") # For rendering the best one
 
 # Takes an individual and makes a tree graph and saves it into trees file
 def plot_as_tree(nodes, edges, labels, best_fit):

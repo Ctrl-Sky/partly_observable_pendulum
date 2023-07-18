@@ -79,8 +79,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
                  toolbox.expr)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make('Pendulum-v1', g=16) # For training
-env_test = gym.make('Pendulum-v1', g=16, render_mode="human") # For rendering the best one
+env_train = gym.make('Pendulum-v1', g=17) # For training
+env_test = gym.make('Pendulum-v1', g=17, render_mode="human") # For rendering the best one
 
 # Used to graph the best individual and output to out.png
 def graph(expr, str):
