@@ -45,3 +45,11 @@ put functions for writing to excel and graphs into modules
 
 https://github.com/yngvem/python-project-structure 
 https://godatadriven.com/blog/a-practical-guide-to-setuptools-and-pyproject-toml/ 
+
+
+things to do tmrw:
+
+Test the no_vel with gravity Changes
+do the python repo set up
+try using the compute canada and try running it
+talk to dr.kelly about the poster event
