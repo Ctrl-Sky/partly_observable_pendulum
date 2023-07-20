@@ -38,16 +38,16 @@ def testGravity(s):
         add_to_excel.append(i)
 
         for j in range(5):
-            fit = evalIndividual(s, i, pset, test=False)[0]
+            fit = evalIndividual(s, pset, i, test=False)[0]
             total += fit
 
         add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel)
+        write_to_excel(add_to_excel, path="/Users/sky/Documents/pendulum_gravity.xlsx")
 
 str = 'ang_vel(limit(asin(protectedDiv(y3, y2), acos(y3, x2)), conditional(x1, conditional(y3, x3)), tan(y3)), cos(sin(x1)), cos(x2), x2)'
 s = gp.PrimitiveTree.from_string(str, pset)
-nodes, edges, labels = gp.graph(s)
-print(evalIndividual(s, pset, 9.81, True))
+# nodes, edges, labels = gp.graph(s)
+# print(evalIndividual(s, pset, 9.81, True))
 
-plot_as_tree(nodes, edges, labels, 12)
-# testGravity(s)
+# plot_as_tree(nodes, edges, labels, 12)
+testGravity(s)

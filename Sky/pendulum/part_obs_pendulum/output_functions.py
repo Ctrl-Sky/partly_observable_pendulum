@@ -1,5 +1,3 @@
-import random
-
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
 
@@ -15,10 +13,9 @@ def plot_as_tree(nodes, edges, labels, best_fit):
     for i in nodes:
         n = g.get_node(i)
         n.attr["label"] = labels[i]
-    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/part_obs_pendulum/'+str(best_fit)+".pdf")
+    g.draw(str(best_fit)+".pdf")
 
-# Append the fitness information to an excel sheet
-def write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof, ask):
+def best_ind_info(fit_mins, best_fit, hof, labels, ask):
     unused, used = find_unused_functions(labels)
 
     if ask == True:
@@ -37,34 +34,26 @@ def write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof, ask):
     fit_mins.append(unused)
     fit_mins.append(used)
     fit_mins.append(notes)
+
+    return fit_mins
+
+# Append the fitness information to an excel sheet
+def write_to_excel(fit_mins, path):
     
-    workbook = load_workbook(filename="/Users/sky/Documents/Book1.xlsx")
+    workbook = load_workbook(filename=path)
     sheet = workbook.active
 
     sheet.append(fit_mins)
 
-    workbook.save(filename="/Users/sky/Documents/Book1.xlsx")
-
-# Plot individual as a tree 
-def plot_as_tree(nodes, edges, labels, best_fit):
-    g = pgv.AGraph()
-    g.add_nodes_from(nodes)
-    g.add_edges_from(edges)
-    g.layout(prog="dot")
-
-    for i in nodes:
-        n = g.get_node(i)
-        n.attr["label"] = labels[i]
-    g.draw('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum/graphs/'+str(best_fit)+".pdf")
+    workbook.save(filename=path)
 
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(gen, fit_mins, best_fit):
-    colours = ['r-', 'g-', 'b-', 'c-', 'm-', 'k-']
 
     # Simply change the lines in quottation above to change the values you want to graph
 
     fig, ax1 = plt.subplots() # Allows you to create multiple plots in one figure
-    line1 = ax1.plot(gen, fit_mins, random.choice(colours), label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
+    line1 = ax1.plot(gen, fit_mins, 'b-', label="Maximum Fitness") # Plots using gen as x value and fit_mins as y, both are list
     ax1.set_xlabel("Generation")
     ax1.set_ylabel("Fitness", color="b")
     for tl in ax1.get_yticklabels(): # Changes colour of ticks and numbers on axis

@@ -89,9 +89,10 @@ def main():
     print(hof[0])
     plot_onto_graph(gen, fit_mins, best_fit)
     evalIndividual(hof[0], pset, 9.81, True)
-    plot_as_tree(nodes, edges, labels, best_fit)
 
-    write_to_excel(fit_mins, best_fit, labels, nodes, edges, hof, ask=True) # Write to specific excel sheet, comment out if not using Sky's Mac
+
+    fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
+    write_to_excel(fit_mins, path="/Users/sky/Documents/Book1.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
 
     return pop, log, hof
 
