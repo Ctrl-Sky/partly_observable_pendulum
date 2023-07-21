@@ -1,12 +1,12 @@
 from deap import gp
 import gymnasium as gym
 
-def evalIndividual(individual, grav, pset, test=False):
+def fullObsEvalIndividual(individual, pset, grav, test=False):
     env_train = gym.make('Pendulum-v1', g=grav) # For training
     env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering the best one
     env = env_train
 
-    num_episode = 100 # Basically the amount of simulations ran
+    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1

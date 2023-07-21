@@ -1,7 +1,7 @@
 from deap import gp
 import gymnasium as gym
 
-def evalIndividual(individual, pset, grav, test=False):
+def partObsEvalIndividual(individual, pset, grav, test=False):
     env_train = gym.make('Pendulum-v1', g=grav) # For training
     env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering the best one
     env = env_train
