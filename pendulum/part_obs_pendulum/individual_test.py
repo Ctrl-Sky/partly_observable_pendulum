@@ -5,7 +5,8 @@ from deap import gp
 
 # Import modules from different directory
 import sys
-sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum')
+sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum')
+
 
 from modules.prim_functions import *
 from modules.output_functions import *
@@ -51,7 +52,7 @@ def testGravity(s):
 str = 'ang_vel(limit(asin(protectedDiv(y3, y2), acos(y3, x2)), conditional(x1, conditional(y3, x3)), tan(y3)), cos(sin(x1)), cos(x2), x2)'
 s = gp.PrimitiveTree.from_string(str, pset)
 # nodes, edges, labels = gp.graph(s)
-print(partObsEvalIndividual(s, pset, 9.81, True))
+# print(partObsEvalIndividual(s, pset, 9.81, True))
 
 # plot_as_tree(nodes, edges, labels, 12)
 # testGravity(s)
