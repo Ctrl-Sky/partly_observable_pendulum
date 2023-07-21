@@ -5,7 +5,7 @@ from deap import gp
 
 # Import modules from different directory
 import sys
-sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum')
+# sys.path.append('/deap_experiments/pendulum')
 
 from modules.prim_functions import *
 from modules.output_functions import *

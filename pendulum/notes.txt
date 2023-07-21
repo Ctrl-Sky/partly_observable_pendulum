@@ -53,3 +53,5 @@ Test the no_vel with gravity Changes
 do the python repo set up
 try using the compute canada and try running it
 talk to dr.kelly about the poster event
+
+fix the path for system.append to ensure it works from other computers not just repo
