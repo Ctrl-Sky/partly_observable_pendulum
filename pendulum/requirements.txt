@@ -1,0 +1,6 @@
+deap
+matplotlib
+pygraghviz
+gymnasium
+pygame
+xlsxwritter

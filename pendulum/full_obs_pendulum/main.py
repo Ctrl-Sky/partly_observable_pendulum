@@ -1,5 +1,5 @@
-# genetic programming for Gymnasium Cart Pole task
-# https://gymnasium.farama.org/environments/classic_control/mountain_car/
+# genetic programming for Gymnasium Pendulum task
+# https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
 
 import numpy
 import operator
@@ -47,6 +47,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
+    # Initialize the population
     pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 

@@ -1,12 +1,14 @@
 from deap import gp
 import gymnasium as gym
 
+# Evaluate fitness of individual
 def fullObsEvalIndividual(individual, pset, grav, test=False):
+    # Set up the enviornment and gravity
     env_train = gym.make('Pendulum-v1', g=grav) # For training
-    env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering the best one
+    env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
     env = env_train
+    num_episode = 30
 
-    num_episode = 30 # Basically the amount of simulations ran
     if test:
         env = env_test
         num_episode = 1
@@ -16,9 +18,10 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = 0
     failed = False
     for x in range(0, num_episode):
+        # Set up the variables for the env
         done = False
         truncated = False
-        observation = env.reset() # Reset the pole to some random location and defines the things in observation
+        observation = env.reset()
         observation = observation[0]
         episode_reward = 0
         num_steps = 0

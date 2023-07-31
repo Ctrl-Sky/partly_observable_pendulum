@@ -3,7 +3,7 @@ import pygraphviz as pgv
 
 from openpyxl import load_workbook
 
-# Takes an individual and makes a tree graph and saves it into trees file
+# Takes an individual and plots it as a tree graph and saves it to a pdf
 def plot_as_tree(nodes, edges, labels, best_fit):
     g = pgv.AGraph()
     g.add_nodes_from(nodes)
@@ -15,6 +15,7 @@ def plot_as_tree(nodes, edges, labels, best_fit):
         n.attr["label"] = labels[i]
     g.draw(str(best_fit)+".pdf")
 
+# Get info on an individual and append it to a list
 def best_ind_info(fit_mins, best_fit, hof, labels, ask):
     unused, used = find_unused_functions(labels)
 
