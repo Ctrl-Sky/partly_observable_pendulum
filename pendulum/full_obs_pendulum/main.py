@@ -75,7 +75,6 @@ def main():
     fullObsEvalIndividual(hof[0], pset, 9.81, True)
 
     # fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
-    # write_to_excel(fit_mins, path="/Users/sky/Documents/Book1.xlsx")
 
     return pop, log, hof
 

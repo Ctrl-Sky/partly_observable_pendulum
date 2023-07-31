@@ -98,7 +98,7 @@ def main():
 
 
     fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
-    write_to_excel(fit_mins, path="/Users/sky/Documents/Book1.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
+    write_to_excel(fit_mins, path="excel_sheets/part_obs_training_data.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
 
     return pop, log, hof
 

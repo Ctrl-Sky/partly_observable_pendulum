@@ -48,7 +48,7 @@ def testGravity(s):
             total += fit
 
         add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel, path="/Users/sky/Documents/pendulum_gravity.xlsx")
+        write_to_excel(add_to_excel, path="excel_sheets/part_obs_grav.xlsx")
 
 str = 'ang_vel(limit(asin(protectedDiv(y3, y2), acos(y3, x2)), conditional(x1, conditional(y3, x3)), tan(y3)), cos(sin(x1)), cos(x2), x2)'
 s = gp.PrimitiveTree.from_string(str, pset)
