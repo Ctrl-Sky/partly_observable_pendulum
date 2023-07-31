@@ -5,7 +5,7 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-PATH=os.path.abspath('pendulum')
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PATH)
 
 from modules.prim_functions import *
@@ -41,8 +41,8 @@ def testGravity(ind, path):
 str_ind = 'conditional(add(x, y), add(vel, y))'
 ind = gp.PrimitiveTree.from_string(str_ind, pset)
 
-print(fullObsEvalIndividual(ind, pset, 9.81, True))
+# print(fullObsEvalIndividual(ind, pset, 9.81, True))
 
 # nodes, edges, labels = gp.graph(s)
 # plot_as_tree(nodes, edges, labels, 12)
-testGravity(ind, path="full_obs_grav.xlsx")
+testGravity(ind, path=os.path.dirname(os.path.abspath(__file__)) + "/full_obs_grav.xlsx")

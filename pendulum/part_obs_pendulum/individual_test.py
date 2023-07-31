@@ -6,7 +6,7 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-PATH=os.path.abspath('pendulum')
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PATH)
 
 from modules.prim_functions import *
@@ -36,7 +36,7 @@ pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
-def testGravity(s):
+def testGravity(s, path):
     gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
     for i in gravity:
         add_to_excel = []
@@ -48,7 +48,7 @@ def testGravity(s):
             total += fit
 
         add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel, path="excel_sheets/part_obs_grav.xlsx")
+        write_to_excel(add_to_excel, path)
 
 str = 'ang_vel(limit(asin(protectedDiv(y3, y2), acos(y3, x2)), conditional(x1, conditional(y3, x3)), tan(y3)), cos(sin(x1)), cos(x2), x2)'
 s = gp.PrimitiveTree.from_string(str, pset)
@@ -56,4 +56,4 @@ s = gp.PrimitiveTree.from_string(str, pset)
 # print(partObsEvalIndividual(s, pset, 9.81, True))
 
 # plot_as_tree(nodes, edges, labels, 12)
-# testGravity(s)
+testGravity(s, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")

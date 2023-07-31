@@ -13,7 +13,7 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-PATH=os.path.abspath('pendulum')
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PATH)
 
 from modules.prim_functions import conditional, truncate

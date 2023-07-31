@@ -17,7 +17,7 @@ import multiprocessing
 # Import modules from different directory
 import os
 import sys
-PATH=os.path.abspath('pendulum')
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PATH)
 
 from modules.prim_functions import *
@@ -98,7 +98,7 @@ def main():
 
 
     fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
-    write_to_excel(fit_mins, path="excel_sheets/part_obs_training_data.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
+    write_to_excel(fit_mins, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_training_data.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
 
     return pop, log, hof
 
