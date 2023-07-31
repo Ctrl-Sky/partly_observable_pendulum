@@ -4,9 +4,10 @@ import operator
 from deap import gp
 
 # Import modules from different directory
+import os
 import sys
-sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum')
-
+PATH=os.path.abspath('pendulum')
+sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *

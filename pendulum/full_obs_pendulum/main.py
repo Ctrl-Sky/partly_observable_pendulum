@@ -11,8 +11,11 @@ from deap import tools
 from deap import gp
 
 # Import modules from different directory
+import os
 import sys
-sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum')
+PATH=os.path.abspath('pendulum')
+sys.path.append(PATH)
+
 from modules.prim_functions import conditional, truncate
 from modules.output_functions import *
 from modules.full_obs_eval_individual import fullObsEvalIndividual

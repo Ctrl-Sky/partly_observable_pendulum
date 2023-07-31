@@ -15,8 +15,10 @@ from deap import gp
 import multiprocessing
 
 # Import modules from different directory
+import os
 import sys
-sys.path.append('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/Sky/pendulum')
+PATH=os.path.abspath('pendulum')
+sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *
