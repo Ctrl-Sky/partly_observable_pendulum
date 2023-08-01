@@ -69,12 +69,17 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     # nodes, edges, labels = gp.graph(hof[0])
 
+    # Prints the fitness score of the best individual
     print(best_fit)
-    print(hof[0])
-    plot_onto_graph(gen, fit_mins, best_fit)
-    fullObsEvalIndividual(hof[0], pset, 9.81, True)
 
-    # fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
+    # Prints the individual's tree in string form
+    print(hof[0])
+
+    # Graphs the fitness score of every ind over the generations and displays it
+    plot_onto_graph(gen, fit_mins, best_fit)
+
+    # Creates an env and displays the best ind being tested in the env
+    fullObsEvalIndividual(hof[0], pset, 9.81, True)
 
     return pop, log, hof
 

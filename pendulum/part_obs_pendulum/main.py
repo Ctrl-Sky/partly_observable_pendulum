@@ -91,14 +91,22 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
+    # Prints the fitness score of the best individual
     print(best_fit)
+
+    # Prints the individual's tree in string form
     print(hof[0])
+
+    # Graphs the fitness score of every ind over the generations and displays it
     plot_onto_graph(gen, fit_mins, best_fit)
+
+    # Creates an env and displays the best ind being tested in the env
     partObsEvalIndividual(hof[0], pset, 9.81, True)
 
-
+    # Ask for relevant info about the best individual and then writes it
+    # to a part_obs_training_data
     fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
-    write_to_excel(fit_mins, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_training_data.xlsx") # Write to specific excel sheet, comment out if not using Sky's Mac
+    write_to_excel(fit_mins, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_training_data.xlsx")
 
     return pop, log, hof
 

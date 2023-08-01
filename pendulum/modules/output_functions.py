@@ -64,7 +64,7 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     labs = [l.get_label() for l in lns] # labs contains the labels of each line (Minimum Fitness and Average Size)
     ax1.legend(lns, labs, loc="lower right") # Adds then a legend
 
-    plt.axis([min(gen), max(gen), -1500, 0])
+    plt.axis([min(gen), max(gen), min(fit_mins), 0])
     plt.show()
 
 # Find used and unused functions in individual

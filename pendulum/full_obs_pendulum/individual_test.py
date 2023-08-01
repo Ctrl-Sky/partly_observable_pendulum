@@ -37,12 +37,21 @@ def testGravity(ind, path):
         add_to_excel.append(round(total/5, 2))
         write_to_excel(add_to_excel, path)
 
-# Change the ind variable to test different individuals
-str_ind = 'conditional(add(x, y), add(vel, y))'
-ind = gp.PrimitiveTree.from_string(str_ind, pset)
+# Replace value of str to an individuals tree in string form to test it
+# Can simply print the indivudual to output the ind's tree in string form
+# in string form and just copy and paste it here
+str='conditional(add(x, y), add(vel, y))'
+ind=gp.PrimitiveTree.from_string(str, pset)
 
+# Creates an env and displays the individual being tested and
+# then prints out it's fitness score
 # print(fullObsEvalIndividual(ind, pset, 9.81, True))
 
+# Plots the graph of the ind in a more falttering way and
+# saves it to a png to view
 # nodes, edges, labels = gp.graph(s)
 # plot_as_tree(nodes, edges, labels, 12)
+
+# Test the ind at different gravity values and then
+# writes the fitness score at each gravity to full_obs_grav.xlsx
 testGravity(ind, path=os.path.dirname(os.path.abspath(__file__)) + "/full_obs_grav.xlsx")
