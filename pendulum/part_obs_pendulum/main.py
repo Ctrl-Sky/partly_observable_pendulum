@@ -1,5 +1,5 @@
-# genetic programming for Gymnasium Cart Pole task
-# https://gymnasium.farama.org/environments/classic_control/mountain_car/
+# genetic programming for Gymnasium Pendulum task
+# https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
 
 import numpy
 import operator
@@ -22,7 +22,7 @@ sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *
-from modules.part_obs_eval_individual import partObsEvalIndividual
+from modules.eval_individual import partObsEvalIndividual
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)

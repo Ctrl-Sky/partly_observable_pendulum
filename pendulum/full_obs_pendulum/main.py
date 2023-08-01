@@ -18,7 +18,7 @@ sys.path.append(PATH)
 
 from modules.prim_functions import conditional, truncate
 from modules.output_functions import *
-from modules.full_obs_eval_individual import fullObsEvalIndividual
+from modules.eval_individual import fullObsEvalIndividual
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)

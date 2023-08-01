@@ -1,3 +1,6 @@
+# genetic programming for Gymnasium Pendulum task
+# https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
+
 import math
 import operator
 
@@ -11,7 +14,7 @@ sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *
-from modules.part_obs_eval_individual import partObsEvalIndividual
+from modules.test_gravity import partObsTestGravity
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
@@ -36,20 +39,6 @@ pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
-def testGravity(ind, path):
-    gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
-    for i in gravity:
-        add_to_excel = []
-        total = 0
-        add_to_excel.append(i)
-
-        for j in range(5):
-            fit = partObsEvalIndividual(ind, pset, i, test=False)[0]
-            total += fit
-
-        add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel, path)
-
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
@@ -67,4 +56,4 @@ ind=gp.PrimitiveTree.from_string(str, pset)
 
 # Test the ind at different gravity values and then
 # writes the fitness score at each gravity to part_obs_grav.xlsx
-testGravity(ind, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+partObsTestGravity(ind, pset, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
