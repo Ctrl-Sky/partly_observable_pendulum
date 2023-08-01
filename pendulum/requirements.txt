@@ -4,3 +4,5 @@ pygraghviz
 gymnasium
 pygame
 xlsxwritter
+openpyxl
+pandas

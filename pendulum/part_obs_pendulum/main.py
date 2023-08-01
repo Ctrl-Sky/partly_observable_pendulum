@@ -17,8 +17,8 @@ import multiprocessing
 # Import modules from different directory
 import os
 import sys
-PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(PATH)
+path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(path)
 
 from modules.prim_functions import *
 from modules.output_functions import *

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
+import pandas as pd
 
 from openpyxl import load_workbook
 
@@ -40,6 +41,17 @@ def best_ind_info(fit_mins, best_fit, hof, labels, ask):
 
 # Append the fitness information to an excel sheet
 def write_to_excel(fit_mins, path):
+
+    # file_path = path
+
+    # df_existing = pd.read_excel(file_path)
+
+    # df_to_append = pd.DataFrame([info_list],
+    #                 index=False, columns=column)
+
+    # df_updated = pd.concat([df_existing, df_to_append], ignore_index=True)
+
+    # df_updated.to_excel(file_path, index=False)
     
     workbook = load_workbook(filename=path)
     sheet = workbook.active
