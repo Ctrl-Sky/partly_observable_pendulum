@@ -4,6 +4,7 @@
 import math
 import operator
 
+import pandas as pd
 from deap import gp
 
 # Import modules from different directory
@@ -40,18 +41,20 @@ pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
 def partObsTestGravity(ind, pset, path):
-    gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
-    for i in gravity:
-        add_to_excel = []
+    gravity = ['ind', 1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
+    add_to_excel = [ind]
+    for i in range(1, len(gravity)):
         total = 0
-        add_to_excel.append(i)
 
-        for j in range(5):
-            fit = partObsEvalIndividual(ind, pset, i, test=False)[0]
+        for j in range(1):
+            fit = partObsEvalIndividual(ind, pset, gravity[i], test=False)[0]
             total += fit
 
+        
         add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel, path)
+
+    df = pd.DataFrame([add_to_excel], index=[1], columns=gravity)
+    write_to_excel(path, df_to_append=df)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
