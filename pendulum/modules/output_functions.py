@@ -40,18 +40,19 @@ def best_ind_info(fit_mins, best_fit, hof, labels, ask):
     return fit_mins
 
 # Append the fitness information to an excel sheet
-def write_to_excel(path, df_to_append):
+def write_to_excel(path, sheet, df_to_append):
 
-    file_path = path
+    if sheet_exists(path, sheet):
+        df_existing = pd.read_excel(path, sheet_name=sheet)
 
-    df_existing = pd.read_excel(file_path)
+        df_updated = pd.concat([df_existing, df_to_append], ignore_index=True)
 
-    # df_to_append = pd.DataFrame([info_list],
-    #                 index=False, columns=column)
+        df_updated.to_excel(path, sheet_name=sheet, index=False)
 
-    df_updated = pd.concat([df_existing, df_to_append], ignore_index=True)
-
-    df_updated.to_excel(file_path, index=False)
+    if not sheet_exists(path, sheet):
+            
+        with pd.ExcelWriter(path, mode='a', engine='openpyxl') as writer:
+            df_to_append.to_excel(writer, sheet_name=sheet, index=False)
     
     # workbook = load_workbook(filename=path)
     # sheet = workbook.active
@@ -94,3 +95,7 @@ def find_unused_functions(labels):
         string2 = string2 + i + ', '
 
     return string1, string2
+
+def sheet_exists(file_path, sheet_name):
+    with pd.ExcelFile(file_path) as xls:
+        return sheet_name in xls.sheet_names
