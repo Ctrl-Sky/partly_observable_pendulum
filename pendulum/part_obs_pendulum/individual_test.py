@@ -39,18 +39,18 @@ pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
-def partObsTestGravity(ind, pset, path):
+def partObsTestGravity(ind, pset, string, path):
     gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
-    add_to_excel = [ind]
+    add_to_excel = [string]
     for i in gravity:
         total = 0
 
-        for j in range(5):
-            fit = partObsEvalIndividual(ind, pset, gravity[i], test=False)[0]
+        for j in range(1):
+            fit = partObsEvalIndividual(ind, pset, i, test=False)[0]
             total += fit
         
         add_to_excel.append(round(total/5, 2))
-    write_to_excel(path, add_to_excel)
+    write_to_excel(add_to_excel, path)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
@@ -58,8 +58,8 @@ def partObsTestGravity(ind, pset, path):
 l = ['ang_vel(y1, y2, x1, protectedDiv(ang_vel(add(max(y1, x1), sub(x2, x3)), x1, y3, x3), limit(y1, x3, limit(y1, x1, ang_vel(x3, x1, x3, x2)))))']
 
 for i in l:
-    str=i
-    ind=gp.PrimitiveTree.from_string(str, pset)
+    string=i
+    ind=gp.PrimitiveTree.from_string(string, pset)
 
     # Creates an env and displays the individual being tested and
     # then prints out it's fitness score
@@ -72,5 +72,5 @@ for i in l:
 
     # Test the ind at different gravity values and then
     # writes the fitness score at each gravity to part_obs_grav.xlsx
-    partObsTestGravity(ind, pset, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+    partObsTestGravity(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
 

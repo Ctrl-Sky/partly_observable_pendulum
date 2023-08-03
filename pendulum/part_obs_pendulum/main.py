@@ -82,7 +82,7 @@ def main():
     pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 1, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 0, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close() # parallel
     
