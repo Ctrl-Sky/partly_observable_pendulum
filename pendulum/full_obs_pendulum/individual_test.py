@@ -8,12 +8,12 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(path)
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *
-from modules.eval_individual import fullObsEvalIndividual
+from modules.test_gravity import fullObsTestGravity
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
@@ -24,6 +24,7 @@ pset.renameArguments(ARG0='x')
 pset.renameArguments(ARG1='y')
 pset.renameArguments(ARG2='vel')
 
+<<<<<<< HEAD
 # Test individual at different gravities and takes the average fitness
 # of 5 and writes it to an excel sheet
 def fullObsTestGravity(ind, pset, sheet, path):
@@ -41,6 +42,8 @@ def fullObsTestGravity(ind, pset, sheet, path):
     df = pd.DataFrame([add_to_excel], index=[1], columns=gravity)
     write_to_excel(path, sheet, df_to_append=df)
 
+=======
+>>>>>>> parent of aee905b (move test gravity functions back)
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here

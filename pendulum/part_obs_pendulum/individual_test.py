@@ -10,12 +10,12 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(path)
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # Saves the path to pendulum directory to PATH
+sys.path.append(PATH)
 
 from modules.prim_functions import *
 from modules.output_functions import *
-from modules.eval_individual import partObsEvalIndividual
+from modules.test_gravity import partObsTestGravity
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
@@ -40,6 +40,7 @@ pset.renameArguments(ARG3='x2')
 pset.renameArguments(ARG4='y3')
 pset.renameArguments(ARG5='x3')
 
+<<<<<<< HEAD
 def partObsTestGravity(ind, pset, sheet, path):
     gravity = ['ind', 1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
     add_to_excel = [ind]
@@ -56,6 +57,8 @@ def partObsTestGravity(ind, pset, sheet, path):
     df = pd.DataFrame([add_to_excel], index=[1], columns=gravity)
     write_to_excel(path, sheet, df_to_append=df)
 
+=======
+>>>>>>> parent of aee905b (move test gravity functions back)
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here

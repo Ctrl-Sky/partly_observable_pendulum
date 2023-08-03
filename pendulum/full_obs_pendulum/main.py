@@ -13,8 +13,8 @@ from deap import gp
 # Import modules from different directory
 import os
 import sys
-path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(path)
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PATH)
 
 from modules.prim_functions import conditional, truncate
 from modules.output_functions import *
