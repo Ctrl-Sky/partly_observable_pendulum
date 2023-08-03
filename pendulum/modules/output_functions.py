@@ -41,12 +41,12 @@ def best_ind_info(fit_mins, best_fit, hof, labels, ask):
 # Append the fitness information to an excel sheet
 def write_to_excel(fit_mins, path):
     
-    # workbook = load_workbook(filename=path)
-    # sheet = workbook.active
+    workbook = load_workbook(filename=path)
+    sheet = workbook.active
 
-    # sheet.append(fit_mins)
+    sheet.append(fit_mins)
 
-    # workbook.save(filename=path)
+    workbook.save(filename=path)
 
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(gen, fit_mins, best_fit):
@@ -82,7 +82,3 @@ def find_unused_functions(labels):
         string2 = string2 + i + ', '
 
     return string1, string2
-
-def sheet_exists(file_path, sheet_name):
-    with pd.ExcelFile(file_path) as xls:
-        return sheet_name in xls.sheet_names

@@ -47,7 +47,8 @@ https://github.com/yngvem/python-project-structure
 https://godatadriven.com/blog/a-practical-guide-to-setuptools-and-pyproject-toml/ 
 
 
-things to do tmrw:
-
-do the python repo set up
 try using the compute canada and try running it
+test it with gravity as well
+
+Work on poster 
+begin testing the memory pendulum using gravity
