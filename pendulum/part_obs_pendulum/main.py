@@ -24,6 +24,11 @@ from modules.prim_functions import *
 from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
+GRAV=9.81
+POP=200
+GENS=25
+TOURN_SIZE=5
+
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 6)
 pset.addPrimitive(operator.add, 2)
@@ -58,8 +63,8 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 # Register functions in the toolbox needed for evolution
-toolbox.register("evaluate", partObsEvalIndividual, pset=pset, grav=9.81)
-toolbox.register("select", tools.selTournament, tournsize=5)
+toolbox.register("evaluate", partObsEvalIndividual, pset=pset, grav=GRAV)
+toolbox.register("select", tools.selTournament, tournsize=TOURN_SIZE)
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr_mut, pset=pset)
@@ -68,7 +73,7 @@ toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_v
 toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def main():
-    pop = toolbox.population(n=200)
+    pop = toolbox.population(n=POP)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -82,7 +87,7 @@ def main():
     pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 0, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close() # parallel
     
@@ -92,23 +97,24 @@ def main():
     nodes, edges, labels = gp.graph(hof[0])
 
     # Prints the fitness score of the best individual
-    print(best_fit)
+    # print(best_fit)
 
     # Prints the individual's tree in string form
-    print(hof[0])
+    # print(hof[0])
 
     # Graphs the fitness score of every ind over the generations and displays it
-    plot_onto_graph(gen, fit_mins, best_fit)
+    # plot_onto_graph(gen, fit_mins, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
-    partObsEvalIndividual(hof[0], pset, 9.81, True)
+    # partObsEvalIndividual(hof[0], pset, 9.81, True)
 
     # Ask for relevant info about the best individual and then writes it
     # to a part_obs_training_data
-    fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, True)
+    fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, ask=False)
     write_to_excel(fit_mins, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_training_data.xlsx")
 
     return pop, log, hof
 
 if __name__ == "__main__":
-    main()
+    for i in range(5):
+        main()

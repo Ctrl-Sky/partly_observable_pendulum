@@ -52,3 +52,12 @@ test it with gravity as well
 
 Work on poster 
 begin testing the memory pendulum using gravity
+
+Future work
+Build policy for dynamic task
+
+Evolving memory module we will be able to build policies to adapt dynamic environment (gravity change)
+
+Basically a pendulum that can adapt to gravitational change
+
+Problem approach methodology
