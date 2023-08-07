@@ -83,3 +83,10 @@ THINGS TO ASK ABOUT
 - refereces and investigation
 - title to put for Dr. Kelly
 - ask Dr. Kelly about intro, houw should we phrase why we decided to study it
+
+avg size of tree
+avg fitness score
+success chance
+average number of evals
+NUMBEr OF GENS 
+POPULATION
