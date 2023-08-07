@@ -78,7 +78,8 @@ def partObsTestGravity(ind, pset, string, path):
 #      'ang_vel(cos(limit(x1, limit(sin(protectedDiv(y1, x2)), conditional(x2, y2), limit(x1, x2, y2)), x1)), max(sub(y2, y2), protectedDiv(x1, x2)), limit(y1, x1, x1), add(x1, atan(y2, x2)))',
 #      'tan(ang_vel(x1, conditional(limit(y2, conditional(limit(y2, y2, y2), sub(asin(x1, y2), y1)), protectedDiv(y1, x1)), sub(x1, y1)), tan(y1), x3))']
 
-l = ['ang_vel(asin(acos(ang_vel(x1, x3, limit(asin(max(limit(x1, x3, y3), sub(atan(x2, x2), conditional(y3, y3))), y1), max(x2, y1), sin(y3)), x3), x1), conditional(x3, x3)), x1, sin(sin(x3)), y3)']
+
+l = ['add(ang_vel(limit(max(x1, y1), add(y1, y2), conditional(y3, atan(y2, y3))), x3, y3, x3), ang_vel(atan(limit(y2, x1, x2), atan(y2, y3)), x3, ang_vel(acos(x2, x2), x3, x3, asin(sub(y1, y2), add(y3, y1))), x3))']
 for i in l:
     string=i
     ind=gp.PrimitiveTree.from_string(string, pset)
@@ -95,3 +96,5 @@ for i in l:
     # Test the ind at different gravity values and then
     # writes the fitness score at each gravity to part_obs_grav.xlsx
     # partObsTestGravity(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+
+
