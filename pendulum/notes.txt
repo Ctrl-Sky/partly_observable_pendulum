@@ -61,3 +61,25 @@ Evolving memory module we will be able to build policies to adapt dynamic enviro
 Basically a pendulum that can adapt to gravitational change
 
 Problem approach methodology
+
+SUBTITLES
+- Introduction/backgroundt
+- Materials and methods
+- Results
+- Future work and next steps
+- Conclusions
+
+PICTURE TO INCLUDE
+- tree graph of best individual compare (recursive and memory index)
+- Graph graph of best individual (recurisve or memory index)
+- Picutres displaying how the pendulum works
+    - 4 pictures that can act as like frames in fps
+- For tables you can used
+    - Gravity table
+    - Organized result table of the best one (basic gen = 30, pop = 200) (only include test #, passed/failed, tree, ftiness)
+    - raw data (probably not he best pick)
+
+THINGS TO ASK ABOUT 
+- refereces and investigation
+- title to put for Dr. Kelly
+- ask Dr. Kelly about intro, houw should we phrase why we decided to study it

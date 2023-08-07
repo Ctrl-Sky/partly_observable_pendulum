@@ -55,7 +55,7 @@ def partObsTestGravity(ind, pset, string, path):
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-l = ['ang_vel(y1, y2, x1, protectedDiv(ang_vel(add(max(y1, x1), sub(x2, x3)), x1, y3, x3), limit(y1, x3, limit(y1, x1, ang_vel(x3, x1, x3, x2)))))']
+l = ['atan(protectedDiv(y2, y3), sub(x3, atan(add(y2, cos(protectedDiv(y2, y1))), protectedDiv(y1, x1))))']
 
 for i in l:
     string=i
@@ -67,10 +67,10 @@ for i in l:
 
     # Plots the graph of the ind in a more falttering way and
     # saves it to a png to view
-    # nodes, edges, labels = gp.graph(s)
-    # plot_as_tree(nodes, edges, labels, 12)
+    nodes, edges, labels = gp.graph(ind)
+    plot_as_tree(nodes, edges, labels, 12)
 
     # Test the ind at different gravity values and then
     # writes the fitness score at each gravity to part_obs_grav.xlsx
-    partObsTestGravity(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+    # partObsTestGravity(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
 
