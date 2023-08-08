@@ -431,6 +431,15 @@ def write_to_excel(fit):
 
     workbook.save(filename="./Book1.xlsx")
 
+def append_to_file(file_name, text):
+    # Open the file in append mode ('a+')
+    with open(file_name, 'a+') as file:
+        # Move the file pointer to the end to ensure appending
+        file.seek(0, 2)
+        
+        # Append the text to the file
+        file.write(text + '\n')
+
 
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(seed, gen, fit_mins, best_fit):
@@ -561,6 +570,10 @@ def main():
     best_fits = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
+
+    file_name = 'tree_string'
+    text_to_append = best_fit
+    append_to_file(file_name, text_to_append)
 
     print(best_fit)
     print(hof[0])
