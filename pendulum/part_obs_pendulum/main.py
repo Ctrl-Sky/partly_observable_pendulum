@@ -24,7 +24,7 @@ from modules.prim_functions import *
 from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
-GRAV=11
+GRAV=12
 POP=200
 GENS=25
 TOURN_SIZE=5
