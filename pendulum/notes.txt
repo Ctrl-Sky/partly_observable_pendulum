@@ -90,3 +90,9 @@ success chance
 average number of evals
 NUMBEr OF GENS 
 POPULATION
+
+
+TO DO 
+
+TEST FULLY OBSERVALBE AND TEST Gravity
+TEST 

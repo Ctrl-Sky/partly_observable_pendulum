@@ -562,7 +562,9 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
 
     nodes, edges, labels = gp.graph(hof[0])
-    best_fits.append(hof[0])
+
+    best_fits.append(str(hof[0]))
+    best_fits.append(best_fit)
     write_to_excel(best_fits, 'memory_raw_data.xlsx')
 
     print(best_fit)
