@@ -90,13 +90,3 @@ success chance
 average number of evals
 NUMBEr OF GENS 
 POPULATION
-
-shorten tittle
-
-sum/ # of steps
-include math ofhow fitness is calculate
-
-explain in more graphical form
--
-
-can remove the gymnasium set up line
