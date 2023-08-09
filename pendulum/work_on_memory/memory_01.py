@@ -423,13 +423,13 @@ def plot_as_tree(nodes, edges, labels, best_fit):
 
 
 # Append the fitness information to an excel sheet
-def write_to_excel(fit):
-    workbook = load_workbook(filename="./Book1.xlsx")
+def write_to_excel(fit, path):
+    workbook = load_workbook(filename=path)
     sheet = workbook.active
 
     sheet.append(fit)
 
-    workbook.save(filename="./Book1.xlsx")
+    workbook.save(filename=path)
 
 
 # Creates and shows the graph of the fitness for then entire population
