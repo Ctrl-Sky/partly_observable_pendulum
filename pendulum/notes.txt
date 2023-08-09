@@ -95,4 +95,6 @@ POPULATION
 TO DO 
 
 TEST FULLY OBSERVALBE AND TEST Gravity
-TEST 
+
+in fully observable evalIndividual
+    Change the trunc to 300

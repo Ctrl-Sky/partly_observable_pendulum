@@ -563,16 +563,16 @@ def main():
 
     nodes, edges, labels = gp.graph(hof[0])
 
-    best_fits.append(str(hof[0]))
-    best_fits.append(best_fit)
-    write_to_excel(best_fits, 'memory_raw_data.xlsx')
-
     print(best_fit)
     print(hof[0])
     plot_onto_graph(seed, gen, best_fits, best_fit)
     # evalIndividual(hof[0], True) # visualize
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
+    
+    best_fits.append(str(hof[0]))
+    best_fits.append(best_fit)
+    write_to_excel(best_fits, 'memory_raw_data.xlsx')
 
     # inp = input("Pass or fail?: ")
     # notes = input("notes: ")
