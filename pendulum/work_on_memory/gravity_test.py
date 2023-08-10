@@ -15,7 +15,7 @@ sys.path.append(path)
 
 from modules.prim_functions import *
 from modules.output_functions import *
-from modules.eval_individual import partObsEvalIndividual
+from modules.eval_individual import indexMemEvalIndividual
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSetTyped("main", [list, float, float], float)
@@ -46,21 +46,28 @@ pset.renameArguments(ARG0="a0")
 pset.renameArguments(ARG1="a1")
 pset.renameArguments(ARG2="a2")
 
-def IndexMemTestGravity(inds, pset, string, path):
+def indexMemTestGravity(inds, pset, path):
     gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
-    add_to_excel = [string]
-    for i in gravity:
-        total = 0
 
-        for j in range(3):
-            fit = partObsEvalIndividual(inds, pset, i, test=False)[0]
-            total += fit
-        
-        add_to_excel.append(round(total/3, 2))
-    write_to_excel(add_to_excel, path)
+    for i in inds:
+        add_to_excel = [i]
+        ind = gp.PrimitiveTree.from_string(i, pset)
 
-l = get_one_column('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx', 'A')
-print(l)
+        for j in gravity:
+            total = 0
+
+            for j in range(3):
+                fit = indexMemEvalIndividual(ind, pset, j, test=False)[0]
+                total += fit
+            
+            add_to_excel.append(round(total/3, 2))
+        write_to_excel(add_to_excel, path)
+
+path_to_excel = '/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx'
+inds = get_one_column(path_to_excel, 'A')
+indexMemEvalIndividual(inds, pset, path_to_excel)
+
+
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
@@ -70,16 +77,16 @@ print(l)
 #     string=i
 #     ind=gp.PrimitiveTree.from_string(string, pset)
 
-    # Creates an env and displays the individual being tested and
-    # then prints out it's fitness score
-    # print(partObsEvalIndividual(ind, pset, 14, True))
+#     # Creates an env and displays the individual being tested and
+#     # then prints out it's fitness score
+#     print(indexMemEvalIndividual(ind, pset, 14, True))
 
-    # Plots the graph of the ind in a more falttering way and
-    # # saves it to a png to view
-    # nodes, edges, labels = gp.graph(ind)
-    # plot_as_tree(nodes, edges, labels, 12)
+#     # Plots the graph of the ind in a more falttering way and
+#     # saves it to a png to view
+#     nodes, edges, labels = gp.graph(ind)
+#     plot_as_tree(nodes, edges, labels, 12)
 
-    # Test the ind at different gravity values and then
-    # writes the fitness score at each gravity to part_obs_grav.xlsx
-    # partObsTestGravity(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+#     # Test the ind at different gravity values and then
+#     # writes the fitness score at each gravity to part_obs_grav.xlsx
+#     indexMemEvalIndividual(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
 
