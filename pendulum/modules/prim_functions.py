@@ -14,10 +14,23 @@ def limit(input, minimum, maximum):
         return input
     
 def protectedDiv(left, right):
-    try: return truncate(left, 8) / truncate(right, 8)
-    except ZeroDivisionError: return 1
+    if (
+        math.isinf(right)
+        or math.isnan(right)
+        or right == 0
+        or math.isinf(left)
+        or math.isnan(left)
+        or left == 0
+    ):
+        return 0
+    try:
+        return truncate(left, 8) / truncate(right, 8)
+    except ZeroDivisionError:
+        return 0
 
 def truncate(number, decimals=0):
+    if math.isinf(number) or math.isnan(number):
+        return 0
     if not isinstance(decimals, int):
         raise TypeError("decimal places must be an integer.")
     elif decimals < 0:
@@ -25,8 +38,11 @@ def truncate(number, decimals=0):
     elif decimals == 0:
         return math.trunc(number)
 
-    factor = 10.0 ** decimals
-    return math.trunc(number * factor) / factor
+    factor = 10.0**decimals
+    num = number * factor
+    if math.isinf(num) or math.isnan(num):
+        return 0
+    return math.trunc(num) / factor
 
 def vel(y2, y1, x2, x1):
     try: y = truncate((y2-y1), 8)
@@ -66,3 +82,24 @@ def vel(y2, y1, x2, x1):
     top = y2-y1
     bottom = x2-x1
     return protectedDiv(top, bottom)
+
+def read(memory, index):
+    if math.isinf(index) or math.isnan(index):
+        idx = 0
+    idx = int(abs(index))
+    return memory[idx % len(memory)]
+
+def write(memory, index, data):
+    if math.isinf(index) or math.isnan(index):
+        idx = 0
+    else:
+        idx = int(abs(index))
+    memory[idx % len(memory)] = data
+    return memory[idx % len(memory)]
+
+def protectedLog(input):
+    if input <= 0:
+        return 0
+    else:
+        return math.log(input)
+    
