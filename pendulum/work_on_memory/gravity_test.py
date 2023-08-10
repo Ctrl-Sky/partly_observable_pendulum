@@ -54,8 +54,8 @@ def indexMemTestGravity(inds, pset, trained_grav, path):
             add_to_excel.append(round(total/3, 2))
         write_to_excel(add_to_excel, path, sheet_name=trained_grav)
 
-path_to_read='/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx'
-path_to_write='/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_grav.xlsx'
+path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
+path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
 GRAV='9.81'
 # inds = get_one_column(path_to_read, 'A')
 # indexMemTestGravity(inds, pset, GRAV, path_to_write)
