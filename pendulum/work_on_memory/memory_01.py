@@ -543,17 +543,20 @@ def main():
     pool = multiprocessing.Pool(processes=96)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
-    pop, log = eaSimple_early_stop(
-        pop,
-        toolbox,
-        0.2,
-        0.75,
-        1000000,
-        stats=mstats,
-        halloffame=hof,
-        verbose=True,
-        sufficient_fitness=-200,
-    )
+    # pop, log = eaSimple_early_stop(
+    #     pop,
+    #     toolbox,
+    #     0.2,
+    #     0.75,
+    #     1000000,
+    #     stats=mstats,
+    #     halloffame=hof,
+    #     verbose=True,
+    #     sufficient_fitness=-200,
+    # )
+
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 400, stats=mstats, halloffame=hof, verbose=True)
+
 
     pool.close()  # parallel
 
@@ -570,9 +573,10 @@ def main():
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
     
-    best_fits.append(str(hof[0]))
-    best_fits.append(best_fit)
-    write_to_excel(best_fits, 'memory_raw_data.xlsx')
+    append_to_excel=[]
+    append_to_excel.append(str(hof[0]))
+    append_to_excel.append(best_fit)
+    write_to_excel(append_to_excel, 'memory_raw_data.xlsx')
 
     # inp = input("Pass or fail?: ")
     # notes = input("notes: ")
