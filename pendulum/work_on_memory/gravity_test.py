@@ -59,8 +59,8 @@ def IndexMemTestGravity(inds, pset, string, path):
         add_to_excel.append(round(total/3, 2))
     write_to_excel(add_to_excel, path)
 
-df = pd.read_excel('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx', usecols='A')
-print(type(df.values))
+l = get_one_column('/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx', 'A')
+print(l)
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here

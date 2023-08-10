@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pygraphviz as pgv
+import pandas as pd
 
 from openpyxl import load_workbook
 
@@ -81,3 +82,12 @@ def find_unused_functions(labels):
         string2 = string2 + i + ', '
 
     return string1, string2
+
+def get_one_column(path, column_name):
+    df = pd.read_excel(path, usecols=column_name)
+    column_list = []
+    for i in df.values:
+        column_list.append(i[0])
+    
+    return column_list
+
