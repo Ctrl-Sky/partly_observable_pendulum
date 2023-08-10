@@ -50,7 +50,7 @@ def partObsTestGravity(ind, pset, string, path):
             total += fit
         
         add_to_excel.append(round(total/3, 2))
-    write_to_excel(add_to_excel, path)
+    write_to_excel(add_to_excel, 'Sheet1', path)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form

@@ -40,11 +40,16 @@ def best_ind_info(fit_mins, best_fit, hof, labels, ask):
     return fit_mins
 
 # Append the fitness information to an excel sheet
-def write_to_excel(fit_mins, path):
+def write_to_excel(fit_mins, sheet_name, path):
     workbook = load_workbook(filename=path)
-    sheet = workbook.active
 
-    sheet.append(fit_mins)
+    if sheet_name not in workbook.sheetnames:
+        workbook.create_sheet(sheet_name)
+
+
+    workbook.active=workbook[sheet_name]
+
+    workbook.active.append(fit_mins)
 
     workbook.save(filename=path)
 
