@@ -63,9 +63,10 @@ def indexMemTestGravity(inds, pset, path):
             add_to_excel.append(round(total/3, 2))
         write_to_excel(add_to_excel, path)
 
-path_to_excel = '/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx'
-inds = get_one_column(path_to_excel, 'A')
-indexMemEvalIndividual(inds, pset, path_to_excel)
+path_to_read='/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_raw_data.xlsx'
+path_to_write='/Users/sky/Documents/Work Info/Research Assistant/deap_experiments/pendulum/work_on_memory/memory_grav.xlsx'
+inds = get_one_column(path_to_read, 'A')
+indexMemEvalIndividual(inds, pset, path_to_write)
 
 
 # Replace value of str to an individuals tree in string form to test it
