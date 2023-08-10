@@ -555,7 +555,7 @@ def main():
     #     sufficient_fitness=-200,
     # )
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 400, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 500, stats=mstats, halloffame=hof, verbose=True)
 
 
     pool.close()  # parallel
