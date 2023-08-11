@@ -118,7 +118,7 @@ def indexMemEvalIndividual(individual, pset, grav, test=False):
     num_episode = 20
     if test:
         env = env_test
-        num_episode = 3
+        num_episode = 1
 
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)

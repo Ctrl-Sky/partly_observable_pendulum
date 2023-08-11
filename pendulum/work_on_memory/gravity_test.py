@@ -47,29 +47,31 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
         for j in gravity:
             total = 0
 
-            for k in range(3):
+            for k in range(10):
                 fit = indexMemEvalIndividual(ind, pset, j, test=False)[0]
                 total += fit
             
-            add_to_excel.append(round(total/3, 2))
+            add_to_excel.append(round(total/10, 2))
         write_to_excel(add_to_excel, trained_grav, path_to_excel)
 
-path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
-path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-GRAV='9.81'
-inds = get_one_column(path_to_read, 'A')
-indexMemTestGravity(inds, pset, GRAV, path_to_write)
+# path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
+# path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
+# GRAV='9.81'
+# inds = get_one_column(path_to_read, 'A')
+# indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-# inds=['sub(sub(sub(protectedDiv(cos(a1), a2), protectedDiv(protectedDiv(abs(a2), read(a0, a1)), abs(read(a0, cos(a1))))), write(a0, a1, write(a0, limit(limit(protectedDiv(cos(write(a0, 0, a1)), a2), protectedLog(a1), a1), protectedLog(a2), a1), a2))), protectedLog(0))']
+inds=['sub(sub(read(a0, sin(conditional(0, sin(a1)))), read(a0, write(a0, protectedLog(conditional(sub(a1, 0), 0)), write(a0, a2, protectedDiv(protectedLog(abs(protectedLog(cos(protectedLog(abs(a1)))))), a2))))), protectedDiv(a1, a2))']
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-# print(indexMemEvalIndividual(ind, pset, 14, True))
+for i in inds:
+    ind=gp.PrimitiveTree.from_string(i, pset)
+    print(indexMemEvalIndividual(ind, pset, 9.81, True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view
