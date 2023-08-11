@@ -54,18 +54,18 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
             add_to_excel.append(round(total/3, 2))
         write_to_excel(add_to_excel, trained_grav, path_to_excel)
 
-# path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
-# path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-# GRAV='9.81'
-# inds = get_one_column(path_to_read, 'A')
-# indexMemTestGravity(inds, pset, GRAV, path_to_write)
+path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
+path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
+GRAV='9.81'
+inds = get_one_column(path_to_read, 'A')
+indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-inds=['sub(sub(sub(protectedDiv(cos(a1), a2), protectedDiv(protectedDiv(abs(a2), read(a0, a1)), abs(read(a0, cos(a1))))), write(a0, a1, write(a0, limit(limit(protectedDiv(cos(write(a0, 0, a1)), a2), protectedLog(a1), a1), protectedLog(a2), a1), a2))), protectedLog(0))']
+# inds=['sub(sub(sub(protectedDiv(cos(a1), a2), protectedDiv(protectedDiv(abs(a2), read(a0, a1)), abs(read(a0, cos(a1))))), write(a0, a1, write(a0, limit(limit(protectedDiv(cos(write(a0, 0, a1)), a2), protectedLog(a1), a1), protectedLog(a2), a1), a2))), protectedLog(0))']
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
@@ -78,5 +78,5 @@ inds=['sub(sub(sub(protectedDiv(cos(a1), a2), protectedDiv(protectedDiv(abs(a2),
 
 # Test the ind at different gravity values and then
 # writes the fitness score at each gravity to part_obs_grav.xlsx
-indexMemTestGravity(inds, pset, '9.81', 'memory_grav.xlsx')
+# indexMemTestGravity(inds, pset, '9.81', path_to_write)
 

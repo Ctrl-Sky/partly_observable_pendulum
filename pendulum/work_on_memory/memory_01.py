@@ -24,6 +24,7 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
+GRAV=11
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -403,9 +404,9 @@ toolbox.register(
 )
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-env_train = gym.make("Pendulum-v1", g=9.81)  # For training
+env_train = gym.make("Pendulum-v1", g=GRAV)  # For training
 env_test = gym.make(
-    "Pendulum-v1", g=9.81, render_mode="human"
+    "Pendulum-v1", g=GRAV, render_mode="human"
 )  # For rendering the best one
 
 
@@ -566,8 +567,6 @@ def main():
 
     nodes, edges, labels = gp.graph(hof[0])
 
-    print(best_fit)
-    print(hof[0])
     plot_onto_graph(seed, gen, best_fits, best_fit)
     # evalIndividual(hof[0], True) # visualize
     plot_as_tree(nodes, edges, labels, best_fit)
