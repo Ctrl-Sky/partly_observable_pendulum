@@ -98,3 +98,7 @@ TEST FULLY OBSERVALBE AND TEST Gravity
 
 in fully observable evalIndividual
     Change the trunc to 300
+
+
+Start inputting data into excel excel_sheets
+test whether you can git push on compute canada so you can edit the github and create scripts
