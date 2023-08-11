@@ -100,5 +100,8 @@ in fully observable evalIndividual
     Change the trunc to 300
 
 
-Start inputting data into excel excel_sheets
-test whether you can git push on compute canada so you can edit the github and create scripts
+Things to test
+
+Try running the ./move_excel
+Test if you can run gravity_test.py in compute canada
+check to see if it writes into a new excel sheet
