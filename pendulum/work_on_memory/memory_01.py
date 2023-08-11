@@ -24,7 +24,7 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-GRAV=11
+GRAV=12
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -428,6 +428,8 @@ def write_to_excel(fit_mins, sheet_name, path):
 
     if sheet_name not in workbook.sheetnames:
         workbook.create_sheet(sheet_name)
+        workbook.active=workbook[sheet_name]
+        workbook.active.append(['ind', 'fitness'])
 
 
     workbook.active=workbook[sheet_name]
@@ -576,7 +578,6 @@ def main():
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
     
-    write_to_excel(['ind', 'fitness'], str(GRAV) , 'memory_raw_data.xlsx')
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)
