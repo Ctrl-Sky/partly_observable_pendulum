@@ -54,11 +54,11 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
             add_to_excel.append(round(total/10, 2))
         write_to_excel(add_to_excel, trained_grav, path_to_excel)
 
-# path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
-# path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-# GRAV='9.81'
-# inds = get_one_column(path_to_read, GRAV, 'A')
-# indexMemTestGravity(inds, pset, GRAV, path_to_write)
+path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
+path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
+GRAV='9.81'
+inds = get_one_column(path_to_read, GRAV, 'A')
+indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 
 

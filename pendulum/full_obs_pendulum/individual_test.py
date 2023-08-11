@@ -26,25 +26,36 @@ pset.renameArguments(ARG2='vel')
 
 # Test individual at different gravities and takes the average fitness
 # of 5 and writes it to an excel sheet
-def fullObsTestGravity(ind, pset, path):
+def fullObsTestGravity(inds, pset, trained_grav, path_to_excel):
     gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
-    for i in gravity:
-        add_to_excel = []
-        total = 0
-        add_to_excel.append(i)
 
-        for j in range(5):
-            fit = fullObsEvalIndividual(ind, pset, i, test=False)[0]
-            total += fit
+    for i in inds:
+        add_to_excel = [i]
+        ind = gp.PrimitiveTree.from_string(i, pset)
 
-        add_to_excel.append(round(total/5, 2))
-        write_to_excel(add_to_excel, 'Sheet1', path)
+        for j in gravity:
+            total = 0
+
+            for k in range(10):
+                fit = fullObsEvalIndividual(ind, pset, j, test=False)[0]
+                total += fit
+            
+            add_to_excel.append(round(total/10, 2))
+        write_to_excel(add_to_excel, trained_grav, path_to_excel)
+
+path_to_read='full_obs_raw_data.xlsx'
+path_to_write='full_obs_grav.xlsx'
+GRAV='9.81'
+inds = get_one_column(path_to_read, GRAV, 'A')
+fullObsTestGravity(inds, pset, GRAV, path_to_write)
+
+
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-str='conditional(add(x, y), add(vel, y))'
-ind=gp.PrimitiveTree.from_string(str, pset)
+# str='conditional(add(x, y), add(vel, y))'
+# ind=gp.PrimitiveTree.from_string(str, pset)
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
@@ -57,4 +68,4 @@ ind=gp.PrimitiveTree.from_string(str, pset)
 
 # Test the ind at different gravity values and then
 # writes the fitness score at each gravity to full_obs_grav.xlsx
-fullObsTestGravity(ind, pset, path=os.path.dirname(os.path.abspath(__file__)) + "/full_obs_grav.xlsx")
+# fullObsTestGravity(ind, pset, path=os.path.dirname(os.path.abspath(__file__)) + "/full_obs_grav.xlsx")

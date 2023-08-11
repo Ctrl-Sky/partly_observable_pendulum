@@ -20,6 +20,8 @@ from modules.prim_functions import conditional, truncate
 from modules.output_functions import *
 from modules.eval_individual import fullObsEvalIndividual
 
+GRAV=9.81
+
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
 pset.addPrimitive(operator.add, 2)
@@ -40,7 +42,7 @@ toolbox.register("individual", tools.initIterate, creator.Individual,
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 # Register functions in the toolbox needed for evolution
-toolbox.register("evaluate", fullObsEvalIndividual, pset=pset, grav=9.81)
+toolbox.register("evaluate", fullObsEvalIndividual, pset=pset, grav=GRAV)
 toolbox.register("select", tools.selTournament, tournsize=3)
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("expr_mut", gp.genFull, min_=0, max_=2)
@@ -51,7 +53,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 def main():
     # Initialize the population
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=500)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -62,24 +64,30 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 1, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 500, stats=mstats, halloffame=hof, verbose=True)
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
     # nodes, edges, labels = gp.graph(hof[0])
 
+    write_to_excel(['ind', 'fitness'], str(GRAV) , 'memory_raw_data.xlsx')
+    append_to_excel=[]
+    append_to_excel.append(str(hof[0]))
+    append_to_excel.append(best_fit)
+    write_to_excel(append_to_excel, str(GRAV), 'memory_raw_data.xlsx')
+
     # Prints the fitness score of the best individual
-    print(best_fit)
+    # print(best_fit)
 
     # Prints the individual's tree in string form
-    print(hof[0])
+    # print(hof[0])
 
     # Graphs the fitness score of every ind over the generations and displays it
-    plot_onto_graph(gen, fit_mins, best_fit)
+    # plot_onto_graph(gen, fit_mins, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
-    fullObsEvalIndividual(hof[0], pset, 9.81, True)
+    # fullObsEvalIndividual(hof[0], pset, 9.81, True)
 
     return pop, log, hof
 
