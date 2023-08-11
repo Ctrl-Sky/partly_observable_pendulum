@@ -572,11 +572,11 @@ def main():
     plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
     
-    write_to_excel(['ind', 'fitness'], 'Sheet1', 'memory_raw_data.xlsx')
+    write_to_excel(['ind', 'fitness'], str(GRAV) , 'memory_raw_data.xlsx')
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)
-    write_to_excel(append_to_excel, 'Sheet1', 'memory_raw_data.xlsx')
+    write_to_excel(append_to_excel, str(GRAV), 'memory_raw_data.xlsx')
 
     # inp = input("Pass or fail?: ")
     # notes = input("notes: ")
