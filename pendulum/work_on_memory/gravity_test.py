@@ -37,7 +37,7 @@ pset.renameArguments(ARG0="a0")
 pset.renameArguments(ARG1="a1")
 pset.renameArguments(ARG2="a2")
 
-def indexMemTestGravity(inds, pset, trained_grav, path):
+def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
     gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
 
     for i in inds:
@@ -52,11 +52,11 @@ def indexMemTestGravity(inds, pset, trained_grav, path):
                 total += fit
             
             add_to_excel.append(round(total/3, 2))
-        write_to_excel(add_to_excel, path, sheet_name=trained_grav)
+        write_to_excel(add_to_excel, trained_grav, path_to_excel)
 
-path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
-path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-GRAV='9.81'
+# path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
+# path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
+# GRAV='9.81'
 # inds = get_one_column(path_to_read, 'A')
 # indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
@@ -65,7 +65,7 @@ GRAV='9.81'
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-# inds=['protectedDiv(ang_vel(ang_vel(sin(add(x1, x3)), sin(y1), protectedDiv(y2, y2), acos(y3, y1)), y3, sub(sin(x2), sin(x1)), x2), acos(limit(add(y3, y1), tan(y3), limit(y3, limit(x1, conditional(max(limit(x1, y2, y2), asin(x2, x2)), protectedDiv(y3, y1)), y2), x3)), y3))']
+inds=['sub(sub(sub(protectedDiv(cos(a1), a2), protectedDiv(protectedDiv(abs(a2), read(a0, a1)), abs(read(a0, cos(a1))))), write(a0, a1, write(a0, limit(limit(protectedDiv(cos(write(a0, 0, a1)), a2), protectedLog(a1), a1), protectedLog(a2), a1), a2))), protectedLog(0))']
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
@@ -78,5 +78,5 @@ GRAV='9.81'
 
 # Test the ind at different gravity values and then
 # writes the fitness score at each gravity to part_obs_grav.xlsx
-# indexMemEvalIndividual(ind, pset, string, path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_grav.xlsx")
+indexMemTestGravity(inds, pset, '9.81', 'memory_grav.xlsx')
 
