@@ -88,8 +88,8 @@ def find_unused_functions(labels):
 
     return string1, string2
 
-def get_one_column(path, column_name):
-    df = pd.read_excel(path, usecols=column_name)
+def get_one_column(path, sheet, column_name):
+    df = pd.read_excel(path, sheet, usecols=column_name)
     column_list = []
     for i in df.values:
         column_list.append(i[0])
