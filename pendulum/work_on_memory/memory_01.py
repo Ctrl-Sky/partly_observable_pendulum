@@ -423,12 +423,16 @@ def plot_as_tree(nodes, edges, labels, best_fit):
     g.draw("./fit_" + str(best_fit) + ".png")
 
 
-# Append the fitness information to an excel sheet
-def write_to_excel(fit, path):
+def write_to_excel(fit_mins, sheet_name, path):
     workbook = load_workbook(filename=path)
-    sheet = workbook.active
 
-    sheet.append(fit)
+    if sheet_name not in workbook.sheetnames:
+        workbook.create_sheet(sheet_name)
+
+
+    workbook.active=workbook[sheet_name]
+
+    workbook.active.append(fit_mins)
 
     workbook.save(filename=path)
 
@@ -556,7 +560,7 @@ def main():
     #     sufficient_fitness=-200,
     # )
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 500, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 3, stats=mstats, halloffame=hof, verbose=True)
 
 
     pool.close()  # parallel
