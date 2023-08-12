@@ -24,7 +24,7 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-GRAV=12
+GRAV=13
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -562,7 +562,7 @@ def main():
     #     sufficient_fitness=-200,
     # )
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 3, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 450, stats=mstats, halloffame=hof, verbose=True)
 
 
     pool.close()  # parallel

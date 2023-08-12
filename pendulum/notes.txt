@@ -102,6 +102,8 @@ in fully observable evalIndividual
 
 Things to test
 
-Try running the ./move_excel
-Test if you can run gravity_test.py in compute canada
-check to see if it writes into a new excel sheet
+Go into test3 and write a bash script to run the gravity_test
+Use the same as ccanada.sh
+if it does work
+write edit move_excel to also move the memory_grav as well
+then run test clear all tables and run the proper test
