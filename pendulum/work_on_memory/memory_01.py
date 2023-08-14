@@ -24,7 +24,7 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-GRAV=9.81
+GRAV=11
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -449,6 +449,7 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
     plt.axis([min(gen), max(gen), min(fit_mins), 0])
     # plt.show()
     plt.savefig(str(seed) + "_fit_curve.png")
+    print('done')
 
 
 # evaluates the fitness of an individual
@@ -584,4 +585,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    for i in range(10):
+        main()
