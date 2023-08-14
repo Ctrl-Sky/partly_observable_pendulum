@@ -3,6 +3,7 @@
 
 import numpy
 import operator
+import multiprocessing
 
 from deap import algorithms
 from deap import base
@@ -64,7 +65,12 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
+    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
+    toolbox.register("map", pool.map) # parallel
+
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 450, stats=mstats, halloffame=hof, verbose=True)
+
+    pool.close()
 
     gen = log.select("gen") 
     fit_mins = log.chapters["fitness"].select("max")
