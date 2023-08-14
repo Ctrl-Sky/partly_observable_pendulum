@@ -84,7 +84,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
