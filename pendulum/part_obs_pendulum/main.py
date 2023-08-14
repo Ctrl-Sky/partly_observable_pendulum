@@ -25,8 +25,8 @@ from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
 GRAV=12
-POP=500
-GENS=450
+POP=20
+GENS=5
 TOURN_SIZE=5
 
 # Set up primitives and terminals
@@ -122,5 +122,4 @@ def main():
     return pop, log, hof
 
 if __name__ == "__main__":
-    for i in range(5):
-        main()
+    main()

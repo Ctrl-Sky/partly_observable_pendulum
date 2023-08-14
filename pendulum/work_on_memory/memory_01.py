@@ -293,7 +293,7 @@ def protectedLog(input):
         return math.log(input)
 
 
-def protectedDiv(left, right):
+def memProtectedDiv(left, right):
     if (
         math.isinf(right)
         or math.isnan(right)
@@ -344,30 +344,13 @@ def listReverse(input):
 #     return len(input)
 
 
-def acos(x, y):
-    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
-        return math.acos(x / y)
-    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.acos(y / x)
-    else:
-        return x
-
-
-def asin(x, y):
-    if protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.asin(y / x)
-    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.asin(y / x)
-    else:
-        return x
-
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSetTyped("main", [list, float, float], float)
 
 pset.addPrimitive(operator.add, [float, float], float)
 pset.addPrimitive(operator.sub, [float, float], float)
-pset.addPrimitive(protectedDiv, [float, float], float)
+pset.addPrimitive(memProtectedDiv, [float, float], float)
 pset.addPrimitive(protectedLog, [float], float)
 pset.addPrimitive(conditional, [float, float], float)
 pset.addPrimitive(limit, [float, float, float], float)

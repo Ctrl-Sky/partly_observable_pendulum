@@ -21,7 +21,7 @@ pset = gp.PrimitiveSetTyped("main", [list, float, float], float)
 
 pset.addPrimitive(operator.add, [float, float], float)
 pset.addPrimitive(operator.sub, [float, float], float)
-pset.addPrimitive(protectedDiv, [float, float], float)
+pset.addPrimitive(memProtectedDiv, [float, float], float)
 pset.addPrimitive(protectedLog, [float], float)
 pset.addPrimitive(conditional, [float, float], float)
 pset.addPrimitive(limit, [float, float, float], float)

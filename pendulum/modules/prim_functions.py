@@ -13,7 +13,7 @@ def limit(input, minimum, maximum):
     else:
         return input
     
-def protectedDiv(left, right):
+def memProtectedDiv(left, right):
     if (
         math.isinf(right)
         or math.isnan(right)
@@ -27,6 +27,12 @@ def protectedDiv(left, right):
         return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError:
         return 0
+    
+def protectedDiv(left, right):
+    try:
+        return truncate(left, 8) / truncate(right, 8)
+    except ZeroDivisionError:
+        return 1
 
 def truncate(number, decimals=0):
     if math.isinf(number) or math.isnan(number):

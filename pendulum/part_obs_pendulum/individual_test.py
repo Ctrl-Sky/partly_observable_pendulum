@@ -58,7 +58,7 @@ def partObsTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read=os.path.dirname(os.path.abspath(__file__))+'/part_obs_raw_data.xlsx'
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/part_obs_grav.xlsx'
-GRAV='13'
+GRAV='12'
 inds = get_one_column(path_to_read, GRAV, 'A')
 partObsTestGravity(inds, pset, GRAV, path_to_write)
 
