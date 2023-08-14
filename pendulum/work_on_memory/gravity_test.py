@@ -56,7 +56,7 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-GRAV='9.81'
+GRAV='13'
 inds = get_one_column(path_to_read, GRAV, 'A')
 indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
@@ -65,13 +65,13 @@ indexMemTestGravity(inds, pset, GRAV, path_to_write)
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-inds=['sub(sub(read(a0, sin(conditional(0, sin(a1)))), read(a0, write(a0, protectedLog(conditional(sub(a1, 0), 0)), write(a0, a2, protectedDiv(protectedLog(abs(protectedLog(cos(protectedLog(abs(a1)))))), a2))))), protectedDiv(a1, a2))']
+# inds=['sub(sub(read(a0, sin(conditional(0, sin(a1)))), read(a0, write(a0, protectedLog(conditional(sub(a1, 0), 0)), write(a0, a2, protectedDiv(protectedLog(abs(protectedLog(cos(protectedLog(abs(a1)))))), a2))))), protectedDiv(a1, a2))']
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-for i in inds:
-    ind=gp.PrimitiveTree.from_string(i, pset)
-    print(indexMemEvalIndividual(ind, pset, 9.81, True))
+# for i in inds:
+#     ind=gp.PrimitiveTree.from_string(i, pset)
+#     print(indexMemEvalIndividual(ind, pset, 9.81, True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view
