@@ -25,8 +25,10 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
+        max_steps=300
+        timeout=False
 
-        while not (done or truncated):
+        while not (done or timeout):
             if failed:
                 action = 0
             else:
@@ -41,6 +43,8 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
             episode_reward += reward
 
             num_steps += 1
+            if num_steps >= max_steps:
+                timeout=True
 
         fitness += episode_reward
     fitness = fitness/num_episode      
@@ -66,7 +70,7 @@ def partObsEvalIndividual(individual, pset, grav, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 400
+        max_steps = 300
         timeout = False
 
         prev_y = observation[0]
