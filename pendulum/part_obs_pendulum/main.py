@@ -111,7 +111,7 @@ def main():
     # Ask for relevant info about the best individual and then writes it
     # to a part_obs_training_data
     # fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, ask=False)
-    # write_to_excel(fit_mins, 'Sheet1', path=os.path.dirname(os.path.abspath(__file__)) + "/excel_sheets/part_obs_training_data.xlsx")
+    write_to_excel(fit_mins, str(GRAV), "part_obs_raw_data.xlsx")
 
     return pop, log, hof
 
