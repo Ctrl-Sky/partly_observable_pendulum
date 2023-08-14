@@ -25,8 +25,8 @@ from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
 GRAV=12
-POP=20
-GENS=5
+POP=500
+GENS=450
 TOURN_SIZE=5
 
 # Set up primitives and terminals
