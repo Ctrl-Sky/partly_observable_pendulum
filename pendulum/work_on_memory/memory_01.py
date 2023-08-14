@@ -24,7 +24,7 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-GRAV=17
+GRAV=8
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
