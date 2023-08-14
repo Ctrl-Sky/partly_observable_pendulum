@@ -12,16 +12,32 @@ import sys
 path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(path)
 
-from modules.prim_functions import *
+from modules.prim_functions import memProtectedDiv, protectedLog, conditional, limit, truncate, read, write
 from modules.output_functions import *
 from modules.eval_individual import indexMemEvalIndividual
 
+def protectedDiv(left, right):
+    if (
+        math.isinf(right)
+        or math.isnan(right)
+        or right == 0
+        or math.isinf(left)
+        or math.isnan(left)
+        or left == 0
+    ):
+        return 0
+    try:
+        return truncate(left, 8) / truncate(right, 8)
+    except ZeroDivisionError:
+        return 0
+    
 # Set up primitives and terminals
 pset = gp.PrimitiveSetTyped("main", [list, float, float], float)
 
 pset.addPrimitive(operator.add, [float, float], float)
 pset.addPrimitive(operator.sub, [float, float], float)
 pset.addPrimitive(memProtectedDiv, [float, float], float)
+pset.addPrimitive(protectedDiv, [float, float], float)
 pset.addPrimitive(protectedLog, [float], float)
 pset.addPrimitive(conditional, [float, float], float)
 pset.addPrimitive(limit, [float, float, float], float)
@@ -56,7 +72,7 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-GRAV='13'
+GRAV='14'
 inds = get_one_column(path_to_read, GRAV, 'A')
 indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
