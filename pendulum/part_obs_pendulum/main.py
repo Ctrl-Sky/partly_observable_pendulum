@@ -25,8 +25,8 @@ from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
 GRAV=12
-POP=200
-GENS=25
+POP=500
+GENS=450
 TOURN_SIZE=5
 
 # Set up primitives and terminals
@@ -96,6 +96,12 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
+    write_to_excel(['ind', 'fitness'], str(GRAV) , 'part_obs_raw_data.xlsx')
+    append_to_excel=[]
+    append_to_excel.append(str(hof[0]))
+    append_to_excel.append(best_fit)
+    write_to_excel(append_to_excel, str(GRAV), 'part_obs_raw_data.xlsx')
+
     # Prints the fitness score of the best individual
     # print(best_fit)
 
@@ -111,7 +117,7 @@ def main():
     # Ask for relevant info about the best individual and then writes it
     # to a part_obs_training_data
     # fit_mins = best_ind_info(fit_mins, best_fit, hof, labels, ask=False)
-    write_to_excel(fit_mins, str(GRAV), "part_obs_raw_data.xlsx")
+    # write_to_excel(fit_mins, str(GRAV), "part_obs_raw_data.xlsx")
 
     return pop, log, hof
 
