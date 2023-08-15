@@ -2,18 +2,27 @@
 # https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
 
 import numpy
-import operator
-import multiprocessing
-import math
-
+import random
 import gymnasium as gym
-
+import operator
+import matplotlib.pyplot as plt
+import math
 from openpyxl import load_workbook
+import sys
+import inspect
+from inspect import isclass
+from operator import attrgetter
+
 from deap import algorithms
 from deap import base
 from deap import creator
 from deap import tools
 from deap import gp
+
+import pygraphviz as pgv
+
+# parallel
+import multiprocessing
 
 # Import modules from different directory
 import os
