@@ -113,7 +113,7 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = fitness/num_episode      
     return (0,) if failed else (fitness,)
 
-GRAV=13
+GRAV=14
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
