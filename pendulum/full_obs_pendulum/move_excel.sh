@@ -15,6 +15,6 @@ git add .
 git commit -m "add excel file"
 git push
 
-git mv memory_raw_data.xlsx ./full_obs_pendulum
+git mv full_obs_raw_data.xlsx ./full_obs_pendulum
 git commit -m "move excel file"
 git push
