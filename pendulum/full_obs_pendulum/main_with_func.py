@@ -40,6 +40,8 @@ def write_to_excel(fit_mins, sheet_name, path):
 
     if sheet_name not in workbook.sheetnames:
         workbook.create_sheet(sheet_name)
+        workbook.active=workbook[sheet_name]
+        workbook.active.append(['ind', 'fitness'])
 
 
     workbook.active=workbook[sheet_name]
@@ -167,7 +169,6 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     # nodes, edges, labels = gp.graph(hof[0])
 
-    write_to_excel(['ind', 'fitness'], str(GRAV) , 'full_obs_raw_data.xlsx')
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)
