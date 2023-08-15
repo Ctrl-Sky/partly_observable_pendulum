@@ -19,3 +19,4 @@ pyparsing==3.0.9+computecanada
 python-dateutil==2.8.2+computecanada
 six==1.16.0+computecanada
 typing_extensions==4.5.0+computecanada
+pandas
