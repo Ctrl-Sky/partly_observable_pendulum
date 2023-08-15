@@ -20,8 +20,8 @@ pset = gp.PrimitiveSet("MAIN", 3)
 pset.addPrimitive(operator.add, 2)
 pset.addPrimitive(conditional, 2)
 
-pset.renameArguments(ARG0='x')
-pset.renameArguments(ARG1='y')
+pset.renameArguments(ARG0='y')
+pset.renameArguments(ARG1='x')
 pset.renameArguments(ARG2='vel')
 
 # Test individual at different gravities and takes the average fitness
@@ -45,9 +45,9 @@ def fullObsTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read='full_obs_raw_data.xlsx'
 path_to_write='full_obs_grav.xlsx'
-GRAV='13'
+GRAV='9.81'
 inds = get_one_column(path_to_read, GRAV, 'A')
-fullObsTestGravity(inds, pset, GRAV, path_to_write)
+# fullObsTestGravity(inds, pset, GRAV, path_to_write)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
@@ -57,7 +57,7 @@ fullObsTestGravity(inds, pset, GRAV, path_to_write)
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-# print(fullObsEvalIndividual(ind, pset, 9.81, True))
+print(fullObsEvalIndividual(inds[0], pset, 9.81, True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view
