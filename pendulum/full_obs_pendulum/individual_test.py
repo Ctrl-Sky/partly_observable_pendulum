@@ -45,9 +45,9 @@ def fullObsTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read='full_obs_raw_data.xlsx'
 path_to_write='full_obs_grav.xlsx'
-GRAV='9.81'
+GRAV='14'
 inds = get_one_column(path_to_read, GRAV, 'A')
-# fullObsTestGravity(inds, pset, GRAV, path_to_write)
+fullObsTestGravity(inds, pset, GRAV, path_to_write)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
@@ -57,7 +57,7 @@ inds = get_one_column(path_to_read, GRAV, 'A')
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-print(fullObsEvalIndividual(inds[0], pset, 9.81, True))
+# print(fullObsEvalIndividual(inds[0], pset, 9.81, True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view

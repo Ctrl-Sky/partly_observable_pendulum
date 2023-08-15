@@ -25,8 +25,8 @@ from modules.output_functions import *
 from modules.eval_individual import partObsEvalIndividual
 
 GRAV=12
-POP=500
-GENS=450
+POP=2
+GENS=2
 TOURN_SIZE=5
 
 # Set up primitives and terminals
@@ -84,7 +84,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
@@ -96,11 +96,11 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
-    write_to_excel(['ind', 'fitness'], str(GRAV) , 'part_obs_raw_data.xlsx')
-    append_to_excel=[]
-    append_to_excel.append(str(hof[0]))
-    append_to_excel.append(best_fit)
-    write_to_excel(append_to_excel, str(GRAV), 'part_obs_raw_data.xlsx')
+    # write_to_excel(['ind', 'fitness'], str(GRAV) , 'part_obs_raw_data.xlsx')
+    # append_to_excel=[]
+    # append_to_excel.append(str(hof[0]))
+    # append_to_excel.append(best_fit)
+    # write_to_excel(append_to_excel, str(GRAV), 'part_obs_raw_data.xlsx')
 
     # Prints the fitness score of the best individual
     # print(best_fit)

@@ -67,6 +67,12 @@ def truncate(number, decimals=0):
     elif decimals == 0:
         return math.trunc(number)
 
+    factor = 10.0**decimals
+    num = number * factor
+    if math.isinf(num) or math.isnan(num):
+        return 0
+    return math.trunc(num) / factor
+
 def conditional(input1, input2):
     if input1 < input2:
         return -input1
@@ -230,7 +236,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
     pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
