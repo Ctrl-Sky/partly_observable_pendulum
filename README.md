@@ -24,7 +24,7 @@ cd ~/scratch/$exp_code
 ```
 run 5 parallel experiments
 ```
-for seed in `seq 1 5`; do sbatch ./ccanada.sh -s $seed; done
+for seed in `seq 1 10`; do sbatch ./ccanada.sh -s $seed; done
 ```
 command to check running experiments
 ```
