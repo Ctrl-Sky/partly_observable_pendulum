@@ -38,8 +38,8 @@ import multiprocessing
 # from modules.eval_individual import partObsEvalIndividual
 
 GRAV=9.81
-POP=500
-GENS=450
+POP=2
+GENS=2
 TOURN_SIZE=5
 
 def write_to_excel(fit_mins, sheet_name, path):
