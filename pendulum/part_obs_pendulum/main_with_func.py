@@ -37,7 +37,7 @@ import multiprocessing
 # from modules.output_functions import *
 # from modules.eval_individual import partObsEvalIndividual
 
-GRAV=12
+GRAV=9.81
 POP=500
 GENS=450
 TOURN_SIZE=5
@@ -242,7 +242,6 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
-    write_to_excel(['ind', 'fitness'], str(GRAV) , 'part_obs_raw_data.xlsx')
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)
