@@ -69,7 +69,6 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
     num_episode = 20
     gravs = numpy.linspace(1, 13, num_episode)
-    
 
     if test:
         env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering

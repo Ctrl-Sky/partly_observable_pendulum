@@ -52,7 +52,7 @@ fullObsTestGravity(inds, pset, GRAV, path_to_write)
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form
 # in string form and just copy and paste it here
-# inds=['conditional(add(y, y), add(add(add(y, x), y), vel))']
+# inds=['conditional(add(add(y, y), y), add(add(add(vel, add(x, add(conditional(y, conditional(y, conditional(conditional(conditional(conditional(x, add(vel, y)), x), conditional(add(vel, vel), add(add(add(y, y), add(add(x, x), add(y, x))), vel))), vel))), conditional(x, x)))), x), add(add(x, y), y)))']
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
