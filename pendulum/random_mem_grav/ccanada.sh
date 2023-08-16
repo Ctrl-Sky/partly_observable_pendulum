@@ -20,4 +20,4 @@ source $SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
 pip install -r requirements_alliancecan.txt
 
-python -u memory_01.py $seed > memory_01-$seed-$SLURM_JOB_ID.std
+python -u random_mem.py $seed > memory_01-$seed-$SLURM_JOB_ID.std
