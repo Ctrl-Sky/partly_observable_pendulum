@@ -45,7 +45,7 @@ def fullObsTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read='full_obs_raw_data.xlsx'
 path_to_write='full_obs_grav.xlsx'
-GRAV='14'
+GRAV='15'
 inds = get_one_column(path_to_read, GRAV, 'A')
 fullObsTestGravity(inds, pset, GRAV, path_to_write)
 
