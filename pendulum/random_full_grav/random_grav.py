@@ -147,7 +147,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 def main():
     # Initialize the population
-    pop = toolbox.population(n=500)
+    pop = toolbox.population(n=100)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -158,10 +158,10 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 450, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()
 
@@ -169,6 +169,7 @@ def main():
     fit_mins = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
+    print(fit_mins)
 
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))

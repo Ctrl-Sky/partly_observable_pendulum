@@ -71,8 +71,8 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
         write_to_excel(add_to_excel, trained_grav, path_to_excel)
 
 path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
-# path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
-GRAV='17'
+path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
+GRAV='9.81'
 inds = get_one_column(path_to_read, GRAV, 'A')
 # indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
@@ -85,9 +85,9 @@ inds = get_one_column(path_to_read, GRAV, 'A')
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-for i in inds:
-    ind=gp.PrimitiveTree.from_string(i, pset)
-    print(indexMemEvalIndividual(ind, pset, float(GRAV), True))
+# for i in inds:
+#     ind=gp.PrimitiveTree.from_string(i, pset)
+print(indexMemEvalIndividual(inds[1], pset, float(GRAV), True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view

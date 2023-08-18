@@ -458,7 +458,7 @@ def evalIndividual(individual, test=False):
     fitness = 0
     failed = False
     for x in range(0, num_episode):
-        env_train = gym.make("Pendulum-v1", g=gravs[0])  # For training
+        env_train = gym.make("Pendulum-v1", g=gravs[x])  # For training
         env = env_train
         done = False
         truncated = False
