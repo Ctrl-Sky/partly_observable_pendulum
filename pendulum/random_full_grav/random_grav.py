@@ -67,8 +67,8 @@ def conditional(input1, input2):
 
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
-    num_episode = 20
-    gravs = numpy.linspace(1, 13, num_episode)
+    num_episode = 30
+    gravs = numpy.linspace(1, 15, num_episode)
 
     if test:
         env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
@@ -114,7 +114,7 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = fitness/num_episode      
     return (0,) if failed else (fitness,)
 
-GRAV=9.81
+GRAV=15
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
@@ -147,7 +147,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 def main():
     # Initialize the population
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=500)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -158,10 +158,10 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=2) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 15, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 450, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()
 
