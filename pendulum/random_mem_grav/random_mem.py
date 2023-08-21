@@ -450,8 +450,8 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     
-    num_episode = 20
-    gravs = numpy.linspace(1, 13, num_episode)
+    num_episode = 30
+    gravs = numpy.linspace(1, 15, num_episode)
 
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)
