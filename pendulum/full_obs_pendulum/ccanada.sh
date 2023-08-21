@@ -20,4 +20,4 @@ source $SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
 pip install -r requirements_alliancecan.txt
 
-python -u main_with_func.py $seed > main-$seed-$SLURM_JOB_ID.std
+python -u ccanada_main.py $seed > main-$seed-$SLURM_JOB_ID.std
