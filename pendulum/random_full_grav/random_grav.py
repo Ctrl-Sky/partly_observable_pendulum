@@ -25,15 +25,23 @@ import pygraphviz as pgv
 import multiprocessing
 
 # Import modules from different directory
-import os
-import sys
-PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(PATH)
+# import os
+# import sys
+# PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.append(PATH)
 
 # from modules.prim_functions import conditional, truncate
 # from modules.output_functions import *
 # from modules.eval_individual import fullObsEvalIndividual
 
+NUM_EP=20
+LIN_MIN=1
+LIN_MAX=13
+MAX_STEP=300
+GRAV=13
+POP=500
+PROCESSES=16
+GENS=450
 
 def write_to_excel(fit_mins, sheet_name, path):
     workbook = load_workbook(filename=path)
@@ -67,8 +75,8 @@ def conditional(input1, input2):
 
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
-    num_episode = 30
-    gravs = numpy.linspace(1, 15, num_episode)
+    num_episode = NUM_EP
+    gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
 
     if test:
         env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
@@ -89,7 +97,7 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps=300
+        max_steps=MAX_STEP
         timeout=False
 
         while not (done or timeout):
@@ -114,7 +122,6 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = fitness/num_episode      
     return (0,) if failed else (fitness,)
 
-GRAV=15
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
@@ -147,7 +154,7 @@ toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max
 
 def main():
     # Initialize the population
-    pop = toolbox.population(n=500)
+    pop = toolbox.population(n=POP)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -158,22 +165,22 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96) # parllel (Process Pool of 16 workers)
+    pool = multiprocessing.Pool(processes=PROCESSES) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, 450, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()
 
     gen = log.select("gen") 
-    fit_mins = log.chapters["fitness"].select("max")
+    fit_maxs = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
-    print(fit_mins)
 
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
-    append_to_excel.append(best_fit)
+    append_to_excel.extend(fit_maxs)
+    print(append_to_excel)
     write_to_excel(append_to_excel, str(GRAV), 'random_full_raw_data.xlsx')
 
     # Prints the fitness score of the best individual
