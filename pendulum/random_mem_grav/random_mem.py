@@ -24,7 +24,14 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-GRAV=18
+NUM_EP=20
+GRAV=13
+LIN_MIN=1
+LIN_MAX=13
+MAX_STEP=300
+POP=500
+PROCESSES=16
+GENS=450
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -77,7 +84,6 @@ def varAnd(population, toolbox, cxpb, mutpb):
             del offspring[i].fitness.values
 
     return offspring
-
 
 def eaSimple_early_stop(
     population,
@@ -199,7 +205,6 @@ def eaSimple_early_stop(
 
     return population, logbook
 
-
 def generate_typed_safe(pset, min_, max_, type_=None):
     """Generate a tree as a list of primitives and terminals in a depth-first
     order. The tree is built from the root to the leaves, and it stops growing
@@ -257,16 +262,13 @@ def generate_typed_safe(pset, min_, max_, type_=None):
                 stack.append((depth + 1, arg))
     return expr
 
-
 # user defined funcitons
-
 
 def read(memory, index):
     if math.isinf(index) or math.isnan(index):
         idx = 0
     idx = int(abs(index))
     return memory[idx % len(memory)]
-
 
 def write(memory, index, data):
     if math.isinf(index) or math.isnan(index):
@@ -276,7 +278,6 @@ def write(memory, index, data):
     memory[idx % len(memory)] = data
     return memory[idx % len(memory)]
 
-
 def limit(input, minimum, maximum):
     if input < minimum:
         return minimum
@@ -285,13 +286,11 @@ def limit(input, minimum, maximum):
     else:
         return input
 
-
 def protectedLog(input):
     if input <= 0:
         return 0
     else:
         return math.log(input)
-
 
 def memProtectedDiv(left, right):
     if (
@@ -307,7 +306,6 @@ def memProtectedDiv(left, right):
         return truncate(left, 8) / truncate(right, 8)
     except ZeroDivisionError:
         return 0
-
 
 def truncate(number, decimals=0):
     if math.isinf(number) or math.isnan(number):
@@ -325,25 +323,11 @@ def truncate(number, decimals=0):
         return 0
     return math.trunc(num) / factor
 
-
 def conditional(input1, input2):
     if input1 < input2:
         return -input1
     else:
         return input1
-
-
-# make a revered copy of input (a list) and return it
-def listReverse(input):
-    rev = input
-    rev.reverse()
-    return rev
-
-
-# def listLength(input):
-#     return len(input)
-
-
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSetTyped("main", [list, float, float], float)
@@ -356,16 +340,8 @@ pset.addPrimitive(conditional, [float, float], float)
 pset.addPrimitive(limit, [float, float, float], float)
 pset.addPrimitive(math.cos, [float], float)
 pset.addPrimitive(math.sin, [float], float)
-# pset.addPrimitive(math.acos, [float], float)
-# pset.addPrimitive(math.asin, [float], float)
-# pset.addPrimitive(math.exp, [float], float)
-# pset.addPrimitive(operator.neg, [float], float)
 pset.addPrimitive(operator.abs, [float], float)
-# pset.addPrimitive(listReverse, [list], list)
 pset.addTerminal(0, float)
-# pset.addTerminal(1, float)
-# pset.addTerminal(2, float)
-# pset.addTerminal(3, float)
 
 pset.addPrimitive(read, [list, float], float)
 pset.addPrimitive(write, [list, float, float], float)
@@ -373,7 +349,6 @@ pset.addPrimitive(write, [list, float, float], float)
 pset.renameArguments(ARG0="a0")
 pset.renameArguments(ARG1="a1")
 pset.renameArguments(ARG2="a2")
-# pset.renameArguments(ARG3="a3")
 
 # Prepare individual
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -387,8 +362,6 @@ toolbox.register(
 )
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-
-
 # Takes an individual and makes a tree graph and saves it into trees file
 def plot_as_tree(nodes, edges, labels, best_fit):
     g = pgv.AGraph()
@@ -400,7 +373,6 @@ def plot_as_tree(nodes, edges, labels, best_fit):
         n = g.get_node(i)
         n.attr["label"] = labels[i]
     g.draw("./fit_" + str(best_fit) + ".png")
-
 
 def write_to_excel(fit_mins, sheet_name, path):
     workbook = load_workbook(filename=path)
@@ -416,7 +388,6 @@ def write_to_excel(fit_mins, sheet_name, path):
     workbook.active.append(fit_mins)
 
     workbook.save(filename=path)
-
 
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(seed, gen, fit_mins, best_fit):
@@ -446,12 +417,11 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
     # plt.show()
     plt.savefig(str(seed) + "_fit_curve.png")
 
-
 # evaluates the fitness of an individual
 def evalIndividual(individual, test=False):
     
-    num_episode = 30
-    gravs = numpy.linspace(1, 15, num_episode)
+    num_episode = NUM_EP
+    gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
 
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)
@@ -466,7 +436,7 @@ def evalIndividual(individual, test=False):
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps = 300
+        max_steps = MAX_STEP
         timeout = False
         memory = [0.0]
         while not (done or timeout):
@@ -515,7 +485,7 @@ toolbox.decorate(
 def main():
     seed = sys.argv[1]  # do args better
     random.seed(seed)
-    pop = toolbox.population(n=500)
+    pop = toolbox.population(n=POP)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -526,7 +496,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96)  # parllel
+    pool = multiprocessing.Pool(processes=PROCESSES)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
     # pop, log = eaSimple_early_stop(
@@ -541,13 +511,13 @@ def main():
     #     sufficient_fitness=-200,
     # )
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 450, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, GENS, stats=mstats, halloffame=hof, verbose=True)
 
 
     pool.close()  # parallel
 
     gen = log.select("gen")
-    best_fits = log.chapters["fitness"].select("max")
+    fit_maxs = log.chapters["fitness"].select("max")
     best_fit = truncate(hof[0].fitness.values[0], 0)
 
     nodes, edges, labels = gp.graph(hof[0])
@@ -559,7 +529,7 @@ def main():
     
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
-    append_to_excel.append(best_fit)
+    append_to_excel.extend(fit_maxs)
     write_to_excel(append_to_excel, str(GRAV), 'random_mem_raw_data.xlsx')
 
     # inp = input("Pass or fail?: ")
