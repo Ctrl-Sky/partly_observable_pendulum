@@ -81,6 +81,33 @@ def plot_onto_graph(gen, fit_mins, best_fit):
     plt.axis([min(gen), max(gen), min(fit_mins), 0])
     plt.show()
 
+def save_graph(seed, gen, fit_mins, best_fit):
+    colours = ["r-", "g-", "b-", "c-", "m-", "k-"]
+
+    # Simply change the lines in quottation above to change the values you want to graph
+    # Allows you to create multiple plots in one figure
+
+    (fig, ax1) = plt.subplots()
+    # Plots using gen as x value and fit_mins as y, both are list
+    line1 = ax1.plot(
+        gen, fit_mins, 'b-', label="Maximum Fitness"
+    )
+    ax1.set_xlabel("Generation")
+    ax1.set_ylabel("Fitness", color="b")
+    for (
+        tl
+    ) in ax1.get_yticklabels():  # Changes colour of ticks and numbers on axis
+        tl.set_color("b")
+
+    lns = line1  # lns is a list containing both lines [line1, line2]
+    # labs contains the labels of each line (Minimum Fitness and Average Size)
+    labs = [l.get_label() for l in lns]
+    ax1.legend(lns, labs, loc="lower right")  # Adds then a legend
+
+    plt.axis([min(gen), max(gen), min(fit_mins), 0])
+    # plt.show()
+    plt.savefig(str(seed) + "_fit_curve.png")
+
 # Find used and unused functions in individual
 def find_unused_functions(labels):
     used_functions = set(list(labels.values()))
