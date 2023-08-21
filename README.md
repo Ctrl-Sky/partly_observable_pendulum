@@ -20,6 +20,7 @@ copy code to uniq experiment directory (from deap_experiments)
 ```
 exp_code=deap-pendulum-po-`date +%Y-%m-%d-%H-%M-%S`-`git rev-parse --short HEAD`
 cp -r pendulum/random_full_grav ~/scratch/$exp_code
+cp -r pendulum/modules ~/scratch
 cd ~/scratch/$exp_code
 ```
 run 5 parallel experiments

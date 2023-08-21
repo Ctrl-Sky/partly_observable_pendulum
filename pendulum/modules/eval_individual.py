@@ -7,7 +7,7 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     env_train = gym.make('Pendulum-v1', g=grav) # For training
     env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
     env = env_train
-    num_episode = 20
+    num_episode = 30
 
     if test:
         env = env_test
