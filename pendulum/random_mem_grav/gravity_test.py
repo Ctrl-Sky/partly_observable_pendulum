@@ -72,7 +72,7 @@ def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
 
 path_to_read=os.path.dirname(os.path.abspath(__file__))+'/random_mem_raw_data.xlsx'
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/random_mem_grav.xlsx'
-GRAV='18'
+GRAV='13'
 inds = get_one_column(path_to_read, GRAV, 'A')
 indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
