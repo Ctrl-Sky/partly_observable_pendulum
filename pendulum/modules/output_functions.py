@@ -53,6 +53,15 @@ def write_to_excel(fit_mins, sheet_name, path):
 
     workbook.save(filename=path)
 
+def create_sheet(fit_mins, sheet_name, path):
+    workbook = load_workbook(filename=path)
+
+    if sheet_name not in workbook.sheetnames:
+        workbook.create_sheet(sheet_name)
+        workbook.active=workbook[sheet_name]
+        workbook.active.append(fit_mins)
+        workbook.save(filename=path)
+
 # Creates and shows the graph of the fitness for then entire population
 def plot_onto_graph(gen, fit_mins, best_fit):
 
