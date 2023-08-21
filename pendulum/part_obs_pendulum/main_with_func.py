@@ -28,93 +28,93 @@ import multiprocessing
 import multiprocessing
 
 # Import modules from different directory
-# import os
-# import sys
-# PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# sys.path.append(PATH)
+import os
+import sys
+PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(PATH)
 
-# from modules.prim_functions import *
-# from modules.output_functions import *
-# from modules.eval_individual import partObsEvalIndividual
+from modules.prim_functions import *
+from modules.output_functions import *
+from modules.eval_individual import partObsEvalIndividual
 
 GRAV=9.81
 POP=2
 GENS=2
 TOURN_SIZE=5
 
-def write_to_excel(fit_mins, sheet_name, path):
-    workbook = load_workbook(filename=path)
+# def write_to_excel(fit_mins, sheet_name, path):
+#     workbook = load_workbook(filename=path)
 
-    if sheet_name not in workbook.sheetnames:
-        workbook.create_sheet(sheet_name)
-        workbook.active=workbook[sheet_name]
-        workbook.active.append(['ind', 'fitness'])
+#     if sheet_name not in workbook.sheetnames:
+#         workbook.create_sheet(sheet_name)
+#         workbook.active=workbook[sheet_name]
+#         workbook.active.append(['ind', 'fitness'])
 
 
-    workbook.active=workbook[sheet_name]
+#     workbook.active=workbook[sheet_name]
 
-    workbook.active.append(fit_mins)
+#     workbook.active.append(fit_mins)
 
-    workbook.save(filename=path)
+#     workbook.save(filename=path)
 
-def truncate(number, decimals=0):
-    if math.isinf(number) or math.isnan(number):
-        return 0
-    if not isinstance(decimals, int):
-        raise TypeError("decimal places must be an integer.")
-    elif decimals < 0:
-        raise ValueError("decimal places has to be 0 or more.")
-    elif decimals == 0:
-        return math.trunc(number)
+# def truncate(number, decimals=0):
+#     if math.isinf(number) or math.isnan(number):
+#         return 0
+#     if not isinstance(decimals, int):
+#         raise TypeError("decimal places must be an integer.")
+#     elif decimals < 0:
+#         raise ValueError("decimal places has to be 0 or more.")
+#     elif decimals == 0:
+#         return math.trunc(number)
 
-    factor = 10.0**decimals
-    num = number * factor
-    if math.isinf(num) or math.isnan(num):
-        return 0
-    return math.trunc(num) / factor
+#     factor = 10.0**decimals
+#     num = number * factor
+#     if math.isinf(num) or math.isnan(num):
+#         return 0
+#     return math.trunc(num) / factor
 
-def conditional(input1, input2):
-    if input1 < input2:
-        return -input1
-    else: return input1
+# def conditional(input1, input2):
+#     if input1 < input2:
+#         return -input1
+#     else: return input1
 
-def limit(input, minimum, maximum):
-    if input < minimum:
-        return minimum
-    elif input > maximum:
-        return maximum
-    else:
-        return input
+# def limit(input, minimum, maximum):
+#     if input < minimum:
+#         return minimum
+#     elif input > maximum:
+#         return maximum
+#     else:
+#         return input
 
-def protectedDiv(left, right):
-    try:
-        return truncate(left, 8) / truncate(right, 8)
-    except ZeroDivisionError:
-        return 1
+# def protectedDiv(left, right):
+#     try:
+#         return truncate(left, 8) / truncate(right, 8)
+#     except ZeroDivisionError:
+#         return 1
 
-def ang_vel(y2, y1, x2, x1):
-    top = atan(y2, x2) - atan(y1, x1)
-    bottom = y2 - y1
-    return protectedDiv(top, bottom)
+# def ang_vel(y2, y1, x2, x1):
+#     top = atan(y2, x2) - atan(y1, x1)
+#     bottom = y2 - y1
+#     return protectedDiv(top, bottom)
 
-def acos(x, y):
-    if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
-        return math.acos(x/y)
-    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.acos(y/x)
-    else:
-        return x
+# def acos(x, y):
+#     if protectedDiv(x, y) < 1 and protectedDiv(x, y) > -1:
+#         return math.acos(x/y)
+#     elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+#         return math.acos(y/x)
+#     else:
+#         return x
 
-def asin(x, y):
-    if protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.asin(y/x)
-    elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
-        return math.asin(y/x)
-    else:
-        return x
+# def asin(x, y):
+#     if protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+#         return math.asin(y/x)
+#     elif protectedDiv(y, x) < 1 and protectedDiv(y, x) > -1:
+#         return math.asin(y/x)
+#     else:
+#         return x
 
-def atan(x, y):
-    return math.atan(protectedDiv(x, y))
+# def atan(x, y):
+#     return math.atan(protectedDiv(x, y))
 
 def partObsEvalIndividual(individual, pset, grav, test=False):
     env_train = gym.make('Pendulum-v1', g=grav) # For training
@@ -248,6 +248,7 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
+    create_sheet(['ind', 'fitness'], str(GRAV), 'part_obs_raw_data.xlsx')
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)

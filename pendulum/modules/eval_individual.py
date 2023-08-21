@@ -115,14 +115,15 @@ def partObsEvalIndividual(individual, pset, grav, test=False):
     fitness = fitness/num_episode        
     return (0,) if failed else (fitness,)
 
+
 def indexMemEvalIndividual(individual, pset, grav, test=False):
-    env_train = gym.make('Pendulum-v1', g=grav) # For training
-    env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering the best one
+    env_train = gym.make("Pendulum-v1", g=grav)  # For training
+    env_test = gym.make("Pendulum-v1", g=grav, render_mode="human")  # For rendering the best one
     env = env_train
     num_episode = 20
     if test:
         env = env_test
-        num_episode = 1
+        num_episode = 3
 
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)
@@ -160,3 +161,4 @@ def indexMemEvalIndividual(individual, pset, grav, test=False):
         fitness += episode_reward
     fitness = fitness / num_episode
     return (0,) if failed else (fitness,)
+    

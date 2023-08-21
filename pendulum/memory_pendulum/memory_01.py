@@ -21,10 +21,24 @@ from deap import gp
 
 import pygraphviz as pgv
 
+# # Import modules from different directory
+# import os
+# import sys
+# path=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.append(path)
+
+# from modules.prim_functions import memProtectedDiv, protectedLog, conditional, limit, truncate, read, write
+# from modules.output_functions import *
+# from modules.eval_individual import indexMemEvalIndividual
+
 # parallel
 import multiprocessing
 
 GRAV=17
+POP=2
+PROCESSES=2
+GENS=2
+PATH_TO_WRITE='memory_raw_data.xlsx'
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -356,9 +370,7 @@ toolbox.register(
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 env_train = gym.make("Pendulum-v1", g=GRAV)  # For training
-env_test = gym.make(
-    "Pendulum-v1", g=GRAV, render_mode="human"
-)  # For rendering the best one
+env_test = gym.make("Pendulum-v1", g=GRAV, render_mode="human")  # For rendering the best one
 
 # Takes an individual and makes a tree graph and saves it into trees file
 def plot_as_tree(nodes, edges, labels, best_fit):
@@ -473,19 +485,14 @@ toolbox.register(
 )
 toolbox.register("mate", gp.cxOnePoint)
 toolbox.register("mutate", gp.mutUniform, expr=toolbox.expr, pset=pset)
-
-toolbox.decorate(
-    "mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17)
-)
-toolbox.decorate(
-    "mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17)
-)
+toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
+toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 
 def main():
-    seed = sys.argv[1]  # do args better
-    random.seed(seed)
-    pop = toolbox.population(n=500)
+    # seed = sys.argv[1]  # do args better
+    # random.seed(seed)
+    pop = toolbox.population(n=POP)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
@@ -496,7 +503,7 @@ def main():
     mstats.register("min", numpy.min)
     mstats.register("max", numpy.max)
 
-    pool = multiprocessing.Pool(processes=96)  # parllel
+    pool = multiprocessing.Pool(processes=PROCESSES)  # parllel
     toolbox.register("map", pool.map)  # parallel
 
     # pop, log = eaSimple_early_stop(
@@ -511,8 +518,7 @@ def main():
     #     sufficient_fitness=-200,
     # )
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, 450, stats=mstats, halloffame=hof, verbose=True)
-
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.75, GENS, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()  # parallel
 
@@ -522,15 +528,15 @@ def main():
 
     nodes, edges, labels = gp.graph(hof[0])
 
-    plot_onto_graph(seed, gen, best_fits, best_fit)
-    # evalIndividual(hof[0], True) # visualize
+    # plot_onto_graph(seed, gen, best_fits, best_fit)
+    evalIndividual(hof[0], True) # visualize
     plot_as_tree(nodes, edges, labels, best_fit)
-    # unused, used = find_unused_functions(labels)
     
+    # create_sheet(['inds', 'fitness'], str(GRAV), PATH_TO_WRITE)
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
     append_to_excel.append(best_fit)
-    write_to_excel(append_to_excel, str(GRAV), 'memory_raw_data.xlsx')
+    write_to_excel(append_to_excel, str(GRAV), PATH_TO_WRITE)
 
     return pop, log, hof
 
