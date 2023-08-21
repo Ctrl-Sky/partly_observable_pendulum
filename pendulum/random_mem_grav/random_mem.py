@@ -522,7 +522,7 @@ def main():
 
     nodes, edges, labels = gp.graph(hof[0])
 
-    # plot_onto_graph(seed, gen, best_fits, best_fit)
+    plot_onto_graph(seed, gen, fit_maxs, best_fit)
     # evalIndividual(hof[0], True) # visualize
     # plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
