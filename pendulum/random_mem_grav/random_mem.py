@@ -421,14 +421,18 @@ def plot_onto_graph(seed, gen, fit_mins, best_fit):
 def evalIndividual(individual, test=False):
     
     num_episode = NUM_EP
-    gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
+    # gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
 
     # Transform the tree expression to functional Python code
     get_action = gp.compile(individual, pset)
     fitness = 0
     failed = False
     for x in range(0, num_episode):
-        env_train = gym.make("Pendulum-v1", g=gravs[x])  # For training
+        if x < 10:
+            gravity=9.81
+        else:
+            gravity=-9.81
+        env_train = gym.make("Pendulum-v1", g=gravity)  # For training
         env = env_train
         done = False
         truncated = False
@@ -524,7 +528,7 @@ def main():
 
     plot_onto_graph(seed, gen, fit_maxs, best_fit)
     # evalIndividual(hof[0], True) # visualize
-    plot_as_tree(nodes, edges, labels, best_fit)
+    # plot_as_tree(nodes, edges, labels, best_fit)
     # unused, used = find_unused_functions(labels)
     
     append_to_excel=[]

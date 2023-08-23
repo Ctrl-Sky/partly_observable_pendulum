@@ -38,7 +38,7 @@ NUM_EP=20
 LIN_MIN=1
 LIN_MAX=13
 MAX_STEP=300
-GRAV=13
+GRAV=-9.81
 POP=500
 PROCESSES=16
 GENS=450
@@ -76,7 +76,7 @@ def conditional(input1, input2):
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
     num_episode = NUM_EP
-    gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
+    # gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
 
     if test:
         env_test = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
@@ -88,8 +88,12 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = 0
     failed = False
     for x in range(0, num_episode):
+        if x < 10:
+            gravity=9.81
+        else:
+            gravity=-9.81
         # Set up the variables for the env
-        env_train = gym.make('Pendulum-v1', g=gravs[x]) # For training
+        env_train = gym.make('Pendulum-v1', g=gravity) # For training
         env = env_train
         done = False
         truncated = False

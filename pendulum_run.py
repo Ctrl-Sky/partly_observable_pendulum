@@ -1,9 +1,14 @@
+import gym
+import pygame
+import gym_examples
+
+
+
 # genetic programming for Gymnasium Pendulum task
 # https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
 
 import numpy
 import random
-import gymnasium as gym
 import operator
 import matplotlib.pyplot as plt
 import math
@@ -39,17 +44,17 @@ POP=2
 PROCESSES=2 #set to 16 if using compute canada
 GENS=2
 PATH_TO_WRITE='full_obs_raw_data.xlsx'
-env = gym.make('gym_examples:gym_examples/GridWorld-v0')
 
 # Evaluate fitness of individual
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
-    env_train=gym.make("Pendulum-v1", g=9.81)
+    env_train = gym.make('GridWorld-v0', g=-9.81)
+    env_test = gym.make('GridWorld-v0', g=-9.81, render_mode='human')
     env = env_train
     num_episode = 30
 
     if test:
-        env = env_train
+        env = env_test
         num_episode = 1
     
     # Transform the tree expression to functional Python code
@@ -180,7 +185,7 @@ def main():
     # plot_onto_graph(gen, fit_mins, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
-    # fullObsEvalIndividual(hof[0], pset, 9.81, True)
+    fullObsEvalIndividual(hof[0], pset, -9.81, True)
 
     return pop, log, hof
 
