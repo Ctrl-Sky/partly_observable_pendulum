@@ -25,7 +25,7 @@ import pygraphviz as pgv
 import multiprocessing
 
 NUM_EP=20
-GRAV=13
+GRAV=-9.81
 LIN_MIN=1
 LIN_MAX=13
 MAX_STEP=300
