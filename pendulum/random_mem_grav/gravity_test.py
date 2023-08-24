@@ -54,7 +54,7 @@ pset.renameArguments(ARG1="a1")
 pset.renameArguments(ARG2="a2")
 
 def indexMemTestGravity(inds, pset, trained_grav, path_to_excel):
-    gravity = [1, 2, 3, 4, 5, 6, 7, 8, 9.81, 11, 12, 13, 14, 15, 16, 17]
+    gravity = [-1, -2, -3, -4, -5, -6, -7, -8, -9.81, -11, -12, -13, -14, -15, -16, -17]
 
     for i in inds:
         add_to_excel = [i]
@@ -74,7 +74,7 @@ path_to_read=os.path.dirname(os.path.abspath(__file__))+'/random_mem_raw_data.xl
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/random_mem_grav.xlsx'
 GRAV='-9.81'
 inds = get_one_column(path_to_read, GRAV, 'A')
-indexMemTestGravity(inds, pset, GRAV, path_to_write)
+# indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 
 
@@ -85,9 +85,9 @@ indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 # Creates an env and displays the individual being tested and
 # then prints out it's fitness score
-# for i in inds:
-#     ind=gp.PrimitiveTree.from_string(i, pset)
-#     print(indexMemEvalIndividual(ind, pset, float(GRAV), True))
+for i in inds:
+    ind=gp.PrimitiveTree.from_string(i, pset)
+    print(indexMemEvalIndividual(ind, pset, float(GRAV), True))
 
 # Plots the graph of the ind in a more falttering way and
 # saves it to a png to view
