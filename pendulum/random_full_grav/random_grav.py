@@ -39,9 +39,9 @@ LIN_MIN=1
 LIN_MAX=13
 MAX_STEP=300
 GRAV=-9.81
-POP=500
-PROCESSES=16
-GENS=450
+POP=50
+PROCESSES=2
+GENS=25
 
 def write_to_excel(fit_mins, sheet_name, path):
     workbook = load_workbook(filename=path)
@@ -116,6 +116,9 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
             except:
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
+
+            if gravity < 0:
+                reward=reward*-1
             episode_reward += reward
 
             num_steps += 1
@@ -205,11 +208,11 @@ def main():
     best_fit = truncate(hof[0].fitness.values[0], 0)
     nodes, edges, labels = gp.graph(hof[0])
 
-    append_to_excel=[]
-    append_to_excel.append(str(hof[0]))
-    append_to_excel.extend(fit_maxs)
-    print(append_to_excel)
-    write_to_excel(append_to_excel, str(GRAV), 'random_full_raw_data.xlsx')
+    # append_to_excel=[]
+    # append_to_excel.append(str(hof[0]))
+    # append_to_excel.extend(fit_maxs)
+    # print(append_to_excel)
+    # write_to_excel(append_to_excel, str(GRAV), 'random_full_raw_data.xlsx')
 
     # Prints the fitness score of the best individual
     # print(best_fit)
@@ -221,7 +224,7 @@ def main():
     save_graph(gen, fit_maxs, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
-    # fullObsEvalIndividual(hof[0], pset, 9.81, True)
+    fullObsEvalIndividual(hof[0], pset, -9.81, True)
 
     return pop, log, hof
 
