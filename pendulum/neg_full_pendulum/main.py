@@ -1,9 +1,12 @@
+import gym
+import pygame
+import gym_examples
+
 # genetic programming for Gymnasium Pendulum task
 # https://www.gymlibrary.dev/environments/classic_control/pendulum/ 
 
 import numpy
 import random
-import gymnasium as gym
 import operator
 import matplotlib.pyplot as plt
 import math
@@ -24,63 +27,30 @@ import pygraphviz as pgv
 # parallel
 import multiprocessing
 
-# Import modules from different directory
+# # Import modules from different directory
 import os
 import sys
 PATH=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PATH)
 
 # from modules.prim_functions import conditional, truncate
-from modules.output_functions import get_one_column
+from modules.output_functions import create_sheet, write_to_excel
 # from modules.eval_individual import fullObsEvalIndividual
 
-NUM_EP=20
-LIN_MIN=1
-LIN_MAX=13
-MAX_STEP=300
 GRAV=-9.81
-POP=50
-PROCESSES=2
-GENS=25
+POP=500
+PROCESSES=96 #set to 96 if using compute canada
+GENS=450
+PATH_TO_WRITE='neg_full_raw_data.xlsx'
 
-def write_to_excel(fit_mins, sheet_name, path):
-    workbook = load_workbook(filename=path)
-
-    if sheet_name not in workbook.sheetnames:
-        workbook.create_sheet(sheet_name)
-        workbook.active=workbook[sheet_name]
-        workbook.active.append(['ind', 'fitness'])
-
-
-    workbook.active=workbook[sheet_name]
-
-    workbook.active.append(fit_mins)
-
-    workbook.save(filename=path)
-
-def truncate(number, decimals=0):
-    if math.isinf(number) or math.isnan(number):
-        return 0
-    if not isinstance(decimals, int):
-        raise TypeError("decimal places must be an integer.")
-    elif decimals < 0:
-        raise ValueError("decimal places has to be 0 or more.")
-    elif decimals == 0:
-        return math.trunc(number)
-
-def conditional(input1, input2):
-    if input1 < input2:
-        return -input1
-    else: return input1
-
+# Evaluate fitness of individual
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
-    num_episode = NUM_EP
-    # gravs = numpy.linspace(LIN_MIN, LIN_MAX, num_episode)
+    env = env_train
+    num_episode = 30
 
     if test:
-        current_env = gym.make('Pendulum-v1', g=grav, render_mode="human") # For rendering
-        env = current_env
+        env = gym.make('GridWorld-v0', g=-9.81, render_mode='human')
         num_episode = 1
     
     # Transform the tree expression to functional Python code
@@ -88,22 +58,18 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = 0
     failed = False
     for x in range(0, num_episode):
-        if x > 0:
-            gravity=9.81
-        else:
-            gravity=-9.81
+        if x < 10 and not test:
+            env_train = gym.make('GridWorld-v0', g=-9.81)
+        elif x >= 10 and not test:
+            env_train = gym.make('Pendulum-v1', g=9.81)
         # Set up the variables for the env
-        if not test:
-            current_env = gym.make('Pendulum-v1', g=gravity) # For training
-
-        env = current_env
         done = False
         truncated = False
         observation = env.reset()
         observation = observation[0]
         episode_reward = 0
         num_steps = 0
-        max_steps=MAX_STEP
+        max_steps=300
         timeout=False
 
         while not (done or timeout):
@@ -118,12 +84,6 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
             except:
                 failed = True
                 observation, reward, done, truncated, info = env.step(0)
-
-            print(observation[0], observation[1])
-            # print(math.tan((observation[0], observation[1])))
-
-            if gravity < 0:
-                reward=reward*-1
             episode_reward += reward
 
             num_steps += 1
@@ -134,30 +94,26 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     fitness = fitness/num_episode      
     return (0,) if failed else (fitness,)
 
-def save_graph(gen, fit_mins, best_fit):
+def truncate(number, decimals=0):
+    if math.isinf(number) or math.isnan(number):
+        return 0
+    if not isinstance(decimals, int):
+        raise TypeError("decimal places must be an integer.")
+    elif decimals < 0:
+        raise ValueError("decimal places has to be 0 or more.")
+    elif decimals == 0:
+        return math.trunc(number)
 
-    # Simply change the lines in quottation above to change the values you want to graph
-    # Allows you to create multiple plots in one figure
+    factor = 10.0**decimals
+    num = number * factor
+    if math.isinf(num) or math.isnan(num):
+        return 0
+    return math.trunc(num) / factor
 
-    (fig, ax1) = plt.subplots()
-    # Plots using gen as x value and fit_mins as y, both are list
-    line1 = ax1.plot(
-        gen, fit_mins, 'b-', label="Maximum Fitness"
-    )
-    ax1.set_xlabel("Generation")
-    ax1.set_ylabel("Fitness", color="b")
-    for (
-        tl
-    ) in ax1.get_yticklabels():  # Changes colour of ticks and numbers on axis
-        tl.set_color("b")
-
-    lns = line1  # lns is a list containing both lines [line1, line2]
-    # labs contains the labels of each line (Minimum Fitness and Average Size)
-    labs = [l.get_label() for l in lns]
-    ax1.legend(lns, labs, loc="lower right")  # Adds then a legend
-
-    plt.axis([min(gen), max(gen), min(fit_mins), 0])
-    plt.savefig(str(best_fit) + "_fit_curve.png")
+def conditional(input1, input2):
+    if input1 < input2:
+        return -input1
+    else: return input1
 
 # Set up primitives and terminals
 pset = gp.PrimitiveSet("MAIN", 3)
@@ -204,20 +160,20 @@ def main():
     pool = multiprocessing.Pool(processes=PROCESSES) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    # pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
+    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()
 
-    # gen = log.select("gen") 
-    # fit_maxs = log.chapters["fitness"].select("max")
-    # best_fit = truncate(hof[0].fitness.values[0], 0)
-    # nodes, edges, labels = gp.graph(hof[0])
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    best_fit = truncate(hof[0].fitness.values[0], 0)
+    nodes, edges, labels = gp.graph(hof[0])
 
-    # append_to_excel=[]
-    # append_to_excel.append(str(hof[0]))
-    # append_to_excel.extend(fit_maxs)
-    # print(append_to_excel)
-    # write_to_excel(append_to_excel, str(GRAV), 'random_full_raw_data.xlsx')
+    create_sheet(['ind', 'fitness'], str(GRAV), PATH_TO_WRITE)
+    append_to_excel=[]
+    append_to_excel.append(str(hof[0]))
+    append_to_excel.append(best_fit)
+    write_to_excel(append_to_excel, str(GRAV), PATH_TO_WRITE)
 
     # Prints the fitness score of the best individual
     # print(best_fit)
@@ -226,13 +182,10 @@ def main():
     # print(hof[0])
 
     # Graphs the fitness score of every ind over the generations and displays it
-    # save_graph(gen, fit_maxs, best_fit)
+    # plot_onto_graph(gen, fit_mins, best_fit)
 
-    path_to_read='random_full_raw_data.xlsx'
-    GRAV='-9.81'
-    inds = get_one_column(path_to_read, GRAV, 'A')
     # Creates an env and displays the best ind being tested in the env
-    fullObsEvalIndividual(inds[0], pset, -9.81, True)
+    # ind='conditional(add(y, add(y, y)), add(add(add(x, add(add(add(x, y), add(conditional(add(add(vel, y), add(x, x)), conditional(vel, conditional(add(y, add(x, vel)), x))), x)), y)), add(add(add(y, x), x), add(x, add(x, vel)))), vel))'
     # fullObsEvalIndividual(hof[0], pset, -9.81, True)
 
     # return pop, log, hof

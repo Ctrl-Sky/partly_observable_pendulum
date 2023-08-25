@@ -36,7 +36,7 @@ from modules.eval_individual import fullObsEvalIndividual
 
 GRAV=17
 POP=500
-PROCESSES=96 #set to 16 if using compute canada
+PROCESSES=96 #set to 96 if using compute canada
 GENS=450
 PATH_TO_WRITE='full_obs_raw_data.xlsx'
 

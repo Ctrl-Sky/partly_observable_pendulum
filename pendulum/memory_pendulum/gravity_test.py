@@ -74,7 +74,7 @@ path_to_read=os.path.dirname(os.path.abspath(__file__))+'/memory_raw_data.xlsx'
 path_to_write=os.path.dirname(os.path.abspath(__file__))+'/memory_grav.xlsx'
 GRAV='9.81'
 inds = get_one_column(path_to_read, GRAV, 'A')
-# indexMemTestGravity(inds, pset, GRAV, path_to_write)
+indexMemTestGravity(inds, pset, GRAV, path_to_write)
 
 
 

@@ -47,7 +47,7 @@ path_to_read='random_full_raw_data.xlsx'
 path_to_write='random_full_grav.xlsx'
 GRAV='-9.81'
 inds = get_one_column(path_to_read, GRAV, 'A')
-fullObsTestGravity(inds, pset, GRAV, path_to_write)
+# fullObsTestGravity(inds, pset, GRAV, path_to_write)
 
 # Replace value of str to an individuals tree in string form to test it
 # Can simply print the indivudual to output the ind's tree in string form

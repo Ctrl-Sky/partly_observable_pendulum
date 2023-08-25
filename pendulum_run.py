@@ -39,10 +39,10 @@ import multiprocessing
 # from modules.output_functions import *
 # from modules.eval_individual import fullObsEvalIndividual
 
-GRAV=9.81
-POP=2
+GRAV=-9.81
+POP=200
 PROCESSES=2 #set to 16 if using compute canada
-GENS=2
+GENS=25
 PATH_TO_WRITE='full_obs_raw_data.xlsx'
 
 # Evaluate fitness of individual
@@ -164,10 +164,10 @@ def main():
 
     pool.close()
 
-    # gen = log.select("gen") 
-    # fit_mins = log.chapters["fitness"].select("max")
-    # best_fit = truncate(hof[0].fitness.values[0], 0)
-    # nodes, edges, labels = gp.graph(hof[0])
+    gen = log.select("gen") 
+    fit_mins = log.chapters["fitness"].select("max")
+    best_fit = truncate(hof[0].fitness.values[0], 0)
+    nodes, edges, labels = gp.graph(hof[0])
 
     # create_sheet(['ind', 'fitness'], str(GRAV), PATH_TO_WRITE)
     # append_to_excel=[]
@@ -176,18 +176,19 @@ def main():
     # write_to_excel(append_to_excel, str(GRAV), PATH_TO_WRITE)
 
     # Prints the fitness score of the best individual
-    # print(best_fit)
+    print(best_fit)
 
     # Prints the individual's tree in string form
-    # print(hof[0])
+    print(hof[0])
 
     # Graphs the fitness score of every ind over the generations and displays it
     # plot_onto_graph(gen, fit_mins, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
+    # ind='conditional(add(y, add(y, y)), add(add(add(x, add(add(add(x, y), add(conditional(add(add(vel, y), add(x, x)), conditional(vel, conditional(add(y, add(x, vel)), x))), x)), y)), add(add(add(y, x), x), add(x, add(x, vel)))), vel))'
     fullObsEvalIndividual(hof[0], pset, -9.81, True)
 
-    return pop, log, hof
+    # return pop, log, hof
 
 if __name__ == "__main__":
     main()
