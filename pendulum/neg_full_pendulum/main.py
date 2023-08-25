@@ -171,7 +171,7 @@ def main():
     create_sheet(['ind', 'fitness'], str(GRAV), PATH_TO_WRITE)
     append_to_excel=[]
     append_to_excel.append(str(hof[0]))
-    append_to_excel.append(best_fit)
+    append_to_excel.append(fit_mins)
     write_to_excel(append_to_excel, str(GRAV), PATH_TO_WRITE)
 
     # Prints the fitness score of the best individual

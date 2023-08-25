@@ -3,7 +3,7 @@
 
 import numpy
 import random
-import gymnasium as gym
+import gym
 import operator
 import matplotlib.pyplot as plt
 import math
@@ -23,15 +23,16 @@ import pygraphviz as pgv
 
 # parallel
 import multiprocessing
+import gym_examples
 
 NUM_EP=20
 GRAV=-9.81
 LIN_MIN=1
 LIN_MAX=13
 MAX_STEP=300
-POP=500
-PROCESSES=16
-GENS=450
+POP=2
+PROCESSES=2
+GENS=2
 
 def varAnd(population, toolbox, cxpb, mutpb):
     r"""Part of an evolutionary algorithm applying only the variation part
@@ -489,8 +490,8 @@ toolbox.decorate(
 
 
 def main():
-    seed = sys.argv[1]  # do args better
-    random.seed(seed)
+    # seed = sys.argv[1]  # do args better
+    # random.seed(seed)
     pop = toolbox.population(n=POP)
     hof = tools.HallOfFame(1)
 
