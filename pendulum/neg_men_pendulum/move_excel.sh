@@ -1,8 +1,8 @@
 #!/bin/bash
 
 dir=$(pwd)
-data="neg_full_raw_data.xlsx"
-fld="neg_full_pendulum
+data="neg_mem_raw_data.xlsx"
+fld="neg_mem_pendulum"
 
 cd ../deap_experiments/pendulum/$fld
 git rm $data

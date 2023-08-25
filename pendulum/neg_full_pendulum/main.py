@@ -46,8 +46,7 @@ PATH_TO_WRITE='neg_full_raw_data.xlsx'
 # Evaluate fitness of individual
 def fullObsEvalIndividual(individual, pset, grav, test=False):
     # Set up the enviornment and gravity
-    env = env_train
-    num_episode = 30
+    num_episode = 20
 
     if test:
         env = gym.make('GridWorld-v0', g=-9.81, render_mode='human')
@@ -59,9 +58,9 @@ def fullObsEvalIndividual(individual, pset, grav, test=False):
     failed = False
     for x in range(0, num_episode):
         if x < 10 and not test:
-            env_train = gym.make('GridWorld-v0', g=-9.81)
+            env=gym.make('GridWorld-v0', g=-9.81)
         elif x >= 10 and not test:
-            env_train = gym.make('Pendulum-v1', g=9.81)
+            env=gym.make('Pendulum-v1', g=9.81)
         # Set up the variables for the env
         done = False
         truncated = False
