@@ -18,6 +18,8 @@ module load python
 virtualenv $SLURM_TMPDIR/env
 source $SLURM_TMPDIR/env/bin/activate
 pip install --upgrade pip
+pip install gym
+pip install pygame
 pip install -r requirements_alliancecan.txt
 
 python -u main.py $seed > main-$seed-$SLURM_JOB_ID.std

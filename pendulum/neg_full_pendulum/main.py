@@ -1,5 +1,4 @@
 import gym
-import pygame
 import gym_examples
 
 # genetic programming for Gymnasium Pendulum task
