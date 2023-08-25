@@ -160,14 +160,14 @@ def main():
     pool = multiprocessing.Pool(processes=PROCESSES) # parllel (Process Pool of 16 workers)
     toolbox.register("map", pool.map) # parallel
 
-    pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
+    # pop, log = algorithms.eaSimple(pop, toolbox, 0.2, 0.5, GENS, stats=mstats, halloffame=hof, verbose=True)
 
     pool.close()
 
-    gen = log.select("gen") 
-    fit_mins = log.chapters["fitness"].select("max")
-    best_fit = truncate(hof[0].fitness.values[0], 0)
-    nodes, edges, labels = gp.graph(hof[0])
+    # gen = log.select("gen") 
+    # fit_mins = log.chapters["fitness"].select("max")
+    # best_fit = truncate(hof[0].fitness.values[0], 0)
+    # nodes, edges, labels = gp.graph(hof[0])
 
     # create_sheet(['ind', 'fitness'], str(GRAV), PATH_TO_WRITE)
     # append_to_excel=[]
@@ -176,17 +176,18 @@ def main():
     # write_to_excel(append_to_excel, str(GRAV), PATH_TO_WRITE)
 
     # Prints the fitness score of the best individual
-    print(best_fit)
+    # print(best_fit)
 
     # Prints the individual's tree in string form
-    print(hof[0])
+    # print(hof[0])
 
     # Graphs the fitness score of every ind over the generations and displays it
     # plot_onto_graph(gen, fit_mins, best_fit)
 
     # Creates an env and displays the best ind being tested in the env
     # ind='conditional(add(y, add(y, y)), add(add(add(x, add(add(add(x, y), add(conditional(add(add(vel, y), add(x, x)), conditional(vel, conditional(add(y, add(x, vel)), x))), x)), y)), add(add(add(y, x), x), add(x, add(x, vel)))), vel))'
-    fullObsEvalIndividual(hof[0], pset, -9.81, True)
+    # fullObsEvalIndividual(hof[0], pset, -9.81, True)
+    print(gym.__version__)
 
     # return pop, log, hof
 
