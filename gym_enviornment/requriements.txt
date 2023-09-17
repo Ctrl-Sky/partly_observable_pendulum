@@ -1,7 +1,0 @@
-deap
-matplotlib
-pygraghviz
-gym
-gymnasium
-pygame
-xlsxwritter

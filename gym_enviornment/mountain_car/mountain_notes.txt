@@ -1,8 +1,0 @@
-Though not the most efficient solution, just using the velocity can easily solve the mountain car using the simple idea:
-if velocity is negative go backwards (action = 0)
-if velocity is positve go forwards (action = 2)
-if velocity is zero you can go forwards or backwards however backwards seems to perform better
-
-When restricted from using velocity and only using position (obersvation[0]), the program is unable to complete the task
-consistently receiving -200 as max fitness score
-
