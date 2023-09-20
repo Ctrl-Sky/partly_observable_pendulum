@@ -1,6 +1,3 @@
-# genetic programming for Gymnasium Cart Pole task
-# https://gymnasium.farama.org/environments/classic_control/mountain_car/
-
 import numpy
 import random
 import gymnasium as gym
