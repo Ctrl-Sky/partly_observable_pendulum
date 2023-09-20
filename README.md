@@ -6,7 +6,7 @@ Hi! My name is Sky Quan and welcome to my repository. This repo was entirely cre
 
 ## How to run mem_pendulum.py and rec_pendulum.py
 
-From the partly_obserable_pendulum directory run:
+From the partly_observable_pendulum directory run:
 ```
 chmod+x ./run_mem_pendulum.py
 ./run_mem_pendulum.py
