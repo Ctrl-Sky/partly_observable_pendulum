@@ -14,8 +14,9 @@ openpyxl
 packaging
 Pillow
 pygame
-pygraphviz
 pyparsing
 python-dateutil
 six
 typing_extensions
+pygraphviz
+pandas
