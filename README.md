@@ -8,14 +8,14 @@ Hi! My name is Sky Quan and welcome to my repository. This repo was entirely cre
 
 From the partly_observable_pendulum directory run:
 ```
-chmod+x run_mem_pendulum.py
-./run_mem_pendulum.py
+chmod +x run_mem_pendulum.sh
+./run_mem_pendulum.sh
 ```
 
 or:
 ```
-chmod+x run_rec_pendulum.py
-./run_rec_pendulum.py
+chmod +x run_rec_pendulum.sh
+./run_rec_pendulum.sh
 ```
 
 ## Notes on running parallel experiments on alliance clusters
