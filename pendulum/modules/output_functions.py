@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-# import pygraphviz as pgv
-# import pandas as pd
+import pygraphviz as pgv
+import pandas as pd
 
 from openpyxl import load_workbook
 

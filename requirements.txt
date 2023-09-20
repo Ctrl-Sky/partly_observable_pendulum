@@ -18,5 +18,5 @@ pyparsing
 python-dateutil
 six
 typing_extensions
-pygraphviz
 pandas
+pygraphviz
